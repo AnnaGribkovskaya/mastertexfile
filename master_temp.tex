@@ -1,0 +1,905 @@
+\documentclass[twoside,english]{uiofysmaster}
+\geometry{a4paper,includeall,bindingoffset=0cm,margin=3cm,
+            marginparsep=0cm,marginparwidth=0cm,top=2cm}
+\usepackage{braket}
+\usepackage{mathtools}      
+\usepackage{amsmath} 
+\author{Anna Gribkovskaya}
+\title{\uppercase{Semi-stochastic Coupled Cluster Doubles for Quantum Dots}}
+\date{May 2018}
+\usepackage{pdfpages}
+\usepackage{mathrsfs}
+\usepackage{simpler-wick}
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newtheorem{post}{Postulate}
+\usepackage{bm}
+\newcommand{\bmat}[2]{\begin{bmatrix}[#1] #2 \end{bmatrix}} 
+\usepackage[backend=bibtex]{biblatex}
+\addbibresource{master.bib}
+
+
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\end{titlepage}
+\begin{abstract}
+	This is an abstract text.
+\end{abstract}
+
+\begin{dedication}
+	To someone
+	\\\vspace{12pt}
+	This is a dedication to my cat.
+\end{dedication}
+\begin{acknowledgements}
+	I acknowledge my acknowledgements.
+\end{acknowledgements}
+\tableofcontents
+
+%\chapter{}
+\chapter*{Introduction}
+This thesis is devoted to study of Quantum Dots (QDs). The detailed mathematical description of QDs is provided below, but in the most general way one may say that QDs are man-made devices that are small enough to posses quantum properties, such as energy shell structure, tunneling effect and etc. Most commonly such devices are fabricated using semiconductors and their size vary from few nanometers to hundreds of nanometers (one nanometer or nm is equal to $1\times 10^{-9} m$). In literature one may find name "artificial atoms" when referring to such  semiconductor nanostructures. This name reflect the fact that QDs and atoms share many similar properties, however this is not completely legit name, though QD are larger then atoms. For atoms size is usually measured in picometres  (one picometre or pm is equal to $1\times 10^{-12} m$).  Normal size of an atom vary form 53 pm for hydrogen atom (this quantity is also known as Bohr radius), to  273 pm for cesium (which is considered to be one of the largest atoms). As one can mention even the small QDs correspond 10 atoms in diameter. Apart from this QDs are very similar to the atoms. The name Quantum Dot reflect the fact that we have a structure that is small enough to have quantum properties and also that this structure is spatially localized. The properties of QDs lie between those of individual discrete atoms or molecules and bulk semiconductors. This fact make such particles matter of great interest both for science and industry. Below in chapter (!!!!!!!) one can find a brief history of QDs and also  some of their applications.  \\
+The aim of this thesis is to study QD numerically. 
+
+	SHOULD ADD MORE LATELY!!! And do not forget reference to chapters afterwards!!
+	
+\part{Theory}
+\chapter{Quantum mechanics}
+In the end of 19th century physics has some unsolved problems that can't be tackled using the already developed theories and methods. This had led to a  significantly different theory that has a number of essential distinctions  from that developed before. This new theory was called quantum mechanics. In the classical (or Newtonian mechanics) there was a theoretical possibility to obtain a complete knowledge of the system under consideration. In quantum mechanics this is not possible. Both for some particular time moment and for all future or previous times. \\
+Let's introduce some concepts here. The \textbf{uncertainty principle} and the \textbf{probability interpretation of the wave function}. The  uncertainty principle (or Heisenberg's uncertainty principle) puts a limit on how precise our measurement of some particular pairs of physical quantities (e.i. position and momentum) can be. The probability interpretation of wave function is a bit harder to explain, because one need a proper mathematical description of quantum mechanics to understand this. For now we just say that if we consider one single particle in space the probability of finding it in some certain position is related to the wave function. We will derive the expression for the total wave function of the system later in this thesis. Another 
+substantial difference in associated with so-called \textbf{principle of complementarity}. It was formulated by  Niels Bohr, one of the founders of quantum mechanics. It stands that in order to describe a system we need pair of certain complementary properties which cannot be observed simultaneously. A good example of such a pair are wave and particle properties of light or electrons (classical mechanics considered light as wave and electron as a particle, but this approach fails to explain photoelectric effect and diffraction of electrons on a slit). Moreover, position and momentum of the particle also can be considered as a pair of complementary properties and this makes Bohr's principle of complementarity closely connected to Heisenberg's uncertainty principle. Also one should mention that quantum mechanics allows us to create or destroy a particle. For example, we have a \textbf{creation} operator which increases number of particles in some system by one and also \textbf{annihilation} operator which decreases this number by one. The last concept to be mentioned here is the word \textbf{quantum} comes from in the first place. In physics, quantum means the smallest possible distance between two values or minimal amount of quantity involved in an interaction. This word is associated with the revolutionary supposition made by Max Planck back in 1900 that electromagnetic energy could be emitted in a form of some discrete quantities, known as “quantum”. He also introduced a  proportionality coefficient between for a minimal energy difference, so-called Planck's constant $h = 6.626 \times 10^{-34} \text{ } (kg \cdot m^2\cdot s^{-1})$. As one can see it has a very small value.  \\
+How does it possible that we have two theories so much different from each other and still use both of them? This is perfectly fine even it may seems to be a bit contradictory. In science there is a rule that require for any new theory to agree with the previous ones under some conditions. This rule called a \textbf{correspondence principle}. In case of quantum mechanics such conditions are named \textbf{classical limit} or \textbf{correspondence limit}, specifically quantum mechanical description of the system should correspond to those obtained by classical one for large quantum numbers. Mathematically it can be achieved requiring Planck's constant $h \rightarrow 0$. This principle allows determine whether a specific quantum theory is valid or not.\\
+Today we usually say that classical mechanics describes the macroscopic objects and quantum mechanics describes microscopic ones. This arise from the fact that some quantum effects can be observed only for tiny particles. However this is not enough to describe the difference, because even the observation itself is now different from that in classical physics. 
+For more details on the matter, please refer to \cite{phillipsIntroductionQuantumMechanics2003}. \\
+
+
+\section{Quantum theory}
+In this section we provide a brief description of main assumptions the quantum theory is build on together with some basic notations to be used in the thesis.\\
+As it have been already mentioned quantum theory has been developed though the $20^{\text{th}}$ century. As any other new theory is was based on some basic assumptions called postulates of quantum mechanics (QM). I do not aim to provide detailed description in the thesis, just a short recap on the topic. \\
+
+\begin{defn} Hilbert Space.\\
+	Let $\mathscr{H}$ be a complex vector space  in which inner product $\braket{\alpha|\beta}$ is defined so that it has the following properties:
+	\begin{enumerate}		
+		\item $\braket{a\alpha|\beta} = a\braket{\alpha|\beta}$, $a \in C$.
+		\item $\braket{\alpha|b\beta} = b^{*}\braket{\alpha|\beta}$, $b \in C$.
+		\item $\overline{\braket{\alpha|\beta}} =\braket{\beta|\alpha}$.
+		\item $||\alpha||^2= \braket{\alpha|\alpha} \geq 0 $.			
+	\end{enumerate}
+Comment. $\ket{\alpha}$ and  $\ket{\beta}$ are ket-vectors in Dirac notations.
+\end{defn}
+
+\begin{post}
+	Every instant state of system is represented by a vector in Hilbert space $\mathscr{H}$.\\
+\textit{Comment}. This is a very strong demand, because it means that any superposition of different states is also a state of the system. For example, if $\ket{\alpha_1}$ and  $\ket{\alpha_2}$ are vectors describing possible states of the system, then their linear combination $\ket{\alpha}$ is also a state of the same system:
+\begin{equation*}
+\ket{\alpha}=a_1\ket{\alpha_1}+a_2\ket{\alpha_2}, \text{   } a_1\text{  and }  a_2 \in C.
+\end{equation*}
+\end{post}
+\begin{defn}
+Operator $\hat{Q}$ is Hermitian is it satisfy the equation:
+\begin{equation}
+\hat{Q}^\dagger=\hat{Q}.
+\end{equation}
+here $\hat{Q}^\dagger$ is adjoint of $\hat{Q}$.
+\end{defn}
+\begin{post}\label{postulat2}
+	Every physical observable is associated with an operator $\hat{Q}$ on a Hilbert space. When acting on a state vector gives an eigenvalue equation:
+	\begin{equation}\label{eq:general_eigval eq}
+	\hat{Q}\ket{\alpha}= q\ket{\alpha}, 
+	\end{equation}
+here eigenvalues are the only measurable values associated with operator and eigenvectors determine a complete orthonormal set of vectors. In addition every operator $\hat{Q}$ associated with a measurable physical quantity must be linear Hermitian operator:
+	\begin{align}
+	\hat{Q}^\dagger=\hat{Q},\\
+	(a\hat{Q})^\dagger=a^*\hat{Q}^\dagger,\\
+	(\hat{Q}+\hat{P})^\dagger =\hat{Q}^\dagger+\hat{P}^\dagger,\\
+	(\hat{Q}\hat{P})^\dagger =\hat{P}^\dagger \hat{Q}^\dagger.
+	\end{align}
+	here $a \in C$ and * denote complex conjugate.\\
+\textit{Comment}. The eigenvalue equation ($\ref{eq:general_eigval eq}$) has some interesting properties when $\hat{Q}$ is Hermitian operator. 
+\end{post}
+
+\begin{theorem}
+	Set of eigenvalues of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ is set of real numbers. 
+\end{theorem}
+
+\begin{theorem}
+	Eigenvectors of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ that belong to different eigenvalues are orthogonal. 
+\end{theorem}
+
+\begin{theorem}
+Set of eigenvectors of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ can be chosen to be an orthonormal basis for $\mathscr{H}$.
+\end{theorem}
+
+\begin{post}
+	Let $\mathscr{H}_1$ and $\mathscr{H}_2$ be the Hilbert spaces corresponding to two systems. The Hilbert space of joint system is given by tensor product $\mathscr{H}=\mathscr{H}_1 \otimes \mathscr{H}_2$.\\
+\textit{Comment}. As it will be shown below this postulate provides us a method to describe many-particle systems. 
+\end{post}
+\begin{post}
+The time evolution of quantum mechanical system is given by Schrödinger equation:
+\begin{equation}\label{eq:basic_schrod}
+ i \hbar \frac{\partial }{ \partial t}\ket{\Psi} = \hat{H}\ket{\Psi}.
+\end{equation}
+here $\ket{\Psi}=\ket{\Psi(t)}$ .
+\end{post}
+In this thesis we do not consider time-evolution of the system and will be focused on so-called time-independent Schrödinger equation or stationary-state equation:
+\begin{equation}
+\hat{H}\ket{\Psi} = E \ket{\Psi}
+\end{equation}
+here $\hat{H}$ in Hamiltonian, $\ket{\Psi}$ is state vector of the system and $E$ is expectation value of the energy. It is the energy spectrum we are interested in, so before solving the equation we need to agree on the form of Hamiltonian and also construct the state vector. This is done in the sections below.
+
+
+\subsection{Many-Body problem formulation}
+As it has been already mentioned we all state functions are vectors in Hilbert space. When we deal with system of many particles we need first to define the type of this particles. Boson are particles with integer spin and fermions are particles with half-integer spin. State vectors of these particles belong to different Hilbert spaces and should be studied independently. In this thesis we consider electrons which are fermions and must obey an exclusion principle first formulated by Wolfgang Pauli for electrons in 1925.
+\begin{defn}Pauli exclusion principle.\\
+Two or more identical fermions cannot occupy the same quantum state simultaneously in the same system.
+\end{defn}
+Let's take a closer look ar the total wave function and how this principle affect the permutations of particles withing the system.
+First we need to mention that particles are identical and indistinguishable. In quantum mechanics interacting and identical particles are considered indistinguishable, which is different from classical mechanics where all particles were distinguishable. The very concept of indistinguishably require some thinking about what happens to the wave function if we interchange some particles? And here it is - where it become a significant difference between bosons and fermions quite important. \\
+Let's define some operators here.\\
+\begin{defn}
+Let $\hat{P_{ij}}$ be the operator that interchanges particles $i$ and $j$. Mathematically this reads as:
+\[\hat{P_{ij}} \ket{ \Psi(x_1 ... x_i ... x_j ...) }=\ket{ \Psi(x_1 ... x_j ... x_i ...) } \]
+\end{defn}
+!!!!!!!!!!!!!!Dopisa pro antisimmetriju!!!!!!!!!
+\subsubsection{Hamiltonian of many-body system}
+As it has been already mentioned Hamiltonian is a Hermitian operator. It can be expressed as:
+\begin{equation}
+\hat{H}=\hat{T}+\hat{V},
+\end{equation}
+where $\hat{T}$ is a kinetic energy operator and $\hat{W}$ is a potential energy operator. \\
+Here we assume the electrons are confined by a pure isotropic harmonic oscillator (H.O.) potential. Also in this project we consider closed shell systems. It means that all possible single-particle states below a certain level are occupied. Such level often called a Fermi level of the system. In particular this assumption means that addition or removal of one electron in such system requires more energy than same action but in a system with non-occupied lowest levels. That leads to a given number of particles $N = \{2, 6, 12, 20\}$ we may have in our quantum dot. 
+Using natural units ($\hbar=c=e=m_e=1$) and a.u. as energy unit one can write Hamiltonian of a such system in Cartesian coordinates as
+\begin{equation}
+\label{eq:finalH}
+\hat{H}=\sum_{i=1}^{N} \left(  -\frac{1}{2} \nabla_i^2 + \frac{1}{2} \omega^2r_i^2  \right)+\sum_{i<j}^{N}\frac{1}{r_{ij}},
+\end{equation}
+$N$ here is number of electrons, $\omega$ is oscillator frequency and $r_{ij}$ distance between two electrons. The Hamiltonian can be rewritten as
+\begin{equation}
+\hat{H}=\hat{H}_0+\hat{H}_I ,
+\end{equation}
+here $\hat{H}_0$ is a standard H.O. part and $\hat{H}_I$ gives a repulsive interaction part. 
+%For the Hartree-Fock method we need a single-particle basis, which in this case is just a H.O. functions. However we also need to compute elements for the Coulomb interaction matrix. The details are discussed below in a method description part. 
+More detailed the Hamiltonian can be written as 
+\begin{equation}
+\hat{H} = \sum_{i=1}^{N}\hat{h}_0(x_i) + \sum_{i < j}^{N}\frac{1}{r_{ij}},
+\label{H1H2}
+\end{equation}
+here $ \hat{h}_0(x_i) $ represents the kinetic energy of the particle as well as the external H.O. potential, the $\frac{1}{r_{ij}}$ term represent the potential energy of Coulomb interaction between two particles. 
+
+\subsection{Second quantization}
+The second quantization is a framework that allows us to write long and cumbersome expressions, such as Slater Determinants and many-body Hamiltonian, in a compact way. The fundamental idea is to use so-called creation and annihilation operators.
+\cite{umrigarObservationsVariationalProjector2015}
+\begin{defn}
+	Creation operator. \\
+	If acting on a vacuum state:
+	\begin{equation}
+	c_i^\dagger\ket{-}=\ket{i}	
+	\end{equation}
+	If acting on an arbitrary SD:
+	\begin{equation}
+	c_i^\dagger\ket{p_1 p_2  \dots p_N}=\ket{i p_1p_2 \dots p_N}	
+	\end{equation}
+\end{defn}
+\begin{defn}
+	Annihilation operator defined as hermitian adjoint to creation operator. \\
+		\begin{equation}
+		c_i\ket{i}=\ket{-}	
+		\end{equation}
+\end{defn}
+Some important results from definition of operators:
+\begin{enumerate}
+\item $c_i \ket{-}=0$ (no particles)
+\item $c_i^\dagger\ket{p_1 p_2  \dots p_N}=0$ if $i=p_i$ (particle already exists in SD) 
+\item $c_i\ket{p_1 p_2  \dots p_N}=0$ if $i\neq p_i$ (particle does not exist in SD) 
+\end{enumerate}
+\section{Operator representation in second quantized form} \label{sec:operator in 2q}
+The Hamiltonian can be written as:
+\begin{equation}
+\hat{H}=\hat{H}_0+\hat{W}
+\end{equation}
+where $\hat{H}_0$ is one-body term and $\hat{W}$ is two-body term.
+In a second quantized form it can be written as:
+\begin{gather}
+\hat{H}_0= \sum_i^N\hat{h}(i)=\sum_{pq}^{N}\bra{p}\hat{h}\ket{q}c_p^\dagger c_q=\sum_{pq}h_{pq}c_p^\dagger c_q;\\ \label{eq:H0}
+h_{pq}=\int_{-\infty}^{\infty}\phi_p(x)^* \hat{h}\phi_q(x) dx\\
+\hat{W}=\sum_{i<j}^{N} \hat{w}(i,j)=\frac{1}{2}\sum_{pqrs}^{N} w_{rs}^{pq}c_p^\dagger c_q^\dagger c_sc_r\\ \label{eq:W}
+w_{rs}^{pq}=\bra{pq}\hat{w}\ket{rs}=\int dx_1 \int dx_2 \phi_p(x_1)^*\phi_p(x_2)^* \hat{h}\phi_r(x_1)\phi_s(x_2) 
+\end{gather}
+As soon as we are studying fermions it's more convenient to write a two-body term in a antisymmetric form:
+\begin{gather}\label{eq:two-body_2q}
+	\hat{W}=\frac{1}{4}\sum_{pqrs} \bra{pq}\hat{w}\ket{rs}_{AS} c_p^\dagger c_q^\dagger c_sc_r\\
+	\bra{pq}\hat{w}\ket{rs}_{AS}\equiv \bra{pq}\hat{w}\ket{rs}-\bra{pq}\hat{w}\ket{sr}
+\end{gather}
+From here on we just use antisymmetric form, so subscript \textit{AS} can be omitted.\\
+The Hamiltonian written in second quantized form then can be written as:
+\begin{equation}\label{eq:Ham in 2q}
+\hat{H}=\sum_{pq}^{N}\bra{p}\hat{h}\ket{q}c_p^\dagger c_q + \frac{1}{4}\sum_{pqrs} \bra{pq}\hat{w}\ket{rs}_{AS} c_p^\dagger c_q^\dagger c_sc_r
+\end{equation}
+\section{Normal ordering and Wick's theorem} \label{sec:Wick}
+After writing Hamiltonian in a second quantized form we are able to compute all matrix elements using the  anticommutator relations:
+\begin{gather}
+\{c_p,c_q \}=0\\
+\{c_p^\dagger,c_q^\dagger \}=0\\
+\{c_p,c_q^\dagger\} = \delta_{pq} \label{eq:fund_anti}
+\end{gather}
+Equation \ref{eq:fund_anti} is a fundamental intercommunication relation.
+However computing matrix elements using \ref{eq:fund_anti} is not a best choice. One can do so, but with N growing larger equations become far too cumbersome and hard to compute. There is much better way to compute matrix elements, however  we have to introduce some concepts first.
+\begin{defn}
+Vacuum expectation value. \\
+If we denote a string of operators $C_1 \dots C_N$, such that $C_i \in \{c_p^\dagger\} \cup \{c_p\} $. One define vacuum expectation value as $ \bra{-}C_1C_2 \dots C_N \ket{-}	$
+\end{defn}
+Matrix elements can be obtained as follows:
+\begin{gather} \label{eq:matrix_elem}
+\bra{\Phi}\hat{H}_0\ket{\Phi}=\sum_{pq}\bra{p}\hat{h}\ket{q}\bra{-}c_N \dots c_1 c_p^\dagger c_q c_1^\dagger \dots c_N^\dagger \ket{-}\\
+\bra{\Phi}\hat{W}\ket{\Phi}= \frac{1}{4}\sum_{pqrs} \bra{pq}\hat{w}\ket{rs} \bra{-}c_N \dots c_1 c_p^\dagger c_q^\dagger c_s c_r c_1^\dagger \dots c_N^\dagger \ket{-} \label{eq:matrix_elem1}
+\end{gather} 
+As one can see from \ref{eq:matrix_elem} and \ref{eq:matrix_elem1}  matrix element are written in form os vacuum expectation value. Now we want to introduce Wick's Theorem, which allows us to compute such values in terms of normal ordered operators. 
+\begin{defn} Normal ordering.
+	Let $\bar{C}=C_1 \dots C_n$ be an arbitrary operator string consisting of creation and annihilation operators. 
+	Let $\sigma \in S_n$ be a permutation that result in all creation operators in the string $\bar{C}$ be on the left and all annihilation operators to the right. Normal ordered string denoted using the braces as $\{C_1 \dots C_n \}$. Normal order is defined as:
+\begin{equation}
+	\{C_1 \dots C_n \} \equiv (-1)^{\mid \sigma \mid}[\text{creation operators} ] \times [ \text{annihilation operators}]
+\end{equation}
+\end{defn}
+One should remember that normal order is not a unique sequence of operators, since it is possible to arrange them in a different ways.\\
+Another important concept we need to mention before we can go to the Wick's theorem is contraction between operators.
+
+\begin{defn} Contraction.
+		\begin{equation}
+	\wick{\c1 X \c1 Y}=\bra{-} XY \ket{-}
+	\end{equation}
+\end{defn}
+Now we need to define the contraction inside na normal ordered string.
+\begin{defn} Contraction inside the operator string.\\
+	Let $ \bar{C}=C_1 \dots C_n $ be an arbitrary operator string consisting of creation and annihilation operators. Let $(C_q, C_p)$ be a pair of operators and $\sigma$ be any possible permutation that places $C_q$ to the first place in the string and
+	 $C_p$ to the second.
+\begin{equation}
+	\wick{\{ C_1 \dots \c1 C_q  \dots \c1 C_p \dots C_n \} } \equiv (-1)^{\mid \sigma \mid} \wick{ \{  \c1 C_q  \c1 C_p C_{\sigma(3)} \dots C_{\sigma(n)} \} }
+\end{equation}
+	
+	For an arbitrary $m$ contractions inside one string we have:
+\begin{equation}
+	\overbrace{ \{ C_1 \dots C_n\} }^\text{m contractions}=(-1)^{\mid \sigma \mid} 
+	\wick{\{ \c1 C_{p_1} \c1 C_{q_1} \dots \c2 C_{p_m} \c2 C_{q_m} C_{\sigma(2m+1)}\dots C_{\sigma(n)}  \} }
+\end{equation}
+\end{defn}
+Now we can finally state the Wick's theorem.
+\begin{theorem} \textbf{ Wick's theorem} \\
+Let $ \bar{C}=C_1 \dots C_n $ be an arbitrary operator string consisting of creation and annihilation operators.
+\begin{gather}
+C_1 \dots C_n=\{C_1 \dots C_n\} + \sum_{\text{all single contractins}} \overbrace{ \{ C_1 \dots C_n\} }^\text{one contraction} +\\ \sum_{\text{all double contractins}} \overbrace{ \{ C_1 \dots C_n\} }^\text{two contraction}+ \dots + 
+ \sum_{\text{all $\frac{n}{2}$ contractins}} \overbrace{ \{ C_1 \dots C_n\} }^\text{$\frac{n}{2}$ contraction}
+\end{gather}
+\end{theorem}
+Some interesting outcomes from Wick's theorem:
+ 
+\begin{enumerate}
+	\item \[\bra{-} \{C_1 \dots C_n\} \ket{-}=0\]
+	\item \[\bra{-} C_1 \dots C_n \ket{-}=0,  \forall  \text{ odd } n\] 
+	\item \[\bra{-} C_1 \dots C_n \ket{-}= \sum_{\frac{n}{2}} \overbrace{ \{C_1 \dots C_n\}}^{\text{all contraction}}, \forall \text{ even } n \]
+\end{enumerate}
+
+
+
+
+\section{Particle-Hole representation}
+In this section we are presenting formalism that is used in many articles and text books on the topic.\\
+
+\begin{defn}Fermi vacuum.\\
+	Let $\ket{\Phi_0}$ be n-electron reference determinant constructed using true vacuum $\ket{}$ and given by:
+	\[ \ket{\Phi_0} = c^\dagger_i c^\dagger_j ..\ket{}. \]
+	Such reference determinant is often called a "Fermi vacuum".
+\end{defn}
+
+
+
+Slater Determinant discussed above is composed using so-called \textit{occupied orbitals}. However they are chosen from a set of single-particle functions that contains also some extra functions. This additional functions are called \textit{virtual orbitals}. There is a convention regarding how to label this occupied and virtual orbitals. It may seen a bit odd, but for occupied orbitals we use name "hole states" and for virtual orbitals we use "particle states". Hole states are labeled with letters \textit{i,j,k} and particle states are labeled with letters \textit{a,b,c}.\\
+
+
+Any system of many particles can by described as a reference determinant...
+
+ 
+\section{Normal-Ordered Electronic Hamiltonian}
+In section $\ref{sec:operator in 2q}$ we have presented operator representation in second quantized form. Equation ($\ref{eq:Ham in 2q}$) that provide a second quantized form of Hamiltonian now can be rewritten using the Wick's theorem (provided in Section$\ref{sec:Wick}$) as a normal ordered operator string. This is a very convenient approach for derivation of Coupled Cluster equations that are provided in Chapter $\ref{ch:coupled_cluster}$.  \\
+Lets start with one-electron part given by equation ($\ref{eq:H0}$):
+\begin{equation}
+\hat{H_0}=\sum_{pq} \braket{p|\hat{h}|q} \{c_p^\dagger c_q \} + \sum_{i}\braket{i|\hat{h}|i} =\sum_{pq} h_{pq} \{c_p^\dagger c_q \} + \sum_{i}h_{ii}
+\end{equation}
+Second term in Hamiltonian equation is a two-body part given in ($\ref{eq:two-body_2q}$). Let's rewrite it using Wick's theorem as follows:
+\begin{eqnarray}
+c_p^\dagger c_q^\dagger c_s c_r= \{ c_p^\dagger c_q^\dagger c_s c_r  \} + \wick{\{ \c1 c_p^\dagger c_q^\dagger \c1 c_s c_r \}} + \wick{\{  c_p^\dagger \c1 c_q^\dagger \c1 c_s c_r \}} +\nonumber\\  \wick{\{  \c1 c_p^\dagger  c_q^\dagger  c_s \c1 c_r \}} 
++ \wick{\{  c_p^\dagger \c1 c_q^\dagger  c_s \c1 c_r \}} +\wick{\{\c1  c_p^\dagger \c2 c_q^\dagger \c1 c_s \c2 c_r \}} +\wick{\{\c1  c_p^\dagger \c2 c_q^\dagger \c2 c_s \c1 c_r \}}  
+\end{eqnarray}
+Remembering that contraction is non-zero only for the operator on the left acting on hole state, we may rewrite it as:
+
+\begin{eqnarray}
+ \{ c_p^\dagger c_q^\dagger c_s c_r  \} -\delta_{p \in i} \delta_{ps} \{  c_q^\dagger  c_r  \} +\delta_{q \in i} \delta_{qs}  \{  c_p^\dagger  c_r  \} + \delta_{p \in i} \delta_{pr} \{  c_q^\dagger  c_s  \}-\nonumber\\ \delta_{q \in i} \delta_{qr} \{  c_p^\dagger  c_s  \}-  \delta_{p \in i} \delta_{ps} \delta_{q \in j} \delta_{qr}+ \delta_{p \in i} \delta_{pr} \delta_{q \in j} \delta_{qs}
+\end{eqnarray}
+here $q \in j$ means that index $q$ belongs to occupied state,  $\delta_{q \in j}$ in this case means that $q=j$ must hold. Using this form we may now rewrite the two-body term in Hamiltonian and obtain:
+\begin{eqnarray}
+\frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \}-\frac{1}{4}\sum_{qri}\braket{iq|ri}\{ c_q^\dagger  c_r  \} +\frac{1}{4}\sum_{pri}\braket{pi|ri}\{ c_p^\dagger  c_r  \} + \nonumber\\ 
++\frac{1}{4}\sum_{qsi}\braket{iq|is}\{ c_q^\dagger  c_s  \} -\frac{1}{4}\sum_{psi}\braket{pi|is}\{ c_p^\dagger  c_s  \} -\frac{1}{4}\sum_{ij}\braket{ij|ij} + \frac{1}{4}\sum_{ij}\braket{ij|ji}  \nonumber\\ 
+=\frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \} + \sum_{pri}\braket{pi|ri}\{ c_p^\dagger  c_r  \} + \frac{1}{2} \sum_{ij}\braket{ij|ij} 
+\end{eqnarray}
+And finally the Hamiltonian ($\ref{eq:Ham in 2q}$) can be re-written in as:
+\begin{eqnarray}
+\hat{H} = \sum_{pq} h_{pq} \{c_p^\dagger c_q \} + \sum_{i}h_{ii} + \frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \} + \sum_{pri}\braket{pi|ri}\{ c_p^\dagger  c_r  \} + \nonumber\\ \frac{1}{2} \sum_{ij}\braket{ij|ij} 
+=  \sum_{pq} f_{pq} \{c_p^\dagger c_q \} + \frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \} + \braket{\Phi_0|H|\Phi_0},
+\end{eqnarray}
+here 
+\begin{equation}\label{eq:Fock_operator}
+F_\text{N} = \sum_{pq}f_{pq}\{c_p^\dagger c_q \}=\sum_{pq}\big(h_{pq}\{c_p^\dagger c_q \}+\sum_{i}\braket{pi|qi}\{c_p^\dagger c_q \}\big),
+\end{equation}
+ is normal-ordered Fock operator. We will discuss it closely is chapter $\ref{ch:HF}$.\\
+Re-arranging the terms we may define a normal-ordered Hamiltonian simply as:
+\begin{eqnarray}
+\hat{H}_N = \hat{H} - \braket{\Phi_0|H|\Phi_0}
+\end{eqnarray}
+This is an interesting result. One may say that the normal-ordered form of operator is build by subtracting reference expectation value of the operator from this particular operator. In this case $\hat{H}_N$ may be referred to as correlation operator.
+
+
+%\wick{\{ C_1 \dots \c1 C_q  \dots \c1 C_p \dots C_n \} } 
+\section{Matrix Elements of Hamiltonian}
+It is convenient to introduce formulas for different matrix elements of Hamiltonian. We are going to use them lately. \\
+!!!!PERENESTI POTOM V DRUGOE MESTO!!!!!!!!!1
+Matrix elements between determinants that differs more then two orthonormal spin orbitals are zero by construction, so we are not going to consider such term.\\
+Let us choose one determinant to be single or double excitation on another. \\
+For double excitation:
+\begin{equation}
+\ket{\Phi_{m}}=a^\dagger_r a^\dagger_s a_q a_p \ket{\Phi_n}.
+\end{equation}
+In this case the corresponding matrix element then is:
+\begin{equation}
+\bra{\Phi_n} \hat{H}\ket{\Phi_{m}}=\braket{rs|pq}_{AS}.
+\end{equation}
+For single excitation:
+\begin{equation}
+\ket{\Phi_{m}}=a^\dagger_r  a_p \ket{\Phi_n}.
+\end{equation}
+And corresponding matrix element then is:
+\begin{equation}
+\bra{\Phi_n} \hat{H}\ket{\Phi_{m}}=\sum_{k}^{N-1}\braket{rk|pk}_{AS}.
+\end{equation}
+here sum runs over all common orbitals present in the determinants.\\
+We also need to compute the diagonal matrix element:
+\begin{equation}
+\bra{\Phi_n} \hat{H}\ket{\Phi_{n}}=\sum_{p\in n} \braket{p|\hat{h}|p} + \frac{1}{2} \sum_{p,q \in n}^{N-1}\braket{pq|pq}_{AS}.
+\end{equation}
+
+\chapter{The Hatree-Fock theory}\label{ch:HF}
+Here we present a brief overview of the Hatree-Fock (HF) theory. It is  well-known and defined way to study systems of large number of particles. It is  easy to implement, but has some disadvantages, for example it fail to provide high accuracy. However, more precise methods are often build on the HF results. This makes HF theory a good starting point for anyone who want to tackle a many-body problem. Methods that are using HF as an input are usually referred to as post-Hartree-Fock. Among them are Configuration Interaction (CI) and Coupled Cluster (CC). \\
+The main idea of HF theory is to approximate unknown wave function with a single Slater Determinant constructed using a single-particle wave functions representing the occupied states in a system under consideration. 
+\section{Introduction to HF}
+Here we start with time independent Schrödinger equation for the ground state:
+\begin{equation}
+\hat{H}\ket{\Phi_0}=E_0\ket{\Phi_0}
+\end{equation}
+In order to derive the HF equations we approximate the ground state wave function with a single SD:
+\begin{equation}
+\ket{\Phi_0}=\prod_{i=1}^{N}c_i^\dagger\ket{-}=\ket{\phi_0, \dots \phi_N}
+\end{equation}
+Here $\phi_0, \dots \phi_N$ are single-particle wave functions.
+
+Hartree-Fock method is the simplest and nevertheless rather efficient methods. Initially introduced by Hartree and then improved by Fock it is one of the most popular \textit{ab initio} methods in quantum chemistry. This method uses an approximation to the exact many-body wave function by a Slater determinant of $N$ orthonormal single-particle wave functions. In this case the approximate wave function of the system is given by:
+\begin{equation}
+\Phi(x_1, x_2,\dots ,x_N,\alpha,\beta,\dots, \sigma)=\frac{1}{\sqrt{N!}}
+\left| \begin{array}{ccccc} \psi_{\alpha}(x_1)& \psi_{\alpha}(x_2)& \dots & \dots & \psi_{\alpha}(x_N)\\
+\psi_{\beta}(x_1)&\psi_{\beta}(x_2)& \dots & \dots & \psi_{\beta}(x_N)\\  
+\dots & \dots & \dots & \dots & \dots \\
+\dots & \dots & \dots & \dots & \dots \\
+\psi_{\sigma}(x_1)&\psi_{\sigma}(x_2)& \dots & \dots & \psi_{\sigma}(x_N)\end{array} \right|, \label{eq:HartreeFockDet}
+\end{equation}
+In this equation $\psi(x_i)$ stands for the single electron wave function, $x_i$ stand for the coordinates and spin values of a particle $i$ and $\alpha, \beta,…,\sigma$ are quantum numbers needed to describe remaining quantum numbers.
+However this expression can be simplified by introducing a new operator $\hat{A}$. This operator is given by 
+\begin{equation}
+\hat{A} = \frac{1}{N!}\sum_{p} (-)^p\hat{P},
+\label{antiSymmetryOperator}
+\end{equation}
+here the sum goes over all possible permutations of two particles and $p$  stands for the number of permutations.\\
+We also need to introduce Hartree-Fock wave function, which is given by product of all possible single-particle wave functions
+\begin{equation}
+\Phi_H(x_1,x_2,\dots,x_N,\alpha,\beta,\dots,\nu) =
+\psi_{\alpha}(x_1)
+\psi_{\beta}(x_2)\dots\psi_{\nu}(x_N).
+\end{equation}
+Using this notations Slater determinant can be rewritten as
+\begin{equation}\label{determ}
+\Phi(x_1,x_2,\dots,x_N,\alpha,\beta,\dots,\nu) = \frac{1}{\sqrt{N!}}\sum_{P} (-)^P\hat{P}\psi_{\alpha}(x_1)
+\psi_{\beta}(x_2)\dots\psi_{\nu}(x_N)=\sqrt{N!}\hat{A}\Phi_H,
+\end{equation}
+Using a Slater determinant and assuming the Hamiltonian is given on form (\ref{eq:finalH}) we may obtain the functional $E[\Phi]$ for the energy. According to the variational principle
+\begin{equation}
+E[\Phi] \ge E_0
+\end{equation}
+here $E_0$ denote the exact ground state energy. 
+There are two main strategies we may use now in order to obtain the ground state energy. In order to find the minimum of the energy functional we may either vary a Slater determinant, or we may expand the single-particle functions in some known basis and then vary the coefficients of expansions. In this project we use the second method. For those who want more detailed insight in the theory presented above in this chapter, please take a look at chapter 15 in \cite{mortenhjorth-jensenCOMPUTATIONALPHYSICS2015}.
+
+\section{Derivation of a Hartree-Fock equations}
+In order to derive the Hartree-Fock equations we need to chose an orthogonal basis to be used for expansion. As soon as we have H.O. potential that confine particles in the system it's reasonable to choose H.O. functions as a basis functions for the expansion as well. In this case we can be sure the functions are orthogonal by nature. 
+\begin{equation}
+\psi_p  = \sum_{\lambda} C_{p\lambda}\phi_{\lambda}. \label{eq:newbasis}
+\end{equation}
+here $\phi_{\lambda}$ is our new basis functions and $C_{p\lambda}$ represent expansion coefficients. This is a very important property for us, as soon as we will vary the coefficients in order to minimize energy. The sum in (\ref{eq:newbasis}) goes to infinity, however we will use a truncation to a certain value. \\
+Using the definitions we introduce in part \ref{not} we may write the energy functional as
+\begin{equation}
+E[\Phi] 
+= \sum_{\mu=1}^N \langle \mu | \hat{h}_0 | \mu \rangle +
+\frac{1}{2}\sum_{{\mu}=1}^N\sum_{{\nu}=1}^N \langle \mu\nu|\hat{v}|\mu\nu\rangle_{\mathrm{AS}}.
+\label{FunctionalEPhi}
+\end{equation}
+here $\mu$ and $\nu$ are basis functions we use in Slater determinant $\Phi$ defined in (\ref{determ}). After expansion in a new basis the functional for the energy turns into:
+\begin{equation}
+E[\Psi] 
+= \sum_{i=1}^N \sum_{\alpha\beta}^Z C^*_{i\alpha}C_{i\beta}\langle \alpha | h | \beta \rangle +
+\frac{1}{2}\sum_{ij=1}^N\sum_{{\alpha\beta\gamma\delta}}^Z C^*_{i\alpha}C^*_{j\beta}C_{i\gamma}C_{j\delta}\langle \alpha\beta|\hat{v}|\gamma\delta\rangle_{AS}. \label{FunctionalEPhi3}
+\end{equation}
+Here $\Psi$ is a new Slater determinant and $\alpha,\beta,\gamma,\delta$ correspond to new basis functions and $Z$ is energy cut-off representing the total possible number of states in a chosen basis. Coefficients $C$ are expansion coefficients from (\ref{eq:newbasis}). They form a unitary matrix that performs a transformation to a new basis and also preserve orthogonality of the basis functions. This allows us to use the Lagrange multiplier method to find the local minimum of the energy functional. We use orthogonality requirement as a constraint and set up a Lagrange functional, were all multipliers have to be in units of energy as soon as matrix $C$ contains only some numbers. Those energies are often called Hartree-Fock single particle energies. They are different from the single-particle energies corresponding to the basis functions because we chose the basis to be H.O. functions without any perturbations. However as it discussed below this new single-particle energies follow the same degeneracy pattern as a pure H.O. energies for the system (below the Fermi level). 
+After applying the Lagrange multipliers method we obtain the following expression
+\begin{equation}
+\sum_{\beta}^Z C_{i\beta}\langle \alpha | h | \beta \rangle+
+\sum_{j=1}^N\sum_{\beta\gamma\delta}^Z C^*_{j\beta}C_{j\delta}C_{i\gamma}\langle \alpha\beta|\hat{v}|\gamma\delta\rangle_{AS}=\epsilon_i^{HF}C_{i\alpha}.
+\end{equation}
+here $\epsilon_i^{HF}$ are new single-particle energies. Now we define Hartree-Fock matrix as
+\begin{equation}
+h_{\alpha\beta}^{HF}=\langle \alpha | h | \beta \rangle+
+\sum_{j=1}^N\sum_{\gamma\delta} C^*_{j\gamma}C_{j\delta}\langle \alpha\gamma|\hat{v}|\beta\delta\rangle_{AS},
+\end{equation}
+once we obtain a matrix eigenvalue problem:
+\begin{equation} \label{eig}
+\hat{h}^{HF}\hat{C}=\epsilon^{\mathrm{HF}}\hat{C}.
+\end{equation}
+To simplify computations in our program we use so called density matrix. It is defined as
+\begin{equation} \label{dens}
+\rho_{\gamma\delta}=\sum_{i\le F}\langle\gamma|i\rangle\langle i|\delta\rangle = \sum_{i\le F}C_{i\gamma}C^*_{i\delta}.
+\end{equation}
+In this case Hamiltonian can be rewritten as 
+\begin{equation}
+\hat{h}_{\alpha\beta}^{HF}=\epsilon_{\alpha}\delta_{\alpha,\beta}+
+\sum_{\gamma\delta} \rho_{\gamma\delta}\langle \alpha\gamma|\hat{v}|\beta\delta\rangle_{AS}.
+\end{equation}
+
+
+\chapter{Coupled Cluster method} \label{ch:coupled_cluster}
+Coupled cluster (CC) method for quantum chemistry was first introduced by J. Cizek in the late 1960s \cite{cizekCorrelationProblemsAtomic}. A few years later he publish a new article on the topic in collaboration with and J. Paldus \cite{cizekCorrelationProblemAtomic1966}. CC is an \textit{ab initio} numerical method widely used for approximate solution of electronic Schrödinger equation because it is both reliable and computationally affordable. This section is based on a very detailed and comprehensive overview of the method provided by Crawford and Schaefer in \cite{crawfordIntroductionCoupledCluster2007}. Coupled cluster method is based on the same basic concepts that are underlying many other many-body methods, such as many-body perturbation theory and full configuration interaction. The main critical difference is use of "exponential ansatz" of the wave function which is discussed below.\\
+In this chapter we discuss some critical ideas for the CC, such as cluster expansion of the wave function , exponential ansatz, Campbell-Baker-Hausdorff (BCH) expansion, second quantization and particle-hole formalizm, normal-ordering and correlation operator in application for CC method. Some of this ideas we have already mention in previuos chapter and some are completely new. The CC method can be described in two different ways using algebraic and diagrammatic formalisms. Both are correct and provide same results, but diagrammatic one is a way faster. However, for understanding of the method and it's origin we need to begin with algebraic form of the equations.\\
+\section{Cluster functions and Exponential Anzats} 
+As we have already discussed above Slater Determinant can be used to describe a wave function of the electrons. In Dirac notations it can be written as follows:
+\begin{equation}
+\Phi_0 =  \ket{\phi_i(\bm{x_1})\phi_j(\bm{x_2}) ...\phi_l(\bm{x_n})}
+\end{equation}
+here $\phi_i(\bm{x_1})$ is a one-electron wave function, that describes motion of each electron separately, the $\bm{x_1}$ is a vector of coordinates, both spatial and spin. \\
+Keeping in mind that we are working with fermions, electronic wave function should be antisymmetric. \\
+Such description has some drawbacks, for example it fails to take into account the instantaneous interactions that keep apart electrons with opposite spins. For more details please refer to  \cite{bartlettApplicationsPostHartree2007} and \cite{ModernQuantumChemistry}. \\
+The most important idea of CC method is exponential exopantion of wave function. 
+\begin{equation}\label{eq:exponential ansatz}
+\ket{\Psi}=e^{\hat{T}}\ket{\Phi_0}.
+\end{equation}
+Where $\hat{T}$ is cluster operator:
+
+\begin{align}
+\hat{T}= \hat{T_1}+ \hat{T_2}+ \hat{T_3}...\hat{T_n},\\
+\hat{T_1}= \sum_{i,a} t_i^a c_a^\dagger c_i, \label{eq:T1}\\
+\hat{T_2}= \frac{1}{4} \sum_{i,j,a,b} t_{i,j}^{a,b} c_a^\dagger a_b^\dagger c_j c_i,\\
+\hat{T_n}= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
+\end{align}
+here values $t_i^a $ and $t_{i,j}^{a,b}$ are called cluster amplitudes. \\
+After introducing the exponential ansatz we need a reciepe to determine the cluster amplitudes. In order to do this we start with electronic Schrödinger equation (REFERENCE!!!) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
+\begin{equation}
+	\hat{H}e^{\hat{T}}\ket{\Phi_0}=Ee^{\hat{T}}\ket{\Phi_0}.
+\end{equation}
+Using the \textit{intermediate normalization} $\braket{\Phi_0|\Psi_{CC}}=1$ and  the equation above we can immediately get the energy:
+\begin{equation}\label{eq:energy simple cc}
+\bra{\Phi_0}\hat{H}e^{\hat{T}}\ket{\Phi_0}=E.
+\end{equation}
+Now we want to use the fact that exponentiated operator can be expressed in terms of power series:
+ \begin{equation}
+ e^{\hat{T}}= 1+ \hat{T}+\frac{1}{2!}\hat{T}^2+ ...
+ \end{equation}
+If we now insert this equation into equation ($\ref{eq:energy simple cc}$) and simplify a bit we obtain:
+\begin{equation}
+ \bra{\Phi_0}\hat{H}\ket{\Phi_0} +  \bra{\Phi_0}\hat{H}\hat{T}\ket{\Phi_0} +\bra{\Phi_0}\hat{H}\frac{1}{2!}\hat{T}^2\ket{\Phi_0}  = E.
+\end{equation}
+In the energy equation above the exponential expansion is truncated after $\hat{T}^2$. This fact if often reffed to as \textit{natural truncation} of the coupled cluster energy equation. It's important here that truncation occurs due to the fact that Hamiltonian in our case is at most two-body operator and cluster operator is at least one-body. It this case matrix elements of Hamiltonian are zero for all determinants that differ more then two orbitals. This truncation does not depend on number of particles or any other parameter, it only occurs due to the form of Hamiltonian. \\
+The amplitude expressions can be computed using the same projection technique, only instead of projecting into reference we will be projecting into exited determinant. 
+\begin{equation}\label{eq:ampl simple}
+\bra{\Phi_{ij...}^{ab...}}\hat{H} e^{\hat{T}}\ket{\Phi_0} = E\bra{\Phi_{ij...}^{ab...}} e^{\hat{T}}\ket{\Phi_0}.
+\end{equation}
+!!!!!!!!!!!!!!!!!!!ADD TEXT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+\subsection{Hausdorff Expansion} \label{sec:Hausdorf}
+Expressions for energy and amplitudes in the section above are not useful for practical computations. In order to obtain equations that can be efficiently implemented in computer programs we are going to use so called similarly transformed Hamiltonian. It is a well known procedure in quantum mechanics. 
+
+ADD TEXT ABOUT SIMILARITY TRANSFORMATIONS\\
+For energy equation we get:
+\begin{equation}\label{eq:energy_cc1}
+\bra{\Phi_0} e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = E. 
+\end{equation}
+And for amplitudes equation we get:
+\begin{equation}
+\bra{\Phi_{ij...}^{ab...}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = E.
+\end{equation} 
+These equations are equivalent to ($\ref{eq:ampl simple}$) and ($\ref{eq:energy simple cc}$) derived in the sections above. However there are two significant advantages this transformation provides to the method. Equations for amplitude are now not coupled to the energy equation and we may use so called Hausdorff expansion (or Campbell-Baker-Hausdorff formula) and rewrite the expression for $ e^{\hat{-T}} \hat{H} e^{\hat{T}} $ in terms of linear combinations of nested commutators of $ \hat{H} $ and $\hat{T}$.
+\begin{equation}
+e^{\hat{-T}} \hat{H} e^{\hat{T}} = \hat{H} + [\hat{H},\hat{T}] + \frac{1}{2!}[[\hat{H},\hat{T}],\hat{T}] + \frac{1}{3!}[[[\hat{H},\hat{T}],\hat{T}],\hat{T}] + ...
+\end{equation} 
+Here we need to make a very important remark regarding the transformation we have done. As it has been mentioned in chapter one quantum mechanics mechanics demand that observables are expectation values of hermitian operators (Postulate $\ref{postulat2}$). The operator  $e^{\hat{-T}} \hat{H} e^{\hat{T}} $ is obviously not hermitian. 
+\begin{equation}
+(e^{\hat{-T}} \hat{H} e^{\hat{T}})^\dagger \neq e^{\hat{-T}} \hat{H} e^{\hat{T}}
+\end{equation} 
+However, the eigenvalue spectrum of this operator is identical to the original Hamiltonian operator. For details please refer to \cite{kutzelniggAlmostVariationalCoupled}.
+
+\section{Coupled Cluster Equations}
+\subsection{Energy Equation}
+In previous section $\ref{sec:Hausdorf}$ we have introduced Hausdorff expansion for similarly transformed Hamiltonian. Now we will use it to derive energy equation. In case of CCSD (meaning $\hat{T}=\hat{T}_1+\hat{T}_2$) the similarlu transformed normal ordered Hamiltonian $\bar{H}=e^{\hat{-T}} \hat{H}_\text{N} e^{\hat{T}}$ can be written as:
+
+\begin{eqnarray}\label{eq:hausdorf_ccsd}
+ \hat{H}_\text{N} + [\hat{H}_\text{N},\hat{T}_1+\hat{T}_2] + \frac{1}{2!}[[\hat{H}_\text{N},\hat{T}_1+\hat{T}_2],\hat{T}_1+\hat{T}_2] + ...= \nonumber\\
+ \hat{H}_\text{N} + [\hat{H}_\text{N},\hat{T}_1] + [\hat{H}_\text{N},\hat{T}_2] + \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_1] +\nonumber\\ \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_2],\hat{T}_2] +  \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_2] + \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_2],\hat{T}_1] + ...
+\end{eqnarray}
+We now want to insert ($\ref{eq:hausdorf_ccsd}$) into ($\ref{eq:energy_cc1}$). The $\hat{H}_\text{N}$ term is trivial as $\braket{\Phi_0|\hat{H}_\text{N}|\Phi_0}=0$.\\
+Next term is a bit more interesting:
+\begin{eqnarray}
+ [\hat{H}_\text{N},\hat{T}_1] =  [\hat{F}_\text{N},\hat{T}_1] +  [\hat{V}_\text{N},\hat{T}_1].
+\end{eqnarray}
+Using ($\ref{eq:T1}$) and the formulation of Fock operator from ($\ref{eq:Fock_operator}$) we need to deal with products of operator strings and we may immediately re-write them using Wick's theorem:
+\begin{eqnarray}
+\{c_p^\dagger c_q \}\{c_a^\dagger c_i \} =\{c_p^\dagger c_q c_a^\dagger c_i \} + \wick{ \{\c1 c_p^\dagger c_q c_a^\dagger \c1 c_i \} } + \wick{ \{ c_p^\dagger \c1 c_q \c1 c_a^\dagger  c_i \} } +
+ \wick{ \{ \c2 c_p^\dagger \c1 c_q \c1 c_a^\dagger \c2  c_i \} } = \nonumber\\
+ \{c_p^\dagger c_q c_a^\dagger c_i \} + \delta_{pi} \{ c_q c_a^\dagger\} +\delta_{qa} \{  c_p^\dagger c_i \} +  \delta_{pi}\delta_{qa}\\
+ \{c_a^\dagger c_i \}\{c_p^\dagger c_q \}= \{c_p^\dagger c_q c_a^\dagger c_i \}.
+\end{eqnarray}
+Using this the first term in commutator may be written as:
+
+ 
+ 
+
+
+\chapter{Quantum Dot}
+
+\section{Introduction to Quantum Dots}
+In this part we provide a theoretical description of 2-dimensional quantum dots. However it's worth talking about what are quantum dots and why are they so interesting before deriving equations. \textit{QDs are sometimes called artificial atoms, due to the fact that they as real atoms has electrons confined inside.} The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
+Today we have many types of QDs, with a large field of application. \textit{It is a growing research area.} History of quantum dots traces back to 1980, when they were first discovered in glass crystals.However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. (REF) managed to make a colloidal QD. \\
+This chapter has a following structure: in the first part a mathematical description of the system under consideration is given starting with all the assumptions and approximation have been made.\\
+PRODUCTION. The synthesis of QDs require very high precision and can be accomplished by means of lithographically pattern structures for etching (REF!), selective erea epitaxy (REF), growth on vicinal substructures (REF), colloidal QD solutions (REF) etc.\\  
+USAGE. QDs have many applications. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications. 
+
+\subsection{Mathematical description of Quantum Dots}\label{sec:math_qd}
+Before we can start derive equations we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
+\begin{enumerate}
+	\item Electrons are confined by  Harmonic Oscillator potential $V(r)=\frac{m\omega^2 r^2}{2}$.
+	\item Electrons interact via two-body Coulomb potential  $V(r_{ij})=\frac{1}{r_{ij}}$.
+	\item The Hamiltonian is considered to be two-dimensional.
+	\item The HO potential is spherically symmetric, giving in parabolic quantum dot.
+\end{enumerate}
+
+
+
+\begin{table}[h!]
+	\caption{Quantum numbers for the single-particle basis using a harmonic oscillator in two dimensions.}
+	\label{tab:c}
+	\begin{center}
+		\begin{tabular}{ccccc}
+			\hline
+			\multicolumn{1}{c}{ Shell number } & \multicolumn{1}{c}{ $(n, m)$ } & \multicolumn{1}{c}{ Energy } & \multicolumn{1}{c}{ Degeneracy } & \multicolumn{1}{c}{ $N$ } \\
+			7            & $(0,-6)$ $(1,-4)$ $(2,-2)$ $(3,0)$  $(2,\ 2)$  $(1,\ 4)$  $(0,\ 6)$ & $7\hbar\omega$ & 14         & 56  \\
+			\hline
+			6            & $(0,-5)$ $(1,-3)$ $(2,-1)$ $(2,\ 1)$  $(1,\ 3)$  $(0,\ 5)$         & $6\hbar\omega$ & 12         & 42  \\
+			\hline
+			5            & $(0,-4)$ $(1,-2)$ $(2,0)$ $(1,\ 2)$ $(0,\ 4)$                  & $5\hbar\omega$ & 10          & 30  \\
+			\hline
+			4            & $(0,-3)$ $(1,-1)$ $(1, 1)$ $(0,\ 3)$                          & $4\hbar\omega$ & 8            & 20  \\
+			\hline
+			3            & $(0,-2)$ $(1,0)$  $(0,\ 2)$                                    & $3\hbar\omega$ & 6          & 12  \\
+			\hline
+			2            & $(0,-1)$  $(0,\ 1)$                                             & $2\hbar\omega$ & 4          & 6   \\
+			\hline
+			1            & $(0,0)$                                                       & $\hbar\omega$  & 2          & 2   \\
+			\hline
+			
+			
+			
+			
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\chapter{Monte Carlo Methods in Quantum Physics}
+Quantum Monte Carlo(QMC) methods are widely used nowadays for systems with large number of particles. In main distinction of these simulation techniques is in their stochastic nature, which is not the case for other simulation methods, such as molecular dynamics. For more on the topic please refer to \cite{hammondMonteCarloMethods1994} and \cite{kalosMonteCarloMethods2008}. \\
+These methods are flexible and at the same time accurate for many-body systems. There are two most common types of QMC, firs is variational Monte Carlo method (VMC) and projector Monte Carlo method (PMC). For PMC methods differ by a form of projector, e.i. exponential or linear. The most common choice is an exponential one also sometimes called as imaginary time propagator.\\
+The essence of VMC method is to choose a trial wave function, depending on some parameters and then for this particular trial wave function to find expectation values of operators and optimize the parameters.\\
+At the same time PMC methods also use trial wave functions. In general PMC is a stochastic application of power method to compute expectation values for eigenstate corresponding to largest absolute eigenvalue.The main advantage of the PMC methods compared to the common matrix diagonalization algorithms, for example iterative and deterministic Lanczos algorithm, is that for stochastic method we do not need to store the whole vector, but just some randomly sampled elements of the vector \cite{umrigarObservationsVariationalProjector2015}. \\
+In this thesis we are implementing a coupled cluster Monte Carlo (CCMC) method which has much in common with one of the PMC methods a diffusion Monte Carlo (DMC) method. In order to simplify the explanation we start with some quick recap on what is DMC.\\
+\section{Diffusion Monte Carlo} \label{sec:DMC}
+The DMC method employ the imaginary time propagator:
+\begin{equation}
+\hat{P(\tau)}=e^{\tau(E_T\hat{1}- \hat{H})},
+\end{equation}
+here $\tau= it$ is imaginary time.\\
+This method is called  diffusion one can do a mapping between a classical diffusion equation and an imaginary-time Schrödinger equation. Let's consider the following form of  Schrödinger equation:
+\begin{equation}\label{eq:imaginary_schrod}
+		\frac{\partial }{ \partial \tau}\ket{\Psi(\textbf{x},\tau)} = \frac{1}{2} \nabla^2 \ket{\Psi(\textbf{x},\tau)} + (E_T - V(\textbf{x}) \ket{\Psi(\textbf{x},\tau)},
+\end{equation}
+
+This equation is very similar to a classical equation:
+\begin{equation}\label{eq:diffusion}
+\frac{\partial C }{ \partial t} = D \frac{\partial^2 C }{ \partial t^2} - kC,
+\end{equation}
+here $D$ is diffusion constant, $C$ is concentration of particles and $k$ proportionality coefficient describing source or sink of particles. First part on the right hand side of this equation describe a classical diffusion process and the second part is just a first order rate equation. The meaning of $k$ is the following - particles can be destroyed or created proportional to $k$.\\
+If we compare two equations together ($\ref{eq:imaginary_schrod}$) and ($\ref{eq:diffusion}$) they are not really alike, due to imaginary time and a wave function. However similarities between this two allow us to use some techniques normally used for classical simulations to imaginary-time Schrödinger equation. Monte Carlo methods are capable to simulate both diffusion and rate, so we can just build up a method that combine this two processes into one.  \\
+First we require $\tau \rightarrow \infty $ we obtain time-independent equation. 
+
+
+First lets consider a kinetic energy term in the equation. 
+
+
+\section{Coupled Cluster Monte Carlo}
+In chapter $\ref{ch:coupled_cluster}$ we have introduced a coupled cluster method. However, the main problem with exact coupled cluster computations is with system size. Scaling starts with the sixth order of $N$ (here $N$ represents system size) that makes even small systems very costly in computations. Coupled Cluster Monte Carlo (CCMC) is a new method which has been first described by Alex Thom in \cite{thomStochasticCoupledCluster2010}. The method has been developed similarly to Full Configuration Interaction Quantum Monte Carlo (FCIQMC) of Alavi \textit{et al.} in \cite{boothFermionMonteCarlo2009}, \cite{clelandCommunicationsSurvivalFittest2010} and \cite{boothApproachingChemicalAccuracy2010}.\\
+In order to explain how we get to CCMC algorithm we first present a brief description of FCIQMC. \\
+The CI wave function is represented by the following expansion:
+ \begin{equation}
+\ket{\Psi_{\text{CI}}}= C_0\ket{D_0} + \sum_{ai} C_i^a \ket{D_i^a} + \sum_{i<j,a<b}C_{ij}^{ab}\ket{D_{ij}^{ab}} + \dots,
+ \end{equation}
+here $\ket{D_0}$ is HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are exited determinants.\\
+In order to determine coefficients $C$ we need to solve a set of projection equations. 
+\begin{align}
+\braket{D_0|\hat{H}-E|\Psi_{\text{CI}}}=0\\
+\braket{D_i^a|\hat{H}-E|\Psi_{\text{CI}}}=0\\
+\braket{D_{ij}^{ab}|\hat{H}-E|\Psi_{\text{CI}}}=0\\
+\braket{D_{ijk}^{abc}|\hat{H}-E|\Psi_{\text{CI}}}=0,
+\end{align} 
+and so on.\\
+Instead of performing this process iteratively we now need to re-express equations. As we already mentioned in section $\ref{sec:DMC}$ while describing DMC this can be done using the imaginary time propagator. In this case operator is $\hat{P}=1-\tau(\hat{H}-E)$ and it projects CI wave function to itself. Using this approach we will get a new set of equations, formulated as:
+\begin{equation}
+C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} = C_{\textbf{I}},
+\end{equation}
+here $\textbf{I}, \textbf{J}$ are some generic indexes and $\textbf{J}\rightarrow \textbf{I}$ means that this two indexes are connected (corresponding matrix element of Hamiltonian is different from zero).
+As in DMC we may study two processes independently, namely:
+\begin{align}
+C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef1}
+C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef2}
+\end{align}
+To simulate this stochastically we should create a population of walkers in the SD space. Number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).
+
+
+
+
+\chapter{Stochastic}
+\section{Normalization}
+Our description uses intermediate normalization as an assumption and it requires a normalization constant to be introduced. 
+!!!!DOPISAT' POCHEMU!!
+\begin{equation}
+\ket{\Psi_{\text{CC}}}=N_0 e^{\frac{\hat{T}}{N_0}} \ket{D_0}.
+\end{equation}
+here $N_0$ is normalization constant.\\
+Such normalization allows to produce fractional populations on excitors, needed for convergence.
+\section{Sampling probabilities}
+
+We have to sample a wave function. In this case a wave function is approximated by the exponential expansion in terms of cluster operator. We will conduct sampling by selecting a particular cluster from the expansion. Here we need to introduce some definitions.\\
+
+
+\begin{defn}Cluster size.\\
+ Size of a cluster is defined by number of excips that are used to collapse the wave function. Reference determinant is considered as a cluster of size $0$.
+\end{defn}
+The probability to choose a cluster of certain size is given by
+
+\begin{equation}
+	p_{\text{size}} = \frac{1}{2^{s+1}}.
+\end{equation}
+here $s$ is size of a cluster. \\
+Each cluster has it's amplitude $A$.\\
+After we have selected a cluster of size $s$, we need another probability - a probability to select a combination of excitors $e$.
+
+\begin{equation}
+p_{\text{clust}} (e|s)= s! \prod_{i=1}^s \frac{|N_i|}{N_{ex}}.
+\end{equation}
+
+here $|N_i|$ is a population on excitor $i$, module here is needed because population of each excitor is stored with sing and can in some cases be negative.\\
+Combining these probabilities together we get:
+\begin{equation}
+p_{select}(e)= \frac{s!\prod_{i=1}^{s} |N_i|}{2^{s+1}N_{ex}}.
+\end{equation}
+It is also important that we use sample same number of excips at each time step:
+\begin{equation}
+p_{sel}= N_0+N_{ex}.
+\end{equation}
+
+While sampling we need just these: $\delta \tau$, $A=N_0$, $p_{sel}$, $p_{\text{select}}$ and $p_{\text{clust}}$ and $p_{\text{excit}}$.
+\begin{equation}
+p_{\text{excit}} = \frac{1}{N_{ex}}. 
+\end{equation}
+
+Spawn probability is:
+\begin{equation}
+p_{\text{total}} = \frac{|\delta \tau H_{nm}A|}{p_{\text{select}}p_{sel}p_{\text{clust}}p_{\text{excit}}} 
+\end{equation} 
+Death probability is: 
+\begin{equation}
+p_{\text{death}} = \frac{|\delta \tau (H_{mm} - S)A|}{p_{\text{select}}p_{sel}p_{\text{clust}}} 
+\end{equation}
+
+
+
+
+\section{Sampling}
+
+Number of single-, double- and triple-excitations including Pauli exclusion principle are defined by the following formulas:
+
+\begin{equation}\label{eq:num_singles}
+N_s = \frac{1}{2}F(N-F)
+\end{equation}
+
+\begin{equation}\label{eq:num_doubles}
+N_d = \frac{1}{2^4}F(F-2)(N-F)^2
+\end{equation}
+
+\begin{equation}\label{eq:num_triples}
+N_t = \frac{1}{2^4}F(3F-4)(N-F)^3
+\end{equation}
+Where $F$ is the Fermi level and $N$ is the number of single-particle states in the system. So we choose single or double proportionally to their amount for a given system configuration.
+\begin{equation}
+P_1 = \frac{A \delta \tau \bra{D_m}\hat{H} \ket{D_n}}{p_{\text{select}}p_{sel}p_{\text{clust}}p_{\text{excit}}}
+\end{equation}
+\begin{equation}
+P_2 = \frac{A \delta \tau (\bra{D_n}\hat{H} \ket{D_n}-S)}{p_{\text{select}}p_{sel}p_{\text{clust}}}
+\end{equation}
+where
+\begin{equation}
+\delta \tau \leq \frac{2}{E_{max} - S}
+\end{equation}
+where $E_{max}$ is the largest eigenvalue of the most excited determinant available in a given one-electron basis and $S \approx E_0$.\\
+Parameter A is known as amplitude total amplitude of the cluster. It depends on size of the cluster.
+\begin{equation}
+A = N_0  \prod_{i=1}^s \frac{N_i}{N_0}
+\end{equation},
+where $N_i$ -- is population on the excip number $i$.
+
+We select cluster size according exponential distribution:
+\begin{equation}
+p_{size}(s)=\frac{1}{2^{s+1}}
+\end{equation}
+
+\begin{equation}
+p_{\text{clust}} (e|s)= s! \prod_{i=1}^s \frac{|N_i|}{N_{ex}}.
+\end{equation}
+Represents number of possibilities to choose excitations (excitors) within chosen cluster. Also $N_{ex}$ is total number of excited determinants that can by sampled in the system (doubles, if we choose CCD method). This number can be calculated using equations ($\ref{eq:num_singles}$),($\ref{eq:num_doubles}$) and ($\ref{eq:num_triples}$).
+
+\begin{equation}
+p_{select}(e)= p_{size}(s) p_{\text{clust}} (e|s) =  \frac{s!\prod_{i=1}^{s} |N_i|}{2^{s+1}N_{ex}}.
+\end{equation}
+
+
+
+\begin{equation}
+p_{sel}= 1+N_{s}+N_{d}+N_{t}.
+\end{equation}
+$p_{sel}$ represent a number of samples in each time-step. This parameter must by constant and depend on total number of possible excited determinants combine with reference.
+
+
+\begin{equation}
+p_{\text{excit}} = \frac{1}{N_{ex}}.
+\end{equation}
+This parameter represent probability to select excited state (not reference).
+
+
+
+
+
+Lets compute some particular probabilities:\\
+
+
+
+\begin{enumerate}
+\item For a cluster of size zero:
+
+\begin{align}
+p_{size} = \frac{1}{2},\\
+p_{sel} = 1+N_{s}+N_{d}+N_{t} = 2N_0,\\
+p_{excit}=\frac{1}{N_{ex}} = \frac{1}{N_d}, for doubles\\
+A = N_0,\\
+p_{clust}=1\\
+\delta \tau = \frac{2}{E_m  - S},\\
+p_{death}=0, by constraction\\
+p_{spawn} = \frac{2}{|E_m  - S|} \frac{|AH_{m0}|}{ p_{sel}  p_{size} p_{clust}p_{excit} }=
+\frac{2}{|E_m  - S|} \frac{N_0|H_{m0}|}{ \frac{1}{2}  2N_0 \frac{1}{N_d} }=\\
+p_{spawn} = \frac{2N_d|H_{m0}|}{|E_m  - S|} 
+\end{align}
+ 
+\item For cluster size 1 we have three possibilities:\\
+1) Parent is a singly exited determinant.
+
+\begin{itemize}
+	\item no spawn
+	\item death according to:
+\begin{align}
+p_{size} = \frac{1}{4},\\
+p_{sel} =  2N_0,\\
+p_{excit}= \frac{1}{N_d}\\
+A = N_0\frac{N_i}{N_0}=N_i,\\
+p_{clust}=1!\frac{1}{N_0}\\
+\delta \tau = \frac{2}{E_m  - S},\\
+p_{death} = \frac{2}{|E_m - S|} \frac{|A(H_{mm}-S)|}{ p_{sel}  p_{size} p_{clust} }=\\
+\frac{4}{|E_m  - S|} \frac{|H_{mm}-S|N_dN_i}{N_0 }
+\end{align}
+here $N_i$ population on chosen excip $i$. Normally in the beginning of simulation it is $i= +1,-1$.
+\end{itemize}
+
+2) Parent is a doubly exited determinant.
+
+\begin{itemize}
+\item can spawn only singly excited determinant with probability:
+\begin{align}\label{eq:spawn_ziae_1}
+p_{spawn} = \frac{2}{E_m - S} \frac{|AH_{mn}|}{ p_{sel}  p_{size} p_{clust} p_{excit} }=\\
+\frac{2}{|E_m  - S|} \frac{|H_{mn}|}{2N_0 \frac{1}{4} \frac{1}{N_d} \frac{1}{N_0}} =\\
+p_{spawn} =\frac{4|H_{mn}|N_d}{|E_m  - S|}
+\end{align}
+\item death according to:
+\begin{align}
+p_{death} = \frac{2}{E_m - S} \frac{|A(H_{mm}-S)|}{ p_{sel}  p_{size} p_{clust} }= \frac{2}{|E_m - S|} \frac{A|H_{mm}-S|N_i}{ 2N_0 \frac{1}{4} \frac{1}{N_0}}=\\
+p_{death} = \frac{4|H_{mm}-S|N_i}{|E_m - S|} 
+\end{align}
+\end{itemize}
+3) Parent is a triply exited determinant.
+\begin{itemize}
+\item can spawn only singly or doubly excited determinant with same probability as before ($\ref{eq:spawn_ziae_1}$).
+\item $p_{death} = 1$ as we do not count triples.
+\end{itemize}
+
+\item For cluster size 2 we have two possibilities:\\
+1) Parent is a doubly exited determinant.
+\begin{itemize}
+	\item can spawn only singly excited determinant with probability:
+\begin{align}
+p_{size} = \frac{1}{8},\\
+A = N_0\frac{N_i}{N_0}\frac{N_j}{N_0}=\frac{N_jN_i}{N_0},\\
+p_{clust}=2!\frac{|N_i|}{N_0}\frac{|N_j|}{N_0}=\frac{2|N_jN_i|}{N_0^2}\\
+\delta \tau = \frac{2}{E_m  - S},\\
+p_{spawn} = \frac{2}{|E_m - S|} \frac{|A(H_{mn}-S)|}{ p_{sel}  p_{size} p_{clust} p_{excit}  }=\\
+p_{spawn} = \frac{2}{|E_m - S|} \frac{  | \frac{N_jN_i}{N_0} (H_{mn}-S)|}{2N_0 \frac{1}{8} \frac{2|N_jN_i|}{N_0^2} \frac{1}{N_d} }=\\
+p_{spawn} = \frac{4}{|E_m - S|} \frac{ |\frac{N_jN_i}{N_0} (H_{mn}-S)|}{ \frac{|N_jN_i|}{N_0} \frac{1}{N_d} }=\frac{4|H_{mn}-S|N_d}{|E_m - S|}\label{eq:spawn_ziae_2}
+\end{align}
+	\item death according to:
+\begin{align}
+	p_{death} = \frac{2}{E_m - S} \frac{A|H_{mm}-S|}{ p_{sel}  p_{size} p_{clust} }=
+	 \frac{2}{E_m - S} \frac{\frac{N_jN_i}{N_0}|H_{mm}-S|}{ 2N_0 \frac{1}{8} \frac{2N_jN_i}{N_0^2} }=\\
+	 p_{death} =  \frac{4|H_{mn}-S|}{|E_m - S|}
+\end{align}
+\end{itemize}
+3) Parent is a triply exited determinant.
+\begin{itemize}
+	\item can spawn only singly or doubly excited determinant with same probability as before ($\ref{eq:spawn_ziae_2}$).
+	\item $p_{death} = 1$ as we do not count triples.
+\end{itemize}
+
+\item Cluster size 3:
+
+Parent is a triply exited determinant.
+\begin{itemize}
+	\item can spawn only singly or doubly excited determinant with  probability  
+\begin{align}
+	p_{size} = \frac{1}{16},\\
+	A = N_0\frac{N_i}{N_0}\frac{N_j}{N_0}\frac{N_k}{N_0}=\frac{N_jN_iN_k}{N_0^2},\\
+	p_{clust}=3!\frac{|N_i|}{N_0}\frac{|N_j|}{N_0}\frac{|N_k|}{N_0}=\frac{6|N_jN_iN_k|}{N_0^3}\\
+	\delta \tau = \frac{2}{E_m  - S},\\
+	p_{spawn} = \frac{2}{E_m - S} \frac{|A(H_{mn}-S)|}{ p_{sel}  p_{size} p_{clust} p_{excit}  }=\\
+	p_{spawn} = \frac{2}{E_m - S} \frac{\frac{|N_jN_iN_k|}{N_0^2}|H_{mn}-S|}{ 2N_0 \frac{1}{16} \frac{6|N_jN_iN_k|}{N_0^3} \frac{1}{N_d}}= \\
+p_{spawn} = \frac{8N_d|H_{mn}-S|}{3(E_m - S)}
+\end{align}
+	\item $p_{death} = 1$ as we do not count triples.
+\end{itemize}
+\end{enumerate}
+\subsection{Sing Problem}
+
+\part{Implementation}
+
+\part{Results}
+
+
+
+\printbibliography
+
+
+
+
+\end{document}

@@ -16,7 +16,7 @@
 \usepackage{bm}
 \newcommand{\bmat}[2]{\begin{bmatrix}[#1] #2 \end{bmatrix}} 
 \usepackage[backend=bibtex]{biblatex}
-\addbibresource{master.bib}
+\addbibresource{master.bib} 
 
 
 
@@ -32,7 +32,7 @@
 \begin{dedication}
 	To someone
 	\\\vspace{12pt}
-	This is a dedication to my cat.
+	This work is dedicated to my family. Thank you all for bearing with my while I was writing it.
 \end{dedication}
 \begin{acknowledgements}
 	I acknowledge my acknowledgements.
@@ -143,8 +143,22 @@ Let's define some operators here.\\
 Let $\hat{P_{ij}}$ be the operator that interchanges particles $i$ and $j$. Mathematically this reads as:
 \[\hat{P_{ij}} \ket{ \Psi(x_1 ... x_i ... x_j ...) }=\ket{ \Psi(x_1 ... x_j ... x_i ...) } \]
 \end{defn}
-!!!!!!!!!!!!!!Dopisa pro antisimmetriju!!!!!!!!!
-\subsubsection{Hamiltonian of many-body system}
+\begin{theorem}
+	$\hat{P_{ij}}$ is a Hermitian operator on Hilbert space for identical particles.\\
+	So that $\hat{P_{ij}}^{-1}=\hat{P_{ij}}^\dagger$.
+\end{theorem}
+Considering this properties one may define and solve the eigenvalue equation for permutation operator.
+\begin{eqnarray}
+\hat{P_{ij}}\ket{\Psi}=\epsilon_{ij}\ket{\Psi},\\
+\hat{P_{ij}}\hat{P_{ij}}\ket{\Psi}= \epsilon_{ij}^2 \ket{\Psi},\\
+\epsilon_{ij}^2 =1 \rightarrow \epsilon_{ij} = \pm 1.
+\end{eqnarray}
+\begin{defn}Symmetricity of wave function.\\
+If $\epsilon_{ij}=1$,  $\ket{Psi}$ considered to be symmetric and correspond to bosons\\
+If $\epsilon_{ij}=-1$,  $\ket{Psi}$ considered to be antisymmetric and correspond to fermions.
+\end{defn}
+The permutation operator will be used in Chapter $\ref{ch:HF}$ for constraction of total many fermion wave function.
+\subsubsection{Hamiltonian of many-body system} \label{sec:manybody}
 As it has been already mentioned Hamiltonian is a Hermitian operator. It can be expressed as:
 \begin{equation}
 \hat{H}=\hat{T}+\hat{V},
@@ -369,8 +383,66 @@ We also need to compute the diagonal matrix element:
 \bra{\Phi_n} \hat{H}\ket{\Phi_{n}}=\sum_{p\in n} \braket{p|\hat{h}|p} + \frac{1}{2} \sum_{p,q \in n}^{N-1}\braket{pq|pq}_{AS}.
 \end{equation}
 
+\chapter{Quantum Dot}
+
+\section{Introduction to Quantum Dots}
+In this part we provide a theoretical description of 2-dimensional quantum dots. However it's worth talking about what are quantum dots and why are they so interesting before deriving equations. \textit{QDs are sometimes called artificial atoms, due to the fact that they as real atoms has electrons confined inside.} The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
+Today we have many types of QDs, with a large field of application. \textit{It is a growing research area.} History of quantum dots traces back to 1980, when they were first discovered in glass crystals.However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. (REF) managed to make a colloidal QD. \\
+This chapter has a following structure: in the first part a mathematical description of the system under consideration is given starting with all the assumptions and approximation have been made.\\
+PRODUCTION. The synthesis of QDs require very high precision and can be accomplished by means of lithographically pattern structures for etching (REF!), selective erea epitaxy (REF), growth on vicinal substructures (REF), colloidal QD solutions (REF) etc.\\  
+USAGE. QDs have many applications. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications. 
+
+\subsection{Mathematical description of Quantum Dots}\label{sec:math_qd}
+Before we can start derive equations we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
+\begin{enumerate}
+	\item Electrons are confined by  Harmonic Oscillator potential $V(r)=\frac{m\omega^2 r^2}{2}$.
+	\item Electrons interact via two-body Coulomb potential  $V(r_{ij})=\frac{1}{r_{ij}}$.
+	\item The Hamiltonian is considered to be two-dimensional.
+	\item The HO potential is spherically symmetric, giving in parabolic quantum dot.
+\end{enumerate}
+
+!!!!!\\
+We have already presented the Hamiltinain of such system in Section $\ref{sec:manybody}$ equations $\ref{H1H2}$. The unperturebed Hamiltonian eigenvalue can be presented as :
+\begin{eqnarray}
+E_0= \sum_{i=1}^{N}\epsilon(i),\\
+\epsilon(i)= 1+|m_i|+ 2n_i.
+\end{eqnarray}
+
+!!!\\
+
+
+\begin{table}[h!]
+	\caption{Quantum numbers for the single-particle basis using a harmonic oscillator in two dimensions.}
+	\label{tab:c}
+	\begin{center}
+		\begin{tabular}{ccccc}
+			\hline
+			\multicolumn{1}{c}{ Shell number } & \multicolumn{1}{c}{ $(n, m)$ } & \multicolumn{1}{c}{ Energy } & \multicolumn{1}{c}{ Degeneracy } & \multicolumn{1}{c}{ $N$ } \\
+			7            & $(0,-6)$ $(1,-4)$ $(2,-2)$ $(3,0)$  $(2,\ 2)$  $(1,\ 4)$  $(0,\ 6)$ & $7\hbar\omega$ & 14         & 56  \\
+			\hline
+			6            & $(0,-5)$ $(1,-3)$ $(2,-1)$ $(2,\ 1)$  $(1,\ 3)$  $(0,\ 5)$         & $6\hbar\omega$ & 12         & 42  \\
+			\hline
+			5            & $(0,-4)$ $(1,-2)$ $(2,0)$ $(1,\ 2)$ $(0,\ 4)$                  & $5\hbar\omega$ & 10          & 30  \\
+			\hline
+			4            & $(0,-3)$ $(1,-1)$ $(1, 1)$ $(0,\ 3)$                          & $4\hbar\omega$ & 8            & 20  \\
+			\hline
+			3            & $(0,-2)$ $(1,0)$  $(0,\ 2)$                                    & $3\hbar\omega$ & 6          & 12  \\
+			\hline
+			2            & $(0,-1)$  $(0,\ 1)$                                             & $2\hbar\omega$ & 4          & 6   \\
+			\hline
+			1            & $(0,0)$                                                       & $\hbar\omega$  & 2          & 2   \\
+			\hline
+			
+			
+			
+			
+		\end{tabular}
+	\end{center}
+\end{table}
+
+
 \chapter{The Hatree-Fock theory}\label{ch:HF}
-Here we present a brief overview of the Hatree-Fock (HF) theory. It is  well-known and defined way to study systems of large number of particles. It is  easy to implement, but has some disadvantages, for example it fail to provide high accuracy. However, more precise methods are often build on the HF results. This makes HF theory a good starting point for anyone who want to tackle a many-body problem. Methods that are using HF as an input are usually referred to as post-Hartree-Fock. Among them are Configuration Interaction (CI) and Coupled Cluster (CC). \\
+Here we present a brief overview of the Hatree-Fock (HF) theory. It is  well-known and defined way to study systems of large number of particles. Hartree-Fock method is the simplest and nevertheless rather efficient methods. Initially introduced by Hartree and then improved by Fock it is one of the most popular \textit{ab initio} methods in quantum chemistry.  It is  easy to implement, but has some disadvantages, for example it fail to provide high accuracy. However, more precise methods are often build on the HF results. This makes HF theory a good starting point for anyone who want to tackle a many-body problem. Methods that are using HF as an input are usually referred to as post-Hartree-Fock. Among them are Configuration Interaction (CI) and Coupled Cluster (CC). \\
 The main idea of HF theory is to approximate unknown wave function with a single Slater Determinant constructed using a single-particle wave functions representing the occupied states in a system under consideration. 
 \section{Introduction to HF}
 Here we start with time independent Schrödinger equation for the ground state:
@@ -383,7 +455,7 @@ In order to derive the HF equations we approximate the ground state wave functio
 \end{equation}
 Here $\phi_0, \dots \phi_N$ are single-particle wave functions.
 
-Hartree-Fock method is the simplest and nevertheless rather efficient methods. Initially introduced by Hartree and then improved by Fock it is one of the most popular \textit{ab initio} methods in quantum chemistry. This method uses an approximation to the exact many-body wave function by a Slater determinant of $N$ orthonormal single-particle wave functions. In this case the approximate wave function of the system is given by:
+This method uses an approximation to the exact many-body wave function by a Slater determinant of $N$ orthonormal single-particle wave functions. In this case the approximate wave function of the system is given by:
 \begin{equation}
 \Phi(x_1, x_2,\dots ,x_N,\alpha,\beta,\dots, \sigma)=\frac{1}{\sqrt{N!}}
 \left| \begin{array}{ccccc} \psi_{\alpha}(x_1)& \psi_{\alpha}(x_2)& \dots & \dots & \psi_{\alpha}(x_N)\\
@@ -532,15 +604,16 @@ However, the eigenvalue spectrum of this operator is identical to the original H
 
 \section{Coupled Cluster Equations}
 \subsection{Energy Equation}
-In previous section $\ref{sec:Hausdorf}$ we have introduced Hausdorff expansion for similarly transformed Hamiltonian. Now we will use it to derive energy equation. In case of CCSD (meaning $\hat{T}=\hat{T}_1+\hat{T}_2$) the similarlu transformed normal ordered Hamiltonian $\bar{H}=e^{\hat{-T}} \hat{H}_\text{N} e^{\hat{T}}$ can be written as:
+In previous section $\ref{sec:Hausdorf}$ we have introduced Hausdorff expansion for similarly transformed Hamiltonian. Now we will use it to derive energy equation. In case of CCSD (meaning $\hat{T}=\hat{T}_1+\hat{T}_2$) the similarly transformed normal ordered Hamiltonian $\bar{H}=e^{\hat{-T}} \hat{H}_\text{N} e^{\hat{T}}$ can be written as:
 
 \begin{eqnarray}\label{eq:hausdorf_ccsd}
  \hat{H}_\text{N} + [\hat{H}_\text{N},\hat{T}_1+\hat{T}_2] + \frac{1}{2!}[[\hat{H}_\text{N},\hat{T}_1+\hat{T}_2],\hat{T}_1+\hat{T}_2] + ...= \nonumber\\
  \hat{H}_\text{N} + [\hat{H}_\text{N},\hat{T}_1] + [\hat{H}_\text{N},\hat{T}_2] + \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_1] +\nonumber\\ \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_2],\hat{T}_2] +  \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_2] + \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_2],\hat{T}_1] + ...
 \end{eqnarray}
+
 We now want to insert ($\ref{eq:hausdorf_ccsd}$) into ($\ref{eq:energy_cc1}$). The $\hat{H}_\text{N}$ term is trivial as $\braket{\Phi_0|\hat{H}_\text{N}|\Phi_0}=0$.\\
 Next term is a bit more interesting:
-\begin{eqnarray}
+\begin{eqnarray}\label{eq:firstterm}
  [\hat{H}_\text{N},\hat{T}_1] =  [\hat{F}_\text{N},\hat{T}_1] +  [\hat{V}_\text{N},\hat{T}_1].
 \end{eqnarray}
 Using ($\ref{eq:T1}$) and the formulation of Fock operator from ($\ref{eq:Fock_operator}$) we need to deal with products of operator strings and we may immediately re-write them using Wick's theorem:
@@ -550,60 +623,60 @@ Using ($\ref{eq:T1}$) and the formulation of Fock operator from ($\ref{eq:Fock_o
  \{c_p^\dagger c_q c_a^\dagger c_i \} + \delta_{pi} \{ c_q c_a^\dagger\} +\delta_{qa} \{  c_p^\dagger c_i \} +  \delta_{pi}\delta_{qa}\\
  \{c_a^\dagger c_i \}\{c_p^\dagger c_q \}= \{c_p^\dagger c_q c_a^\dagger c_i \}.
 \end{eqnarray}
-Using this the first term in commutator may be written as:
-
- 
- 
-
-
-\chapter{Quantum Dot}
-
-\section{Introduction to Quantum Dots}
-In this part we provide a theoretical description of 2-dimensional quantum dots. However it's worth talking about what are quantum dots and why are they so interesting before deriving equations. \textit{QDs are sometimes called artificial atoms, due to the fact that they as real atoms has electrons confined inside.} The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
-Today we have many types of QDs, with a large field of application. \textit{It is a growing research area.} History of quantum dots traces back to 1980, when they were first discovered in glass crystals.However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. (REF) managed to make a colloidal QD. \\
-This chapter has a following structure: in the first part a mathematical description of the system under consideration is given starting with all the assumptions and approximation have been made.\\
-PRODUCTION. The synthesis of QDs require very high precision and can be accomplished by means of lithographically pattern structures for etching (REF!), selective erea epitaxy (REF), growth on vicinal substructures (REF), colloidal QD solutions (REF) etc.\\  
-USAGE. QDs have many applications. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications. 
-
-\subsection{Mathematical description of Quantum Dots}\label{sec:math_qd}
-Before we can start derive equations we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
-\begin{enumerate}
-	\item Electrons are confined by  Harmonic Oscillator potential $V(r)=\frac{m\omega^2 r^2}{2}$.
-	\item Electrons interact via two-body Coulomb potential  $V(r_{ij})=\frac{1}{r_{ij}}$.
-	\item The Hamiltonian is considered to be two-dimensional.
-	\item The HO potential is spherically symmetric, giving in parabolic quantum dot.
-\end{enumerate}
-
-
-
-\begin{table}[h!]
-	\caption{Quantum numbers for the single-particle basis using a harmonic oscillator in two dimensions.}
-	\label{tab:c}
-	\begin{center}
-		\begin{tabular}{ccccc}
-			\hline
-			\multicolumn{1}{c}{ Shell number } & \multicolumn{1}{c}{ $(n, m)$ } & \multicolumn{1}{c}{ Energy } & \multicolumn{1}{c}{ Degeneracy } & \multicolumn{1}{c}{ $N$ } \\
-			7            & $(0,-6)$ $(1,-4)$ $(2,-2)$ $(3,0)$  $(2,\ 2)$  $(1,\ 4)$  $(0,\ 6)$ & $7\hbar\omega$ & 14         & 56  \\
-			\hline
-			6            & $(0,-5)$ $(1,-3)$ $(2,-1)$ $(2,\ 1)$  $(1,\ 3)$  $(0,\ 5)$         & $6\hbar\omega$ & 12         & 42  \\
-			\hline
-			5            & $(0,-4)$ $(1,-2)$ $(2,0)$ $(1,\ 2)$ $(0,\ 4)$                  & $5\hbar\omega$ & 10          & 30  \\
-			\hline
-			4            & $(0,-3)$ $(1,-1)$ $(1, 1)$ $(0,\ 3)$                          & $4\hbar\omega$ & 8            & 20  \\
-			\hline
-			3            & $(0,-2)$ $(1,0)$  $(0,\ 2)$                                    & $3\hbar\omega$ & 6          & 12  \\
-			\hline
-			2            & $(0,-1)$  $(0,\ 1)$                                             & $2\hbar\omega$ & 4          & 6   \\
-			\hline
-			1            & $(0,0)$                                                       & $\hbar\omega$  & 2          & 2   \\
-			\hline
-			
-			
-			
-			
-		\end{tabular}
-	\end{center}
-\end{table}
+Using this the next term ($\ref{eq:firstterm}$) in expansion ($\ref{eq:hausdorf_ccsd}$) may be written as and the fact that expectation value of normal ordered operator string is zero by contraction (only fully contracted terms make contribution to the energy) we get:
+\begin{eqnarray}
+\bra{\Phi_0}[\hat{F}_\text{N},\hat{T}_1] \ket{\Phi_0}=\sum_{ia} f_{ia}t_i^a,\\
+\bra{\Phi_0}[\hat{V}_\text{N},\hat{T}_1] \ket{\Phi_0}=0.
+\end{eqnarray}
+Next term is:
+\begin{eqnarray}\label{eq:secondterm}
+[\hat{H}_\text{N},\hat{T}_2]=[\hat{F}_\text{N},\hat{T}_2] +  [\hat{V}_\text{N},\hat{T}_2].
+\end{eqnarray} 
+Following the same procedure as before we get:
+\begin{eqnarray}
+\bra{\Phi_0}[\hat{F}_\text{N},\hat{T}_2] \ket{\Phi_0}=0\\
+\bra{\Phi_0}[\hat{V}_\text{N},\hat{T}_2] \ket{\Phi_0}=\frac{1}{4}\sum_{ijab}\braket{ij|\hat{v}|ab}t_{ij}^{ab}
+\end{eqnarray}
+And for the next term we have:
+\begin{eqnarray}
+\frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_1]= \frac{1}{2}\hat{H}_\text{N}\hat{T}_1^2 -\hat{T}_1\hat{H}_\text{N}\hat{T}_1 + \frac{1}{2}\hat{T}_1^2\hat{H}_\text{N}=\nonumber \\
+ \frac{1}{2}\hat{F}_\text{N}\hat{T}_1^2 +  \frac{1}{2}\hat{V}_\text{N}\hat{T}_1^2 
+ -\hat{T}_1\hat{F}_\text{N}\hat{T}_1  -\hat{T}_1\hat{V}_\text{N}\hat{T}_1 + 
+ \frac{1}{2}\hat{T}_1^2\hat{F}_\text{N} +  \frac{1}{2}\hat{T}_1^2\hat{V}_\text{N}
+\end{eqnarray}
+Let us consider this one more carefully, because it can help us to state a so-called connected contraction theorem.
+\begin{eqnarray}
+\hat{F}_\text{N}\hat{T}_1^2 = \sum_{ijab} \sum_{pq}f_{pq}t_i^at_j^b(\{c_p^\dagger c_q c_a^\dagger c_i c_b^\dagger c_j \}+ \wick{\{\c1 c_p^\dagger c_q c_a^\dagger \c1 c_i c_b^\dagger c_j \}}  +\wick{\{\c1 c_p^\dagger c_q c_a^\dagger  c_i c_b^\dagger \c1c_j \}} + \nonumber \\
+\wick{\{ c_p^\dagger \c1 c_q \c1c_a^\dagger  c_i c_b^\dagger c_j \}} + \wick{\{ c_p^\dagger \c1 c_q c_a^\dagger  c_i \c1 c_b^\dagger c_j \}} + \wick{\{ \c2 c_p^\dagger  \c1 c_q \c1 c_a^\dagger \c2 c_i  c_b^\dagger  c_j \}} + \nonumber \\ \wick{\{ \c2 c_p^\dagger  \c1 c_q \c1 c_a^\dagger  c_i  c_b^\dagger \c2 c_j \}}+ \wick{\{ \c2 c_p^\dagger  \c1 c_q  c_a^\dagger \c2 c_i \c1 c_b^\dagger  c_j \}}+  \wick{\{ \c2 c_p^\dagger  \c1 c_q  c_a^\dagger  c_i \c1 c_b^\dagger \c2 c_j \}})
+\end{eqnarray}
+As we can see there is no fully contracted terms in the expression above. Two other terms can be written as:
+\begin{align*}
+\hat{T}_1\hat{F}_\text{N}\hat{T}_1= \sum_{ijab} t_i^at_j^b \bigg( \sum_{pq}f_{pq} \{c_a^\dagger c_ic_p^\dagger c_q  c_b^\dagger c_j \} +  \sum_{q}f_{jq}\{c_a^\dagger c_i  c_q  c_b^\dagger \} +  \sum_{p}f_{pb}\{c_a^\dagger c_i   c_p^\dagger c_j \} + f_{jb}\{c_a^\dagger c_i \}\bigg)\nonumber \\
+\hat{T}_1^2\hat{F}_\text{N} =\sum_{ijab}  \sum_{pq}f_{pq}  t_i^at_j^b \{c_a^\dagger c_ic_b^\dagger c_j  c_p^\dagger c_q   \} \nonumber \\
+\end{align*}
+Non of the above contribute to the energy expectation value. However the term $[\hat{F}_\text{N},\hat{T}_1] $ does. Using this to facts we may now formulate the connected contractuon theorem:
+\begin{theorem}
+The contribution to the energy expectation value from the terms in Hausdorff expansion of similarly transformed normal ordered Hamiltonian is non zero only if the the $\hat{H}_\text{N}$ has at least one contraction with every cluster operator on the right side.\\
+Such connected contraction is denoted with subscript $(...)_c$.
+\end{theorem}
+Using this theorem one can say that as soon as Hamiltonian has at most four operators the Hausdorff expansion can have at most four cluster operators. This eventually makes the derivation of energy and amplitudes equations much easier.\\
+Let's continue on derivation of energy equation using the connected contractions. Contribution from $(\hat{F}_\text{N}\hat{T_2})_c$ is zero by constraction, due to absence of fully contracted terms ($\hat{F}_\text{N}$ contains two operators and $\hat{T_2}$ has four). The contribution from $(\hat{V}_\text{N}\hat{T_2})_c$ is non zero, because we have two normal ordered operator strings of the same size here.:
+\begin{equation}
+\bra{\Phi_0}(\hat{V}_\text{N}\hat{T}_2)_c \ket{\Phi_0}=\frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab}.
+\end{equation}
+Next non-zero contribution comes from term $(\hat{V}_\text{N}\hat{T_1}^2)_c$:
+\begin{equation}
+\bra{\Phi_0}(\hat{V}_\text{N}\hat{T}_1^2)_c \ket{\Phi_0}=\sum_{ijab} \braket{ij||ab}t_{i}^{a}t_{j}^{b}.
+\end{equation}
+Gathering all the term carefully one obtain the following expression for the correlation energy:
+\begin{equation}
+E_{corr}= E_{CCSD} - E_{HF}= \sum_{ia} f_{ia}t_i^a + \frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab} +\frac{1}{2}\sum_{ijab} \braket{ij||ab}t_{i}^{a}t_{j}^{b}.
+\end{equation}
+Or in case of coupled clusters doubles simply:
+\begin{equation}
+E_{corr}= E_{CCD} - E_{HF}= \frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab}.
+\end{equation}
+\subsection{Amplitudes equations}
 
 \chapter{Monte Carlo Methods in Quantum Physics}
 Quantum Monte Carlo(QMC) methods are widely used nowadays for systems with large number of particles. In main distinction of these simulation techniques is in their stochastic nature, which is not the case for other simulation methods, such as molecular dynamics. For more on the topic please refer to \cite{hammondMonteCarloMethods1994} and \cite{kalosMonteCarloMethods2008}. \\
@@ -897,9 +970,7 @@ p_{spawn} = \frac{8N_d|H_{mn}-S|}{3(E_m - S)}
 
 
 
-\printbibliography
-
-
+\printbibliography 
 
 
 \end{document}

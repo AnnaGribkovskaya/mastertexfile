@@ -589,8 +589,8 @@ For energy equation we get:
 \bra{\Phi_0} e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = E. 
 \end{equation}
 And for amplitudes equation we get:
-\begin{equation}
-\bra{\Phi_{ij...}^{ab...}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = E.
+\begin{equation}\label{eq:amplitudesgeneral}
+\bra{\Phi_{ij...}^{ab...}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0.
 \end{equation} 
 These equations are equivalent to ($\ref{eq:ampl simple}$) and ($\ref{eq:energy simple cc}$) derived in the sections above. However there are two significant advantages this transformation provides to the method. Equations for amplitude are now not coupled to the energy equation and we may use so called Hausdorff expansion (or Campbell-Baker-Hausdorff formula) and rewrite the expression for $ e^{\hat{-T}} \hat{H} e^{\hat{T}} $ in terms of linear combinations of nested commutators of $ \hat{H} $ and $\hat{T}$.
 \begin{equation}
@@ -654,13 +654,13 @@ As we can see there is no fully contracted terms in the expression above. Two ot
 \hat{T}_1\hat{F}_\text{N}\hat{T}_1= \sum_{ijab} t_i^at_j^b \bigg( \sum_{pq}f_{pq} \{c_a^\dagger c_ic_p^\dagger c_q  c_b^\dagger c_j \} +  \sum_{q}f_{jq}\{c_a^\dagger c_i  c_q  c_b^\dagger \} +  \sum_{p}f_{pb}\{c_a^\dagger c_i   c_p^\dagger c_j \} + f_{jb}\{c_a^\dagger c_i \}\bigg)\nonumber \\
 \hat{T}_1^2\hat{F}_\text{N} =\sum_{ijab}  \sum_{pq}f_{pq}  t_i^at_j^b \{c_a^\dagger c_ic_b^\dagger c_j  c_p^\dagger c_q   \} \nonumber \\
 \end{align*}
-Non of the above contribute to the energy expectation value. However the term $[\hat{F}_\text{N},\hat{T}_1] $ does. Using this to facts we may now formulate the connected contractuon theorem:
-\begin{theorem}
+Non of the above contribute to the energy expectation value. However the term $[\hat{F}_\text{N},\hat{T}_1] $ does. Using this to facts we may now formulate the connected contraction theorem:
+\begin{theorem} Connected Cluster Theorem \\ \label{theo:connected}
 The contribution to the energy expectation value from the terms in Hausdorff expansion of similarly transformed normal ordered Hamiltonian is non zero only if the the $\hat{H}_\text{N}$ has at least one contraction with every cluster operator on the right side.\\
 Such connected contraction is denoted with subscript $(...)_c$.
 \end{theorem}
 Using this theorem one can say that as soon as Hamiltonian has at most four operators the Hausdorff expansion can have at most four cluster operators. This eventually makes the derivation of energy and amplitudes equations much easier.\\
-Let's continue on derivation of energy equation using the connected contractions. Contribution from $(\hat{F}_\text{N}\hat{T_2})_c$ is zero by constraction, due to absence of fully contracted terms ($\hat{F}_\text{N}$ contains two operators and $\hat{T_2}$ has four). The contribution from $(\hat{V}_\text{N}\hat{T_2})_c$ is non zero, because we have two normal ordered operator strings of the same size here.:
+Let's continue on derivation of energy equation using the connected contractions. Contribution from $(\hat{F}_\text{N}\hat{T_2})_c$ is zero by construction, due to absence of fully contracted terms ($\hat{F}_\text{N}$ contains two operators and $\hat{T_2}$ has four). The contribution from $(\hat{V}_\text{N}\hat{T_2})_c$ is non zero, because we have two normal ordered operator strings of the same size here.:
 \begin{equation}
 \bra{\Phi_0}(\hat{V}_\text{N}\hat{T}_2)_c \ket{\Phi_0}=\frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab}.
 \end{equation}
@@ -677,6 +677,63 @@ Or in case of coupled clusters doubles simply:
 E_{corr}= E_{CCD} - E_{HF}= \frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab}.
 \end{equation}
 \subsection{Amplitudes equations}
+Above we presented a general form for amplitudes equation in ($\ref{eq:amplitudesgeneral}$). Depending on the truncation of cluster operator we may have different types of coupled cluster methods: coupled cluster singles and doubles (CCSD), coupled cluster doubles (CCD) or coupled cluster singes, doubles and triples (CCSDT). The general form for amplitude equations ($\ref{eq:amplitudesgeneral}$) then can be used to find singly-excited amplitudes $t_{i}^{a}$ and doubly-excited amplitudes  $t_{ij}^{ab}$. 
+
+
+\begin{eqnarray}
+\bra{\Phi_{ij}^{ab}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0 \xRightarrow{~\textsf{CCD}~} \text{ for  $t_{ij}^{ab}$}
+\end{eqnarray}
+
+\begin{eqnarray}
+\begin{aligned}
+\bra{\Phi_{i}^{a}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \\
+\bra{\Phi_{ij}^{ab}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \end{aligned}
+\xRightarrow{~\textsf{CCSD}~}
+\begin{aligned}
+\text{ for  $t_{i}^{a}$} \\
+\text{ for  $t_{ij}^{ab}$} \end{aligned}
+\end{eqnarray}
+
+\begin{eqnarray}
+\begin{aligned}
+\bra{\Phi_{i}^{a}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \\
+\bra{\Phi_{ij}^{ab}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0 \\
+\bra{\Phi_{ijk}^{abc}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \\ \end{aligned}
+\xRightarrow{~\textsf{CCSDT}~}
+\begin{aligned}
+\text{ for  $t_{i}^{a}$} \\
+\text{ for  $t_{ij}^{ab}$} \\
+\text{ for  $t_{ijk}^{abc}$} \end{aligned}
+\end{eqnarray}
+And so on.\\
+Equations for amplitudes are derived using same approach as for the energy, we just write all operators as normal ordered strings and look for fully contracted and connected clusters. Additionally we need to write an excited determinant as an operator string also:
+\begin{eqnarray}
+\bra{\Phi_{ij}^{ab}} = \bra{\Phi_0} \{  c_i^\dagger c_j^\dagger  c_b  c_a \}.
+\end{eqnarray}
+The derivation is rather simple, though quite time-consuming due to number of terms in BSH expansion to take care of. We are not going to tackle all of them and will just present some as an example.\\
+We are going to look into CCD approximation here, thus only consider terms that contribute to the amplitudes for $\hat{T}_2$.\\
+The one-body term does not contribute because it is not possible to construct fully contracted terms, so the only term that is able to produce such contractions is:
+\begin{eqnarray}
+\braket{\Phi_{ij}^{ab}|(\hat{F}_\text{N}+\hat{V}_\text{N})|\Phi_0} \rightarrow \braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N})|\Phi_0},\nonumber \\
+\braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N})|\Phi_0} = \frac{1}{4}\sum_{pqrs} \braket{pq||rs}\braket{\Phi_0| \{  c_i^\dagger c_j^\dagger  c_b  c_a \} \{  c_p^\dagger c_q^\dagger  c_s  c_r \} |\Phi_0}=\nonumber \\
+ \frac{1}{4}\sum_{pqrs} \braket{pq||rs} \bigg( \wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c1  c_p^\dagger \c2 c_q^\dagger \c3 c_s \c4 c_r \}  } 
+ + \wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c2  c_p^\dagger \c1 c_q^\dagger \c3 c_s \c4 c_r \}  } + \nonumber \\
+  \wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c1  c_p^\dagger \c2 c_q^\dagger \c4 c_s \c3 c_r \}  }+\wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c2  c_p^\dagger \c1 c_q^\dagger \c4 c_s \c3 c_r \}  }  \bigg) =\braket{ab||ij}
+\end{eqnarray}
+Contribution from other terms are obtained in the similar manner, one just need to kepp in mind that for terms with cluster operator, like $\braket{\Phi_{ij}^{ab}|(\hat{F}_\text{N}\hat{T}_2)_c|\Phi_0}$ and $\braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N}\hat{T}_2)_c|\Phi_0}$ the Connected Cluster Theorem $\ref{theo:connected}$ must be satisfied.\\
+The final expression for the amplitudes in case of CCD approximation is the following:
+\begin{eqnarray}
+0 =\braket{ab||ij} + \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} ) + \frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab} \nonumber &+\\
+ \frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd} + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac} + 
+ \frac{1}{2} P(ij)(ab) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac} t_{lj}^{db} \nonumber & + \\
+ \frac{1}{4} \sum_{klcd}\braket{kl||cd}t_{ij}^{cd} t_{kl}^{ab}  
+- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{ij}^{ac} t_{kl}^{bd}- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{ab} t_{jl}^{cd} &  
+\end{eqnarray}
+
+
+
+
+
 
 \chapter{Monte Carlo Methods in Quantum Physics}
 Quantum Monte Carlo(QMC) methods are widely used nowadays for systems with large number of particles. In main distinction of these simulation techniques is in their stochastic nature, which is not the case for other simulation methods, such as molecular dynamics. For more on the topic please refer to \cite{hammondMonteCarloMethods1994} and \cite{kalosMonteCarloMethods2008}. \\

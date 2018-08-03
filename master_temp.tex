@@ -48,10 +48,10 @@ The aim of this thesis is to study QD numerically.
 	
 \part{Theory}
 \chapter{Quantum mechanics}
-In the end of 19th century physics has some unsolved problems that can't be tackled using the already developed theories and methods. This had led to a  significantly different theory that has a number of essential distinctions  from that developed before. This new theory was called quantum mechanics. In the classical (or Newtonian mechanics) there was a theoretical possibility to obtain a complete knowledge of the system under consideration. In quantum mechanics this is not possible. Both for some particular time moment and for all future or previous times. \\
+In the end of 19th century physics has some unsolved problems that can't be tackled using already developed theories and methods. This had led to a  significantly different theory that has a number of essential distinctions  from that developed before. This new theory was named quantum mechanics. In the classical (or Newtonian mechanics) there was a theoretical possibility to obtain a complete knowledge of the system under consideration. In quantum mechanics this is not possible. Both for some particular time moment and for all future or previous times. \\
 Let's introduce some concepts here. The \textbf{uncertainty principle} and the \textbf{probability interpretation of the wave function}. The  uncertainty principle (or Heisenberg's uncertainty principle) puts a limit on how precise our measurement of some particular pairs of physical quantities (e.i. position and momentum) can be. The probability interpretation of wave function is a bit harder to explain, because one need a proper mathematical description of quantum mechanics to understand this. For now we just say that if we consider one single particle in space the probability of finding it in some certain position is related to the wave function. We will derive the expression for the total wave function of the system later in this thesis. Another 
-substantial difference in associated with so-called \textbf{principle of complementarity}. It was formulated by  Niels Bohr, one of the founders of quantum mechanics. It stands that in order to describe a system we need pair of certain complementary properties which cannot be observed simultaneously. A good example of such a pair are wave and particle properties of light or electrons (classical mechanics considered light as wave and electron as a particle, but this approach fails to explain photoelectric effect and diffraction of electrons on a slit). Moreover, position and momentum of the particle also can be considered as a pair of complementary properties and this makes Bohr's principle of complementarity closely connected to Heisenberg's uncertainty principle. Also one should mention that quantum mechanics allows us to create or destroy a particle. For example, we have a \textbf{creation} operator which increases number of particles in some system by one and also \textbf{annihilation} operator which decreases this number by one. The last concept to be mentioned here is the word \textbf{quantum} comes from in the first place. In physics, quantum means the smallest possible distance between two values or minimal amount of quantity involved in an interaction. This word is associated with the revolutionary supposition made by Max Planck back in 1900 that electromagnetic energy could be emitted in a form of some discrete quantities, known as “quantum”. He also introduced a  proportionality coefficient between for a minimal energy difference, so-called Planck's constant $h = 6.626 \times 10^{-34} \text{ } (kg \cdot m^2\cdot s^{-1})$. As one can see it has a very small value.  \\
-How does it possible that we have two theories so much different from each other and still use both of them? This is perfectly fine even it may seems to be a bit contradictory. In science there is a rule that require for any new theory to agree with the previous ones under some conditions. This rule called a \textbf{correspondence principle}. In case of quantum mechanics such conditions are named \textbf{classical limit} or \textbf{correspondence limit}, specifically quantum mechanical description of the system should correspond to those obtained by classical one for large quantum numbers. Mathematically it can be achieved requiring Planck's constant $h \rightarrow 0$. This principle allows determine whether a specific quantum theory is valid or not.\\
+substantial difference in associated with so-called \textbf{principle of complementarity}. It was formulated by  Niels Bohr, one of the founders of quantum mechanics. It stands that in order to describe a system we need pair of certain complementary properties which cannot be observed simultaneously. A good example of such a pair are wave and particle properties of light or electrons (classical mechanics considered light as wave and electron as a particle, but this approach fails to explain photoelectric effect and diffraction of electrons on a slit). Moreover, position and momentum of the particle also can be considered as a pair of complementary properties and this makes Bohr's principle of complementarity closely connected to Heisenberg's uncertainty principle. Also one should mention that quantum mechanics allows us change number of particles in some particular state. For example, we have a \textbf{creation} operator which increases number of particles in some given state of system by one and also \textbf{annihilation} operator which decreases this number by one. The last concept to be mentioned here is the word \textbf{quantum} itself and where it comes from in the first place. In physics, "quantum" determines the smallest possible distance between two values or minimal amount of quantity involved in an interaction. This word is associated with the revolutionary supposition made by Max Planck back in 1900 that electromagnetic energy could be emitted in a form of some discrete quantities, known as “quantum”. He also introduced a  proportionality coefficient between for a minimal energy difference, so-called Planck's constant $h = 6.626 \times 10^{-34} \text{ } (kg \cdot m^2\cdot s^{-1})$. As one can see it has a very small value.  \\
+How does it possible that we have two theories so much different from each other and still use both of them? This is perfectly fine even it may seems to be a bit contradictory. In science there is a rule that require for any new theory to agree with the previous ones under some conditions. This rule called a \textbf{correspondence principle}. In case of quantum mechanics such conditions are named \textbf{classical limit} or \textbf{correspondence limit}, specifically quantum mechanical description of the system should correspond to those obtained by classical one for large quantum numbers. Mathematically it can be achieved requiring Planck's constant $h \rightarrow 0$. This principle allows us to determine whether a specific quantum theory is valid or not.\\
 Today we usually say that classical mechanics describes the macroscopic objects and quantum mechanics describes microscopic ones. This arise from the fact that some quantum effects can be observed only for tiny particles. However this is not enough to describe the difference, because even the observation itself is now different from that in classical physics. 
 For more details on the matter, please refer to \cite{phillipsIntroductionQuantumMechanics2003}. \\
 
@@ -92,27 +92,27 @@ here $\hat{Q}^\dagger$ is adjoint of $\hat{Q}$.
 	\end{equation}
 here eigenvalues are the only measurable values associated with operator and eigenvectors determine a complete orthonormal set of vectors. In addition every operator $\hat{Q}$ associated with a measurable physical quantity must be linear Hermitian operator:
 	\begin{align}
-	\hat{Q}^\dagger=\hat{Q},\\
-	(a\hat{Q})^\dagger=a^*\hat{Q}^\dagger,\\
-	(\hat{Q}+\hat{P})^\dagger =\hat{Q}^\dagger+\hat{P}^\dagger,\\
-	(\hat{Q}\hat{P})^\dagger =\hat{P}^\dagger \hat{Q}^\dagger.
+	&\hat{Q}^\dagger=\hat{Q},\\
+	&(a\hat{Q})^\dagger=a^*\hat{Q}^\dagger,\\
+	&(\hat{Q}\hat{P})^\dagger  =\hat{P}^\dagger \hat{Q}^\dagger,\\
+	&(\hat{Q}+\hat{P})^\dagger =\hat{Q}^\dagger+\hat{P}^\dagger
 	\end{align}
 	here $a \in C$ and * denote complex conjugate.\\
 \textit{Comment}. The eigenvalue equation ($\ref{eq:general_eigval eq}$) has some interesting properties when $\hat{Q}$ is Hermitian operator. 
 \end{post}
 
-\begin{theorem}
+\begin{theorem}\label{theorem:eigvalHerm}
 	Set of eigenvalues of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ is set of real numbers. 
 \end{theorem}
 
-\begin{theorem}
+\begin{theorem}\label{theorem:eigvecHerm}
 	Eigenvectors of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ that belong to different eigenvalues are orthogonal. 
 \end{theorem}
 
-\begin{theorem}
+\begin{theorem}\label{theorem:orhtonormalbasis}
 Set of eigenvectors of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ can be chosen to be an orthonormal basis for $\mathscr{H}$.
 \end{theorem}
-
+We do not provide proofs for this Theorems $\ref{theorem:eigvalHerm}$, $\ref{theorem:eigvecHerm}$ and $\ref{theorem:orhtonormalbasis}$. For more detailed description please refer to \cite{aulettaQuantumMechanics2009}.
 \begin{post}
 	Let $\mathscr{H}_1$ and $\mathscr{H}_2$ be the Hilbert spaces corresponding to two systems. The Hilbert space of joint system is given by tensor product $\mathscr{H}=\mathscr{H}_1 \otimes \mathscr{H}_2$.\\
 \textit{Comment}. As it will be shown below this postulate provides us a method to describe many-particle systems. 
@@ -139,7 +139,7 @@ Two or more identical fermions cannot occupy the same quantum state simultaneous
 Let's take a closer look ar the total wave function and how this principle affect the permutations of particles withing the system.
 First we need to mention that particles are identical and indistinguishable. In quantum mechanics interacting and identical particles are considered indistinguishable, which is different from classical mechanics where all particles were distinguishable. The very concept of indistinguishably require some thinking about what happens to the wave function if we interchange some particles? And here it is - where it become a significant difference between bosons and fermions quite important. \\
 Let's define some operators here.\\
-\begin{defn}
+\begin{defn}\label{denf:permutation}
 Let $\hat{P_{ij}}$ be the operator that interchanges particles $i$ and $j$. Mathematically this reads as:
 \[\hat{P_{ij}} \ket{ \Psi(x_1 ... x_i ... x_j ...) }=\ket{ \Psi(x_1 ... x_j ... x_i ...) } \]
 \end{defn}
@@ -157,14 +157,14 @@ Considering this properties one may define and solve the eigenvalue equation for
 If $\epsilon_{ij}=1$,  $\ket{Psi}$ considered to be symmetric and correspond to bosons\\
 If $\epsilon_{ij}=-1$,  $\ket{Psi}$ considered to be antisymmetric and correspond to fermions.
 \end{defn}
-The permutation operator will be used in Chapter $\ref{ch:HF}$ for constraction of total many fermion wave function.
+The permutation operator is be used in Chapter $\ref{ch:HF}$ for construction of total many fermion wave function and in Chapter $\ref{ch:coupled_cluster}$ for amplitudes.
 \subsubsection{Hamiltonian of many-body system} \label{sec:manybody}
 As it has been already mentioned Hamiltonian is a Hermitian operator. It can be expressed as:
 \begin{equation}
 \hat{H}=\hat{T}+\hat{V},
 \end{equation}
 where $\hat{T}$ is a kinetic energy operator and $\hat{W}$ is a potential energy operator. \\
-Here we assume the electrons are confined by a pure isotropic harmonic oscillator (H.O.) potential. Also in this project we consider closed shell systems. It means that all possible single-particle states below a certain level are occupied. Such level often called a Fermi level of the system. In particular this assumption means that addition or removal of one electron in such system requires more energy than same action but in a system with non-occupied lowest levels. That leads to a given number of particles $N = \{2, 6, 12, 20\}$ we may have in our quantum dot. 
+Here we assume the electrons are confined by a pure isotropic harmonic oscillator (H.O.) potential. Also in this thesis we consider closed shell systems. It means that all possible single-particle states below a certain level are occupied. Such level often called a Fermi level of the system. In particular this assumption means that addition or removal of one electron in such system requires more energy than same action but in a system with non-occupied lowest levels. That leads to a given number of particles $N = \{2, 6, 12, 20\}$ we may have in our quantum dot. 
 Using natural units ($\hbar=c=e=m_e=1$) and a.u. as energy unit one can write Hamiltonian of a such system in Cartesian coordinates as
 \begin{equation}
 \label{eq:finalH}
@@ -239,8 +239,8 @@ After writing Hamiltonian in a second quantized form we are able to compute all 
 \{c_p^\dagger,c_q^\dagger \}=0\\
 \{c_p,c_q^\dagger\} = \delta_{pq} \label{eq:fund_anti}
 \end{gather}
-Equation \ref{eq:fund_anti} is a fundamental intercommunication relation.
-However computing matrix elements using \ref{eq:fund_anti} is not a best choice. One can do so, but with N growing larger equations become far too cumbersome and hard to compute. There is much better way to compute matrix elements, however  we have to introduce some concepts first.
+Equation \ref{eq:fund_anti} is a fundamental anti-commutator relation.
+However computing matrix elements using \ref{eq:fund_anti} is not a best choice. One can do so, but with number of particles growing larger equations become far too cumbersome and hard to compute. There is much better way to compute matrix elements, however  we have to introduce some concepts first.
 \begin{defn}
 Vacuum expectation value. \\
 If we denote a string of operators $C_1 \dots C_N$, such that $C_i \in \{c_p^\dagger\} \cup \{c_p\} $. One define vacuum expectation value as $ \bra{-}C_1C_2 \dots C_N \ket{-}	$
@@ -596,7 +596,7 @@ These equations are equivalent to ($\ref{eq:ampl simple}$) and ($\ref{eq:energy 
 \begin{equation}
 e^{\hat{-T}} \hat{H} e^{\hat{T}} = \hat{H} + [\hat{H},\hat{T}] + \frac{1}{2!}[[\hat{H},\hat{T}],\hat{T}] + \frac{1}{3!}[[[\hat{H},\hat{T}],\hat{T}],\hat{T}] + ...
 \end{equation} 
-Here we need to make a very important remark regarding the transformation we have done. As it has been mentioned in chapter one quantum mechanics mechanics demand that observables are expectation values of hermitian operators (Postulate $\ref{postulat2}$). The operator  $e^{\hat{-T}} \hat{H} e^{\hat{T}} $ is obviously not hermitian. 
+Here we need to make a very important remark regarding the transformation we have done. As it has been mentioned in chapter one quantum mechanics demand that observables are expectation values of hermitian operators (Postulate $\ref{postulat2}$). The operator  $e^{\hat{-T}} \hat{H} e^{\hat{T}} $ is obviously not hermitian. 
 \begin{equation}
 (e^{\hat{-T}} \hat{H} e^{\hat{T}})^\dagger \neq e^{\hat{-T}} \hat{H} e^{\hat{T}}
 \end{equation} 

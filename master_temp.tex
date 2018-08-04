@@ -250,8 +250,8 @@ Matrix elements can be obtained as follows:
 \bra{\Phi}\hat{H}_0\ket{\Phi}=\sum_{pq}\bra{p}\hat{h}\ket{q}\bra{-}c_N \dots c_1 c_p^\dagger c_q c_1^\dagger \dots c_N^\dagger \ket{-}\\
 \bra{\Phi}\hat{W}\ket{\Phi}= \frac{1}{4}\sum_{pqrs} \bra{pq}\hat{w}\ket{rs} \bra{-}c_N \dots c_1 c_p^\dagger c_q^\dagger c_s c_r c_1^\dagger \dots c_N^\dagger \ket{-} \label{eq:matrix_elem1}
 \end{gather} 
-As one can see from \ref{eq:matrix_elem} and \ref{eq:matrix_elem1}  matrix element are written in form os vacuum expectation value. Now we want to introduce Wick's Theorem, which allows us to compute such values in terms of normal ordered operators. 
-\begin{defn} Normal ordering.
+As one can see from (\ref{eq:matrix_elem}) and (\ref{eq:matrix_elem1})  matrix element are written in form os vacuum expectation value. Now we want to introduce Wick's Theorem, which allows us to compute such values in terms of normal ordered operators. 
+\begin{defn} Normal ordering.\\
 	Let $\bar{C}=C_1 \dots C_n$ be an arbitrary operator string consisting of creation and annihilation operators. 
 	Let $\sigma \in S_n$ be a permutation that result in all creation operators in the string $\bar{C}$ be on the left and all annihilation operators to the right. Normal ordered string denoted using the braces as $\{C_1 \dots C_n \}$. Normal order is defined as:
 \begin{equation}
@@ -266,7 +266,7 @@ Another important concept we need to mention before we can go to the Wick's theo
 	\wick{\c1 X \c1 Y}=\bra{-} XY \ket{-}
 	\end{equation}
 \end{defn}
-Now we need to define the contraction inside na normal ordered string.
+Now we need to define the contraction inside a normal ordered string.
 \begin{defn} Contraction inside the operator string.\\
 	Let $ \bar{C}=C_1 \dots C_n $ be an arbitrary operator string consisting of creation and annihilation operators. Let $(C_q, C_p)$ be a pair of operators and $\sigma$ be any possible permutation that places $C_q$ to the first place in the string and
 	 $C_p$ to the second.
@@ -295,16 +295,31 @@ Some interesting outcomes from Wick's theorem:
 	\item \[\bra{-} C_1 \dots C_n \ket{-}=0,  \forall  \text{ odd } n\] 
 	\item \[\bra{-} C_1 \dots C_n \ket{-}= \sum_{\frac{n}{2}} \overbrace{ \{C_1 \dots C_n\}}^{\text{all contraction}}, \forall \text{ even } n \]
 \end{enumerate}
+For derivation of coupled cluster equation we need to consider a product of normal-ordered strings. For this purporse we may state a so-called generalized Wick's theorem.
+\begin{theorem} Generalized Wick's theorem.\\
+Let's consider a set of operator strings. $C^1_1 ...C^1_i$, $C^1_2 ...C^2_j$ and $C^n_1 ...C^n_k$. Here $n$ is total number of strings. Then if we need to evaluate the following product of a set of normal-ordered strings:
 
-
+\begin{align}
+\{C_1^1 \dots C_i^1\}\{C_1^2 \dots C_j^2\} ... \{C_1^n \dots C_k^n\} = \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} + \nonumber \\
+\sum_{\text{all single contractins}} \overbrace{ \{C_1^n \dots C_k^n\}= \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} }^\text{one contraction between strings} + \nonumber \\ \sum_{\text{all double contractins}} \overbrace{ \{C_1^n \dots C_k^n\}= \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} }^\text{two contractions between strings}+\nonumber \\ \dots + 
+\sum_{\text{all $\frac{n}{2}$ contractins}} \overbrace{ \{C_1^n \dots C_k^n\}= \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} }^\text{$\frac{n}{2}$ contractions  between strings},
+\end{align}
+here \textit{contraction between strings} means we are only considering contractions of the a certain type:
+	\begin{align}
+	\wick{\{\c1 C_1^1 \dots C_i^1|\c1 C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\}},\\
+	\wick{\{\c1 C_1^1 \dots  C_i^1|  C_1^2 \dots C_j^2|\c1 ... \c2... | C_1^n \c2 \dots C_k^n\}},\\
+	\wick{\{\c1 C_1^1 \dots \c3 C_i^1|   C_1^2 ..\c3. C_j^2|\c1 .. \c2. | C_1^n \c2 \dots C_k^n\}},
+	\end{align}
+	and so on. But not a contraction inside a single string.
+\end{theorem}
 
 
 \section{Particle-Hole representation}
 In this section we are presenting formalism that is used in many articles and text books on the topic.\\
 
 \begin{defn}Fermi vacuum.\\
-	Let $\ket{\Phi_0}$ be n-electron reference determinant constructed using true vacuum $\ket{}$ and given by:
-	\[ \ket{\Phi_0} = c^\dagger_i c^\dagger_j ..\ket{}. \]
+	Let $\ket{\Phi_0}$ be n-electron reference determinant constructed using true vacuum $\ket{-}$ and given by:
+	\[ \ket{\Phi_0} = c^\dagger_i c^\dagger_j ..\ket{-}. \]
 	Such reference determinant is often called a "Fermi vacuum".
 \end{defn}
 
@@ -313,7 +328,7 @@ In this section we are presenting formalism that is used in many articles and te
 Slater Determinant discussed above is composed using so-called \textit{occupied orbitals}. However they are chosen from a set of single-particle functions that contains also some extra functions. This additional functions are called \textit{virtual orbitals}. There is a convention regarding how to label this occupied and virtual orbitals. It may seen a bit odd, but for occupied orbitals we use name "hole states" and for virtual orbitals we use "particle states". Hole states are labeled with letters \textit{i,j,k} and particle states are labeled with letters \textit{a,b,c}.\\
 
 
-Any system of many particles can by described as a reference determinant...
+%Any system of many particles can by described as a reference determinant.
 
  
 \section{Normal-Ordered Electronic Hamiltonian}
@@ -387,10 +402,10 @@ We also need to compute the diagonal matrix element:
 
 \section{Introduction to Quantum Dots}
 In this part we provide a theoretical description of 2-dimensional quantum dots. However it's worth talking about what are quantum dots and why are they so interesting before deriving equations. \textit{QDs are sometimes called artificial atoms, due to the fact that they as real atoms has electrons confined inside.} The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
-Today we have many types of QDs, with a large field of application. \textit{It is a growing research area.} History of quantum dots traces back to 1980, when they were first discovered in glass crystals.However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. (REF) managed to make a colloidal QD. \\
+Today we have many types of QDs, with a large field of application. \textit{It is a growing research area.} History of quantum dots traces back to 1980, when they were first discovered in glass crystals \cite{ekimovaiQuantumSizeEffect1981}. However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. \cite{murraySynthesisCharacterizationNearly1993} managed to make a colloidal QD. \\
 This chapter has a following structure: in the first part a mathematical description of the system under consideration is given starting with all the assumptions and approximation have been made.\\
 PRODUCTION. The synthesis of QDs require very high precision and can be accomplished by means of lithographically pattern structures for etching (REF!), selective erea epitaxy (REF), growth on vicinal substructures (REF), colloidal QD solutions (REF) etc.\\  
-USAGE. QDs have many applications. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications. 
+USAGE. QDs have many applications. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications \cite{zhuQuantumDots2013}. 
 
 \subsection{Mathematical description of Quantum Dots}\label{sec:math_qd}
 Before we can start derive equations we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
@@ -402,7 +417,7 @@ Before we can start derive equations we should make some basic assumptions. The 
 \end{enumerate}
 
 !!!!!\\
-We have already presented the Hamiltinain of such system in Section $\ref{sec:manybody}$ equations $\ref{H1H2}$. The unperturebed Hamiltonian eigenvalue can be presented as :
+We have already presented the Hamiltonian of such system in Section $\ref{sec:manybody}$ equations $\ref{H1H2}$. The unperturbed Hamiltonian eigenvalue can be presented as :
 \begin{eqnarray}
 E_0= \sum_{i=1}^{N}\epsilon(i),\\
 \epsilon(i)= 1+|m_i|+ 2n_i.
@@ -532,6 +547,10 @@ In this case Hamiltonian can be rewritten as
 \hat{h}_{\alpha\beta}^{HF}=\epsilon_{\alpha}\delta_{\alpha,\beta}+
 \sum_{\gamma\delta} \rho_{\gamma\delta}\langle \alpha\gamma|\hat{v}|\beta\delta\rangle_{AS}.
 \end{equation}
+\section{Hartree-Fock basis}
+
+
+
 
 
 \chapter{Coupled Cluster method} \label{ch:coupled_cluster}

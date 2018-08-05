@@ -48,57 +48,56 @@ The aim of this thesis is to study QD numerically.
 	
 \part{Theory}
 \chapter{Quantum mechanics}
-In the end of 19th century physics has some unsolved problems that can't be tackled using already developed theories and methods. This had led to a  significantly different theory that has a number of essential distinctions  from that developed before. This new theory was named quantum mechanics. In the classical (or Newtonian mechanics) there was a theoretical possibility to obtain a complete knowledge of the system under consideration. In quantum mechanics this is not possible. Both for some particular time moment and for all future or previous times. \\
-Let's introduce some concepts here. The \textbf{uncertainty principle} and the \textbf{probability interpretation of the wave function}. The  uncertainty principle (or Heisenberg's uncertainty principle) puts a limit on how precise our measurement of some particular pairs of physical quantities (e.i. position and momentum) can be. The probability interpretation of wave function is a bit harder to explain, because one need a proper mathematical description of quantum mechanics to understand this. For now we just say that if we consider one single particle in space the probability of finding it in some certain position is related to the wave function. We will derive the expression for the total wave function of the system later in this thesis. Another 
-substantial difference in associated with so-called \textbf{principle of complementarity}. It was formulated by  Niels Bohr, one of the founders of quantum mechanics. It stands that in order to describe a system we need pair of certain complementary properties which cannot be observed simultaneously. A good example of such a pair are wave and particle properties of light or electrons (classical mechanics considered light as wave and electron as a particle, but this approach fails to explain photoelectric effect and diffraction of electrons on a slit). Moreover, position and momentum of the particle also can be considered as a pair of complementary properties and this makes Bohr's principle of complementarity closely connected to Heisenberg's uncertainty principle. Also one should mention that quantum mechanics allows us change number of particles in some particular state. For example, we have a \textbf{creation} operator which increases number of particles in some given state of system by one and also \textbf{annihilation} operator which decreases this number by one. The last concept to be mentioned here is the word \textbf{quantum} itself and where it comes from in the first place. In physics, "quantum" determines the smallest possible distance between two values or minimal amount of quantity involved in an interaction. This word is associated with the revolutionary supposition made by Max Planck back in 1900 that electromagnetic energy could be emitted in a form of some discrete quantities, known as “quantum”. He also introduced a  proportionality coefficient between for a minimal energy difference, so-called Planck's constant $h = 6.626 \times 10^{-34} \text{ } (kg \cdot m^2\cdot s^{-1})$. As one can see it has a very small value.  \\
-How does it possible that we have two theories so much different from each other and still use both of them? This is perfectly fine even it may seems to be a bit contradictory. In science there is a rule that require for any new theory to agree with the previous ones under some conditions. This rule called a \textbf{correspondence principle}. In case of quantum mechanics such conditions are named \textbf{classical limit} or \textbf{correspondence limit}, specifically quantum mechanical description of the system should correspond to those obtained by classical one for large quantum numbers. Mathematically it can be achieved requiring Planck's constant $h \rightarrow 0$. This principle allows us to determine whether a specific quantum theory is valid or not.\\
-Today we usually say that classical mechanics describes the macroscopic objects and quantum mechanics describes microscopic ones. This arise from the fact that some quantum effects can be observed only for tiny particles. However this is not enough to describe the difference, because even the observation itself is now different from that in classical physics. 
+In the end of 19th century physics had some unsolved problems that couldn't be tackled using already developed theories and methods. This had led to a  significantly different theory with a number of essential distinctions  from that developed before. This new theory was named quantum mechanics. In the classical (or Newtonian mechanics) there is a theoretical possibility to obtain a complete knowledge of the system under consideration. In quantum mechanics this is not possible, neither for some particular moment in time  nor for all other  moments in time. \\
+Let's introduce some concepts here. The \textbf{uncertainty principle} and the \textbf{probability interpretation of the wave function}. The  uncertainty principle (or Heisenberg's uncertainty principle) puts a limit on the precision of our measurement of some particular pairs of physical quantities (e.i. position and momentum). The probability interpretation of the wave function is a bit harder to explain, because one needs a proper mathematical description of the quantum mechanics to understand this. For now we just say that if we consider one single particle in space the probability of finding it in some certain position is related to the wave function. We will derive the expression for the total wave function of the system later in this thesis. Another 
+substantial difference is associated with so-called \textbf{principle of complementarity}. It was formulated by  Niels Bohr, one of the founders of the quantum mechanics. It stands that in order to describe a system we need a pair of certain complementary properties which cannot be observed simultaneously. A good example of such a pair are wave and particle properties of light or electrons. Classical mechanics considered light as a wave and electron as a particle, but this approach failed to explain the photoelectric effect and the diffraction of electrons on a slit. Moreover, position and momentum of the particle also can be considered as a pair of complementary properties. This makes Bohr's principle of the complementarity closely connected to Heisenberg's uncertainty principle. Also one should mention that quantum mechanics allows us to change the number of particles in some particular state. For example, we have a \textbf{creation} operator which increases the number of particles in some given state of the system by one, and \textbf{annihilation} operator which decreases this number by one. The last concept to be mentioned here is the word \textbf{quantum} itself. In physics, "quantum" determines the smallest possible difference between two values or minimal amount of quantity involved in an interaction. This concept is associated with the revolutionary supposition made by Max Planck back in 1900. He assumed that electromagnetic energy could be emitted in a form of some discrete quantities, known as “quantum”. He also introduced a proportionality coefficient for a minimal energy difference, so-called Planck's constant $h = 6.626 \times 10^{-34} \text{ } (kg \cdot m^2\cdot s^{-1})$. As one can see it has a very small value.  \\
+How does it possible to have two theories much different from each other and continue to use both of them? This is perfectly fine even it may seems to be a bit contradictory. In science there is a rule that require for any new theory to agree with the previous ones under some conditions. This rule is called a \textbf{correspondence principle}. In case of quantum mechanics these conditions are named \textbf{classical limit} or \textbf{correspondence limit}. In particular this means that quantum mechanical description of the system should correspond to those obtained by classical theory for large quantum numbers. Mathematically it can be achieved by requirement $h \rightarrow 0$, where $h$ Planck's constant. This principle allows us to determine whether a specific quantum theory is valid or not.\\
+Today we usually say that classical mechanics describes the macroscopic objects and quantum mechanics describes microscopic ones. This arise from the fact that some quantum effects can be observed only for extremely small particles. However this is not enough to describe the difference, because even the observation itself is now different from that in classical physics. 
 For more details on the matter, please refer to \cite{phillipsIntroductionQuantumMechanics2003}. \\
 
 
 \section{Quantum theory}
-In this section we provide a brief description of main assumptions the quantum theory is build on together with some basic notations to be used in the thesis.\\
-As it have been already mentioned quantum theory has been developed though the $20^{\text{th}}$ century. As any other new theory is was based on some basic assumptions called postulates of quantum mechanics (QM). I do not aim to provide detailed description in the thesis, just a short recap on the topic. \\
+In this section we provide a brief description of main assumptions needed for the quantum theory and  some basic notations to be used in the thesis.\\
+As it has been already mentioned quantum theory has been developed though the $20^{\text{th}}$ century. As any other new theory it is based on some assumptions called the postulates of quantum mechanics (QM). In this thesis we do not aim to provide a detailed description on the topic, however some basic introduction is needed.\\
 
 \begin{defn} Hilbert Space.\\
-	Let $\mathscr{H}$ be a complex vector space  in which inner product $\braket{\alpha|\beta}$ is defined so that it has the following properties:
+	Let $\mathscr{H}$ be a complex vector space. The inner product $\braket{\alpha|\beta} $\footnote{$\ket{\alpha}$ and  $\ket{\beta}$ are ket-vectors in Dirac notations.} in that space is defined so that it has the following properties:
 	\begin{enumerate}		
 		\item $\braket{a\alpha|\beta} = a\braket{\alpha|\beta}$, $a \in C$.
 		\item $\braket{\alpha|b\beta} = b^{*}\braket{\alpha|\beta}$, $b \in C$.
 		\item $\overline{\braket{\alpha|\beta}} =\braket{\beta|\alpha}$.
 		\item $||\alpha||^2= \braket{\alpha|\alpha} \geq 0 $.			
 	\end{enumerate}
-Comment. $\ket{\alpha}$ and  $\ket{\beta}$ are ket-vectors in Dirac notations.
 \end{defn}
 
 \begin{post}
-	Every instant state of system is represented by a vector in Hilbert space $\mathscr{H}$.\\
-\textit{Comment}. This is a very strong demand, because it means that any superposition of different states is also a state of the system. For example, if $\ket{\alpha_1}$ and  $\ket{\alpha_2}$ are vectors describing possible states of the system, then their linear combination $\ket{\alpha}$ is also a state of the same system:
+	Every instant state of a system is represented by a vector in Hilbert space $\mathscr{H}$.\\
+\textit{Comment}. This is a very strong demand, because it means that any superposition of the different states is also a state of the system. For example, if $\ket{\alpha_1}$ and  $\ket{\alpha_2}$ are vectors describing possible states of the system, then their linear combination $\ket{\alpha}$ is also a state of the same system:
 \begin{equation*}
 \ket{\alpha}=a_1\ket{\alpha_1}+a_2\ket{\alpha_2}, \text{   } a_1\text{  and }  a_2 \in C.
 \end{equation*}
 \end{post}
 \begin{defn}
-Operator $\hat{Q}$ is Hermitian is it satisfy the equation:
+Operator $\hat{Q}$ is Hermitian if it satisfies the equation:
 \begin{equation}
-\hat{Q}^\dagger=\hat{Q}.
+\hat{Q}^\dagger=\hat{Q},
 \end{equation}
-here $\hat{Q}^\dagger$ is adjoint of $\hat{Q}$.
+where $\hat{Q}^\dagger$ is adjoint of $\hat{Q}$.
 \end{defn}
 \begin{post}\label{postulat2}
-	Every physical observable is associated with an operator $\hat{Q}$ on a Hilbert space. When acting on a state vector gives an eigenvalue equation:
+	Every physical observable is associated with an operator $\hat{Q}$ in a Hilbert space. Action of the operator on state vector results into following eigenvalue equation:
 	\begin{equation}\label{eq:general_eigval eq}
 	\hat{Q}\ket{\alpha}= q\ket{\alpha}, 
 	\end{equation}
-here eigenvalues are the only measurable values associated with operator and eigenvectors determine a complete orthonormal set of vectors. In addition every operator $\hat{Q}$ associated with a measurable physical quantity must be linear Hermitian operator:
+where eigenvalues $q$ are the only measurable values associated with the operator. Eigenvectors determine a complete orthonormal set of vectors for this operator. In addition every operator $\hat{Q}$ associated with a measurable physical quantity must be a linear Hermitian operator. In particular that means it should posses the following properties:
 	\begin{align}
 	&\hat{Q}^\dagger=\hat{Q},\\
 	&(a\hat{Q})^\dagger=a^*\hat{Q}^\dagger,\\
 	&(\hat{Q}\hat{P})^\dagger  =\hat{P}^\dagger \hat{Q}^\dagger,\\
-	&(\hat{Q}+\hat{P})^\dagger =\hat{Q}^\dagger+\hat{P}^\dagger
+	&(\hat{Q}+\hat{P})^\dagger =\hat{Q}^\dagger+\hat{P}^\dagger,
 	\end{align}
-	here $a \in C$ and * denote complex conjugate.\\
-\textit{Comment}. The eigenvalue equation ($\ref{eq:general_eigval eq}$) has some interesting properties when $\hat{Q}$ is Hermitian operator. 
+	where $a \in C$, and * denote complex conjugate.\\
+\textit{Comment}. The eigenvalue equation ($\ref{eq:general_eigval eq}$) has interesting properties when $\hat{Q}$ is Hermitian operator. They are presented in theorems below.
 \end{post}
 
 \begin{theorem}\label{theorem:eigvalHerm}
@@ -112,32 +111,31 @@ here eigenvalues are the only measurable values associated with operator and eig
 \begin{theorem}\label{theorem:orhtonormalbasis}
 Set of eigenvectors of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ can be chosen to be an orthonormal basis for $\mathscr{H}$.
 \end{theorem}
-We do not provide proofs for this Theorems $\ref{theorem:eigvalHerm}$, $\ref{theorem:eigvecHerm}$ and $\ref{theorem:orhtonormalbasis}$. For more detailed description please refer to \cite{aulettaQuantumMechanics2009}.
+We do not provide proofs for these Theorems. For more detailed description please refer to \cite{aulettaQuantumMechanics2009}.
 \begin{post}
 	Let $\mathscr{H}_1$ and $\mathscr{H}_2$ be the Hilbert spaces corresponding to two systems. The Hilbert space of joint system is given by tensor product $\mathscr{H}=\mathscr{H}_1 \otimes \mathscr{H}_2$.\\
-\textit{Comment}. As it will be shown below this postulate provides us a method to describe many-particle systems. 
+\textit{Comment}. As it is shown further in this thesis this postulate provides a method to describe many-particle systems. 
 \end{post}
 \begin{post}
-The time evolution of quantum mechanical system is given by Schrödinger equation:
+The time evolution of the quantum mechanical system is given by the Schr\"{o}dinger equation:
 \begin{equation}\label{eq:basic_schrod}
- i \hbar \frac{\partial }{ \partial t}\ket{\Psi} = \hat{H}\ket{\Psi}.
+ i \hbar \frac{\partial }{ \partial t}\ket{\Psi} = \hat{H}\ket{\Psi},
 \end{equation}
-here $\ket{\Psi}=\ket{\Psi(t)}$ .
+where $\ket{\Psi}=\ket{\Psi(t)}$ .
 \end{post}
-In this thesis we do not consider time-evolution of the system and will be focused on so-called time-independent Schrödinger equation or stationary-state equation:
+In this thesis we do not consider time-evolution of the system and will be focused on the time-independent Schr\"{o}dinger equation or stationary-state equation:
 \begin{equation}
-\hat{H}\ket{\Psi} = E \ket{\Psi}
+\hat{H}\ket{\Psi} = E \ket{\Psi},
 \end{equation}
-here $\hat{H}$ in Hamiltonian, $\ket{\Psi}$ is state vector of the system and $E$ is expectation value of the energy. It is the energy spectrum we are interested in, so before solving the equation we need to agree on the form of Hamiltonian and also construct the state vector. This is done in the sections below.
+where $\hat{H}$ in Hamiltonian, $\ket{\Psi}$ is state vector of the system and $E$ is the expectation value of the energy. It is the energy spectrum we are interested in, so before solving the Schr\"{o}dinger equation we need to agree on the form of Hamiltonian and also construct the state vector. This is presented in the sections below.
 
 
 \subsection{Many-Body problem formulation}
-As it has been already mentioned we all state functions are vectors in Hilbert space. When we deal with system of many particles we need first to define the type of this particles. Boson are particles with integer spin and fermions are particles with half-integer spin. State vectors of these particles belong to different Hilbert spaces and should be studied independently. In this thesis we consider electrons which are fermions and must obey an exclusion principle first formulated by Wolfgang Pauli for electrons in 1925.
-\begin{defn}Pauli exclusion principle.\\
+As it has been already mentioned all state functions arethe  vectors in the Hilbert space. When we deal with a system consisting of many particles we need to define the type of these particles. Bosons are the particles with an integer spin and fermions are the particles with an odd half-integer spin. State vectors of these particles belong to different Hilbert spaces and should be studied independently. In this thesis we consider electrons which are fermions and must obey an exclusion principle, formulated by Wolfgang Pauli in 1925.
+\begin{defn}The Pauli exclusion principle.\\
 Two or more identical fermions cannot occupy the same quantum state simultaneously in the same system.
 \end{defn}
-Let's take a closer look ar the total wave function and how this principle affect the permutations of particles withing the system.
-First we need to mention that particles are identical and indistinguishable. In quantum mechanics interacting and identical particles are considered indistinguishable, which is different from classical mechanics where all particles were distinguishable. The very concept of indistinguishably require some thinking about what happens to the wave function if we interchange some particles? And here it is - where it become a significant difference between bosons and fermions quite important. \\
+Let's take a closer look at the total wave function and how this principle affect the permutations of the particles withing the system. First we need to mention that the particles are identical and indistinguishable. In quantum mechanics interacting and identical particles are considered indistinguishable, which is different from classical mechanics where all particles were distinguishable. The very concept of indistinguishably require some thinking about what happens to the wave function if we interchange some particles? And here it is - where it become a significant difference between bosons and fermions quite important. \\
 Let's define some operators here.\\
 \begin{defn}\label{denf:permutation}
 Let $\hat{P_{ij}}$ be the operator that interchanges particles $i$ and $j$. Mathematically this reads as:

@@ -1069,14 +1069,26 @@ p_{spawn} = \frac{8N_d|H_{mn}-S|}{3(E_m - S)}
 \end{itemize}
 \end{enumerate}
 \subsection{Sing Problem}
+\chapter{Coulomb matrix elements}
+Coulomb matrix elements are required for all methods described in this thesis. In case of Hartree Fock method they can be just computed on the fly, using the formulas presented in Appendix $\ref{app:1}$ . However, after we made a transformation to the Hartree Fock basis, we need they to be stored and assessed in a most quickly and efficient way possible. \\
+One solution is to store them as four-dimensional array, mapping the unique set of indexes $pqrs$ to a certain value. This method is inefficient, because due to symmetry requirements such array will contain a lot of zeros.\\
+Another solution is to store only non-zero values in one array and associated set of indexes  in the other. This improvement will save a lot of memory, but require a costly search through the vector of indexes, to find a position of needed combination $pqrs$.\\
+One more solution is to map each non-zero value with a unique address. This method combine advantages of the two described above and allow us to save both memory and avoid search.\\
+The method is described in details here \cite{leikangerFullConfigurationInteraction}.
 
 \part{Implementation}
 
 \part{Results}
 
+\clearpage
+**\appendix
+\chapter{Coulomb matrix elements}\label{app:1}
+ % filename in curly brackets
+
 
 
 \printbibliography 
+
 
 
 \end{document}

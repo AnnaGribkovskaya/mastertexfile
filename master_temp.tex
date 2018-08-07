@@ -1076,10 +1076,26 @@ Another solution is to store only non-zero values in one array and associated se
 One more solution is to map each non-zero value with a unique address. This method combine advantages of the two described above and allow us to save both memory and avoid search.\\
 The method is described in details here \cite{leikangerFullConfigurationInteraction}.
 
-\part{Implementation}
+\part{Implementation and results}
+In this part we present the implementation of algorithms presented in the thesis. This part has the following structure:\\
+\begin{itemize}
+\item Section $\ref{sec:impl1}$ present a general structure of the code and description of all classes used.
+\item Section (REF) 
+\end{itemize}
 
-\part{Results}
-
+\section{General structure of the code}\label{sec:impl1}
+Code has the following base classes:
+\begin{enumerate}
+\item Class \textit{GENERALSPCLASS} is base class and contains the following virtual functions:
+	\begin{enumerate}
+	\item \textit{getQuantumDotStates},
+	\item \textit{getQuantumDotStatesNumber},
+	\item \textit{TBME},
+	\item \textit{getSPenergies},
+	\end{enumerate}
+\item \textit{channelset} is another base class with virtual functions.
+\end{enumerate}
+And following derived classes:
 \clearpage
 **\appendix
 \chapter{Coulomb matrix elements}\label{app:1}

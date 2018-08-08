@@ -600,8 +600,8 @@ The most important idea of CC method is exponential exopantion of wave function.
 \end{equation}
 Where $\hat{T}$ is cluster operator:
 
-\begin{align}
-\hat{T}= \hat{T_1}+ \hat{T_2}+ \hat{T_3}...\hat{T_n},\\
+\begin{align} \label{eq:T}
+\hat{T}= \hat{T_1}+ \hat{T_2}+ \hat{T_3}...\hat{T_n},  \\
 \hat{T_1}= \sum_{i,a} t_i^a c_a^\dagger c_i, \label{eq:T1}\\
 \hat{T_2}= \frac{1}{4} \sum_{i,j,a,b} t_{i,j}^{a,b} c_a^\dagger a_b^\dagger c_j c_i,\\
 \hat{T_n}= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
@@ -813,11 +813,12 @@ First we require $\tau \rightarrow \infty $ we obtain time-independent equation.
 First lets consider a kinetic energy term in the equation. 
 
 
-\section{Coupled Cluster Monte Carlo}
+\section{Stochastic Coupled Cluster Theory}
 In chapter $\ref{ch:coupled_cluster}$ we have introduced a coupled cluster method. However, the main problem with exact coupled cluster computations is with system size. Scaling starts with the sixth order of $N$ (here $N$ represents system size) that makes even small systems very costly in computations. Coupled Cluster Monte Carlo (CCMC) is a new method which has been first described by Alex Thom in \cite{thomStochasticCoupledCluster2010}. The method has been developed similarly to Full Configuration Interaction Quantum Monte Carlo (FCIQMC) of Alavi \textit{et al.} in \cite{boothFermionMonteCarlo2009}, \cite{clelandCommunicationsSurvivalFittest2010} and \cite{boothApproachingChemicalAccuracy2010}.\\
 In order to explain how we get to CCMC algorithm we first present a brief description of FCIQMC. \\
+\subsection{Full Configuration Interaction Quantum Monte Carlo}
 The CI wave function is represented by the following expansion:
- \begin{equation}
+ \begin{equation}\label{eq:fciqmcWF}
 \ket{\Psi_{\text{CI}}}= C_0\ket{D_0} + \sum_{ai} C_i^a \ket{D_i^a} + \sum_{i<j,a<b}C_{ij}^{ab}\ket{D_{ij}^{ab}} + \dots,
  \end{equation}
 here $\ket{D_0}$ is HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are exited determinants.\\
@@ -839,9 +840,19 @@ As in DMC we may study two processes independently, namely:
 C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef1}
 C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef2}
 \end{align}
-To simulate this stochastically we should create a population of walkers in the SD space. Number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).
-
-
+After this we need to discretize the coefficients. To simulate this stochastically we should create a population of walkers in the SD space. Each walker has a sign and belog to any determinant. Number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).In order to run the simulation we need to consider three processes:\\
+\begin{enumerate}
+	\item \textbf{Spawning}. Aa soon as walker can be positioned on any determinant, we consider random walker at determinant $D_{\textbf{J}}$.After this we randomly pick up a connected determinant  $D_{\textbf{I}}$ (assuming $|H_{\textbf{IJ}}|\neq 0$). The probability to spawn a walker from $\textbf{J} \rightarrow \textbf{I} $ is proportional to $\tau |H_{\textbf{IJ}}| $ and sign $- sgn(H_{\textbf{IJ}})$. The spawning process is corresponding to equation ($\ref{eq:FCIQMC_coef2}$) and can be formulated as $ - \tau H_{\textbf{IJ}} C_{\textbf{J}} + C_{\textbf{I}} \rightarrow  C_{\textbf{I}} $.
+	\item \textbf{Birth/Death}. Here we simulate creation or destruction of the already existing walker at some determinant, for example $D_{\textbf{I}}$ . This process corresponds to the  equation ($\ref{eq:FCIQMC_coef1}$) and the probability is now proportional to $- \tau (H_{\textbf{II}} - E) $ and sign distinguish between either walker is created or destroyed. Negative sign corresponds to death and positive sign corresponds to birth.
+	\item \textbf{Annihilation}. All pairs of walkers with opposite sign are removed, if they belong to the same determinant.
+\end{enumerate}
+The population control is carried out by varying of the remaining parameter, so-called shift $E$. This parameter can influence the population dynamics in a following way - if the value of $E$ exceeds the lowest eigenvalue, then the population of walkers will increase and vice versa. 
+\subsection{Coupled Cluster Quantum Monte Carlo}
+Following the same procedure as for FCIQMC we present a CC wave function in a similar way as we did it for CI in equation ($\ref{eq:fciqmcWF}$). The CC wave function is represented by the following expansion:
+\begin{equation}\label{eq:ccqmcWF}
+\ket{\Psi_{\text{CI}}}= N_0 e^{\hat{T}}\ket{D_0},
+\end{equation}
+where $N_0$ determines the normalization of wave function and the equation for cluster operator $\hat{T}$ is presented in Chapter $\ref{ch:coupled_cluster}$ by equation ($\ref{eq:T}$). 
 
 
 \chapter{Stochastic}
@@ -1099,7 +1110,7 @@ And following derived classes:
 \clearpage
 **\appendix
 \chapter{Coulomb matrix elements}\label{app:1}
- % filename in curly brackets
+
 
 
 

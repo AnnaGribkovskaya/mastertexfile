@@ -821,7 +821,7 @@ The CI wave function is represented by the following expansion:
  \begin{equation}\label{eq:fciqmcWF}
 \ket{\Psi_{\text{CI}}}= C_0\ket{D_0} + \sum_{ai} C_i^a \ket{D_i^a} + \sum_{i<j,a<b}C_{ij}^{ab}\ket{D_{ij}^{ab}} + \dots,
  \end{equation}
-here $\ket{D_0}$ is HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are exited determinants.\\
+here $\ket{D_0}$\footnote{we use $\ket{D_0}$ for $\ket{\Psi_0}$, $\ket{D_i^a}$ for $\ket{\Psi_i^a}$ and so on to distinguish between deterministic and stochastic methods} is HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are exited determinants.\\
 In order to determine coefficients $C$ we need to solve a set of projection equations. 
 \begin{align}
 \braket{D_0|\hat{H}-E|\Psi_{\text{CI}}}=0\\
@@ -830,15 +830,19 @@ In order to determine coefficients $C$ we need to solve a set of projection equa
 \braket{D_{ijk}^{abc}|\hat{H}-E|\Psi_{\text{CI}}}=0,
 \end{align} 
 and so on.\\
-Instead of performing this process iteratively we now need to re-express equations. As we already mentioned in section $\ref{sec:DMC}$ while describing DMC this can be done using the imaginary time propagator. In this case operator is $\hat{P}=1-\tau(\hat{H}-E)$ and it projects CI wave function to itself. Using this approach we will get a new set of equations, formulated as:
-\begin{equation}
+Instead of performing this process iteratively we now need to re-express equations. As we already mentioned in section $\ref{sec:DMC}$ while describing DMC this can be done using the imaginary time propagator. In this case operator is given by:
+\begin{equation}\label{eq:projector} 
+\hat{P}=1-\tau(\hat{H}-E).
+\end{equation}
+It projects CI wave function to itself. Using this approach we will get a new set of equations, formulated as:
+\begin{equation}\label{eq:CIprojected}
 C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} = C_{\textbf{I}},
 \end{equation}
 here $\textbf{I}, \textbf{J}$ are some generic indexes and $\textbf{J}\rightarrow \textbf{I}$ means that this two indexes are connected (corresponding matrix element of Hamiltonian is different from zero).
 As in DMC we may study two processes independently, namely:
 \begin{align}
 C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef1}
-C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef2}
+C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} \rightarrow C_{\textbf{I}}\\ \label{eq:FCIQMC_coef2}
 \end{align}
 After this we need to discretize the coefficients. To simulate this stochastically we should create a population of walkers in the SD space. Each walker has a sign and belog to any determinant. Number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).In order to run the simulation we need to consider three processes:\\
 \begin{enumerate}
@@ -850,9 +854,49 @@ The population control is carried out by varying of the remaining parameter, so-
 \subsection{Coupled Cluster Quantum Monte Carlo}
 Following the same procedure as for FCIQMC we present a CC wave function in a similar way as we did it for CI in equation ($\ref{eq:fciqmcWF}$). The CC wave function is represented by the following expansion:
 \begin{equation}\label{eq:ccqmcWF}
-\ket{\Psi_{\text{CI}}}= N_0 e^{\hat{T}}\ket{D_0},
+\ket{\Psi_{\text{CC}}}= N_0 e^{\frac{\hat{T}}{N_0}}\ket{D_0},
 \end{equation}
-where $N_0$ determines the normalization of wave function and the equation for cluster operator $\hat{T}$ is presented in Chapter $\ref{ch:coupled_cluster}$ by equation ($\ref{eq:T}$). 
+where $N_0$ determines the normalization of wave function and the equation for cluster operator $\hat{T}$ is presented in description of deterministic CC method in Chapter $\ref{ch:coupled_cluster}$ by equation ($\ref{eq:T}$). \\
+Let's write it in a more detailed way using a cluster operator equation:
+\begin{align}
+\ket{\Psi_{\text{CC}}}=N_0\ket{D_0} + \sum_{\textbf{I}} \ket{D_0} t_\textbf{I} \hat{c_\textbf{I}} + \frac{1}{2N_0}
+ \sum_{\textbf{IJ}} \ket{D_0} t_\textbf{I} t_\textbf{J}\hat{c_\textbf{I}} \hat{c_\textbf{J}}\ket{D_0} + ...,
+\end{align}
+where indexes \textbf{I,J} are generic indexes for an excitation.\footnote{Indexing is different from the deterministic CC theory, because we are using notations by Thom and Spenser from \cite{spencerDevelopmentsStochasticCoupled2016}. In this notation each cluster has just one generic index, regardless of level of the excitation for example, $ \hat{c_a}^\dagger \hat{c_i}$ is just written as $\hat{c_\textbf{I}}$.} We use this kind of notations to make equations more alike those for FCIQMC.\\ 
+After this we can present the CC equations:
+\begin{align}\label{eq:CCQMC1}
+&\braket{D_0|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
+&\braket{D_i^a|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
+&\braket{D_{ij}^{ab}|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
+\end{align} 
+and so on.\\
+\subsubsection{A representative example}
+Here we follow Thom in his article from 2010 \cite{thomStochasticCoupledCluster2010} to present a simple idea of CCQMC for a system that has only four states, two occupied (i,j) and two virtual (a,b). Here we use generic index for determinant so that $ \ket{D_{ij}^{ab}} = \ket{D_\textbf{n}} $.
+As it has been already done for the FCIQMC we need an operator ($\ref{eq:projector}$) that projects the solution $\Psi_{CC}$ to itself and reproduce the same eigenfunctions.\\
+After this we obtain:
+\begin{align}
+\braket{D_{\textbf{n}|}| 1-\tau (\hat{H}-E)|\Psi_{CC}},\\
+\big(1-\tau(H_{\textbf{nn}}-E)\big)\big(t_i^a t_j^b-t_i^b t_j^a + t_{ij}^{ab}\big)  \nonumber \\
+- \frac{\tau}{N_0} \sum_{\textbf{m} \neq \textbf{n}} H_{\textbf{nm}} \braket{D_{\textbf{m}}|\Psi_{CC}} = (t_i^a t_j^b-t_i^b t_j^a + t_{ij}^{ab}),
+\end{align}
+where we consider determinants $D_{\textbf{n}}$ and $D_{\textbf{m}}$ to be connected,so that  $H_\textbf{nm} \neq 0 $. This equation is similar to equation ($\ref{eq:CIprojected}$). Once aging following the same procedure as for FCIQMC we are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding amplitudes are called "excitors" \footnote{text}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 \chapter{Stochastic}

@@ -490,7 +490,7 @@ E_0= \sum_{i=1}^{N}\epsilon(i),\\
 Here we present a brief overview of the Hatree-Fock (HF) theory. It is  well-known and defined way to study systems of large number of particles. Hartree-Fock method is the simplest and nevertheless rather efficient methods. Initially introduced by Hartree and then improved by Fock it is one of the most popular \textit{ab initio} methods in quantum chemistry.  It is  easy to implement, but has some disadvantages, for example it fail to provide high accuracy. However, more precise methods are often build on the HF results. This makes HF theory a good starting point for anyone who want to tackle a many-body problem. Methods that are using HF as an input are usually referred to as post-Hartree-Fock. Among them are Configuration Interaction (CI) and Coupled Cluster (CC). \\
 The main idea of HF theory is to approximate unknown wave function with a single Slater Determinant constructed using a single-particle wave functions representing the occupied states in a system under consideration. 
 \section{Introduction to HF}
-Here we start with time independent Schrödinger equation for the ground state:
+Here we start with time independent Schr\"{o}dinger equation for the ground state:
 \begin{equation}
 \hat{H}\ket{\Phi_0}=E_0\ket{\Phi_0}
 \end{equation}
@@ -584,7 +584,7 @@ In this case Hamiltonian can be rewritten as
 
 
 \chapter{Coupled Cluster method} \label{ch:coupled_cluster}
-Coupled cluster (CC) method for quantum chemistry was first introduced by J. Cizek in the late 1960s \cite{cizekCorrelationProblemsAtomic}. A few years later he publish a new article on the topic in collaboration with and J. Paldus \cite{cizekCorrelationProblemAtomic1966}. CC is an \textit{ab initio} numerical method widely used for approximate solution of electronic Schrödinger equation because it is both reliable and computationally affordable. This section is based on a very detailed and comprehensive overview of the method provided by Crawford and Schaefer in \cite{crawfordIntroductionCoupledCluster2007}. Coupled cluster method is based on the same basic concepts that are underlying many other many-body methods, such as many-body perturbation theory and full configuration interaction. The main critical difference is use of "exponential ansatz" of the wave function which is discussed below.\\
+Coupled cluster (CC) method for quantum chemistry was first introduced by J. Cizek in the late 1960s \cite{cizekCorrelationProblemsAtomic}. A few years later he publish a new article on the topic in collaboration with and J. Paldus \cite{cizekCorrelationProblemAtomic1966}. CC is an \textit{ab initio} numerical method widely used for approximate solution of electronic Schr\"{o}dinger equation because it is both reliable and computationally affordable. This section is based on a very detailed and comprehensive overview of the method provided by Crawford and Schaefer in \cite{crawfordIntroductionCoupledCluster2007}. Coupled cluster method is based on the same basic concepts that are underlying many other many-body methods, such as many-body perturbation theory and full configuration interaction. The main critical difference is use of "exponential ansatz" of the wave function which is discussed below.\\
 In this chapter we discuss some critical ideas for the CC, such as cluster expansion of the wave function , exponential ansatz, Campbell-Baker-Hausdorff (BCH) expansion, second quantization and particle-hole formalizm, normal-ordering and correlation operator in application for CC method. Some of this ideas we have already mention in previuos chapter and some are completely new. The CC method can be described in two different ways using algebraic and diagrammatic formalisms. Both are correct and provide same results, but diagrammatic one is a way faster. However, for understanding of the method and it's origin we need to begin with algebraic form of the equations.\\
 \section{Cluster functions and Exponential Anzats} 
 As we have already discussed above Slater Determinant can be used to describe a wave function of the electrons. In Dirac notations it can be written as follows:
@@ -607,7 +607,7 @@ Where $\hat{T}$ is cluster operator:
 \hat{T_n}= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
 \end{align}
 here values $t_i^a $ and $t_{i,j}^{a,b}$ are called cluster amplitudes. \\
-After introducing the exponential ansatz we need a reciepe to determine the cluster amplitudes. In order to do this we start with electronic Schrödinger equation (REFERENCE!!!) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
+After introducing the exponential ansatz we need a reciepe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation (REFERENCE!!!) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
 \begin{equation}
 	\hat{H}e^{\hat{T}}\ket{\Phi_0}=Ee^{\hat{T}}\ket{\Phi_0}.
 \end{equation}
@@ -796,7 +796,7 @@ The DMC method employ the imaginary time propagator:
 \hat{P(\tau)}=e^{\tau(E_T\hat{1}- \hat{H})},
 \end{equation}
 here $\tau= it$ is imaginary time.\\
-This method is called  diffusion one can do a mapping between a classical diffusion equation and an imaginary-time Schrödinger equation. Let's consider the following form of  Schrödinger equation:
+This method is called  diffusion one can do a mapping between a classical diffusion equation and an imaginary-time Schr\"{o}dinger equation. Let's consider the following form of  Schr\"{o}dinger equation:
 \begin{equation}\label{eq:imaginary_schrod}
 		\frac{\partial }{ \partial \tau}\ket{\Psi(\textbf{x},\tau)} = \frac{1}{2} \nabla^2 \ket{\Psi(\textbf{x},\tau)} + (E_T - V(\textbf{x}) \ket{\Psi(\textbf{x},\tau)},
 \end{equation}
@@ -806,7 +806,7 @@ This equation is very similar to a classical equation:
 \frac{\partial C }{ \partial t} = D \frac{\partial^2 C }{ \partial t^2} - kC,
 \end{equation}
 here $D$ is diffusion constant, $C$ is concentration of particles and $k$ proportionality coefficient describing source or sink of particles. First part on the right hand side of this equation describe a classical diffusion process and the second part is just a first order rate equation. The meaning of $k$ is the following - particles can be destroyed or created proportional to $k$.\\
-If we compare two equations together ($\ref{eq:imaginary_schrod}$) and ($\ref{eq:diffusion}$) they are not really alike, due to imaginary time and a wave function. However similarities between this two allow us to use some techniques normally used for classical simulations to imaginary-time Schrödinger equation. Monte Carlo methods are capable to simulate both diffusion and rate, so we can just build up a method that combine this two processes into one.  \\
+If we compare two equations together ($\ref{eq:imaginary_schrod}$) and ($\ref{eq:diffusion}$) they are not really alike, due to imaginary time and a wave function. However similarities between this two allow us to use some techniques normally used for classical simulations to imaginary-time Schr\"{o}dinger equation. Monte Carlo methods are capable to simulate both diffusion and rate, so we can just build up a method that combine this two processes into one.  \\
 First we require $\tau \rightarrow \infty $ we obtain time-independent equation. 
 
 
@@ -875,11 +875,27 @@ Here we follow Thom in his article from 2010 \cite{thomStochasticCoupledCluster2
 As it has been already done for the FCIQMC we need an operator ($\ref{eq:projector}$) that projects the solution $\Psi_{CC}$ to itself and reproduce the same eigenfunctions.\\
 After this we obtain:
 \begin{align}
-\braket{D_{\textbf{n}|}| 1-\tau (\hat{H}-E)|\Psi_{CC}},\\
+\braket{D_{\textbf{n}|}| 1-\tau (\hat{H}-E)|\Psi_{CC}}, \label{key} \\
 \big(1-\tau(H_{\textbf{nn}}-E)\big)\big(t_i^a t_j^b-t_i^b t_j^a + t_{ij}^{ab}\big)  \nonumber \\
 - \frac{\tau}{N_0} \sum_{\textbf{m} \neq \textbf{n}} H_{\textbf{nm}} \braket{D_{\textbf{m}}|\Psi_{CC}} = (t_i^a t_j^b-t_i^b t_j^a + t_{ij}^{ab}),
 \end{align}
-where we consider determinants $D_{\textbf{n}}$ and $D_{\textbf{m}}$ to be connected,so that  $H_\textbf{nm} \neq 0 $. This equation is similar to equation ($\ref{eq:CIprojected}$). Once aging following the same procedure as for FCIQMC we are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding amplitudes are called "excitors" \footnote{text}.
+where we consider determinants $D_{\textbf{n}}$ and $D_{\textbf{m}}$ to be connected,so that  $H_\textbf{nm} \neq 0 $. This equation is similar to equation ($\ref{eq:CIprojected}$). Once aging following the same procedure as for FCIQMC we are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding operators are named "excitors" \footnote{Here one should be careful with terminology because it can differ from one article to another. Imaginary particles for stochastic approach to solve the Schr\"{o}dinger equation were first introdused by Andersen article  \cite{andersonRandomWalkSimulation1975} and were called "psips". In this thesis we follow the Thom and Spencer in \cite{spencerDevelopmentsStochasticCoupled2016}  and name operators as "excitors" and particles as "excips". In some articles both particles and operators are addressed to as "excitors".}. In this case excips on the Hartree-Fock determinant are represented by $N_0$ and all the other amplitudes $t_{\textbf{I}}$ are represented by walkers in the excited space. In case of stochastic coupled cluster theory we should consider products of excitors as well as a single ones. Following the notations from the article we use square brackets to do so, $[t_i^a t_j^b ]$, $[t_i^b t_j^a ]$  and $t_{ij}^{ab}$ should by considered separately. \\
+Spawn and death steps corresponding to equations are described in a following way:
+\begin{align}
+bla-bla
+\end{align}
+
+
+
+
+The main point here is to generate and store only non-composite clusters. This is achieved as follows:
+\begin{itemize}
+\item 
+\end{itemize} 
+
+
+SAMPLING
+
 
 
 

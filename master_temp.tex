@@ -4,6 +4,10 @@
 \usepackage{braket}
 \usepackage{mathtools}      
 \usepackage{amsmath} 
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{tcolorbox}
 \author{Anna Gribkovskaya}
 \title{\uppercase{Semi-stochastic Coupled Cluster Doubles for Quantum Dots}}
 \date{May 2018}
@@ -882,7 +886,6 @@ After this we obtain:
 where we consider determinants $D_{\textbf{n}}$ and $D_{\textbf{m}}$ to be connected,so that  $H_\textbf{nm} \neq 0 $. This equation is similar to equation ($\ref{eq:CIprojected}$). Once aging following the same procedure as for FCIQMC we are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding operators are named "excitors" \footnote{Here one should be careful with terminology because it can differ from one article to another. Imaginary particles for stochastic approach to solve the Schr\"{o}dinger equation were first introdused by Andersen article  \cite{andersonRandomWalkSimulation1975} and were called "psips". In this thesis we follow the Thom and Spencer in \cite{spencerDevelopmentsStochasticCoupled2016}  and name operators as "excitors" and particles as "excips". In some articles both particles and operators are addressed to as "excitors".}. In this case excips on the Hartree-Fock determinant are represented by $N_0$ and all the other amplitudes $t_{\textbf{I}}$ are represented by walkers in the excited space. In case of stochastic coupled cluster theory we should consider products of excitors as well as a single ones. Following the notations from the article we use square brackets to do so, $[t_i^a t_j^b ]$, $[t_i^b t_j^a ]$  and $t_{ij}^{ab}$ should by considered separately. \\
 Spawn and death steps corresponding to equations are described in a following way:
 \begin{align}
-bla-bla
 \end{align}
 
 
@@ -1164,9 +1167,71 @@ Code has the following base classes:
 	\item \textit{TBME},
 	\item \textit{getSPenergies},
 	\end{enumerate}
-\item \textit{channelset} is another base class with virtual functions.
+\item \textit{channelset} is another base class with virtual functions:
 \end{enumerate}
 And following derived classes:
+
+\section{Implementation of Hartree-Fock solver}
+
+
+
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=5.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=20em, text centered, rounded corners, minimum height=5em]
+\tikzstyle{small block} = [rectangle, draw, fill=blue!20, 
+text width=7em, text centered, rounded corners, minimum height=5em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+minimum height=2em]
+\begin{figure}
+	\centering
+\begin{tikzpicture}[node distance = 3cm, auto]
+% Place nodes
+\node [block] (init) {Compute One-Body and Two-Body matrix elements};
+%\node [cloud, left of=init] (expert) {expert};
+%\node [cloud, right of=init] (system) {system};
+\node [block, below of=init] (identify) {Initialize the coefficient matrix and the density matrix};
+\node [block, below of=identify] (initialize) {Compute Hartree-Fock matrix};
+\node [block, below of=initialize] (evaluate) {Dizgonalize the Hartree-Fock matrix};  
+\node [decision, below of=evaluate] (decide) {Convergence test passed?};
+\node [small block, left of=decide, node distance=6cm] (update) {Update the coeficient matrix and Compute new HF matrix};
+\node [block, below of=decide, node distance=3cm] (stop) {Compute HF Energy and Store the coeficient matrix};
+% Draw edges
+\path [line] (init) -- (identify);
+\path [line] (identify) -- (initialize);
+\path [line] (initialize) -- (evaluate);
+\path [line] (evaluate) -- (decide);
+\path [line] (decide) -- node [near start] {no} (update);
+\path [line] (update) |- (evaluate);
+\path [line] (decide) -- node {yes}(stop);
+%\path [line,dashed] (expert) -- (init);
+%\path [line,dashed] (system) -- (init);
+%\path [line,dashed] (system) |- (evaluate);
+\end{tikzpicture}
+\caption{Flow chart for Hartree-Fock algorithm}\label{fig::FHflowchart}
+\end{figure}
+
+Fig. $\ref{fig::FHflowchart}$ present the illustration for the HF algorithm. Here is a bit more detailed description of the algorithm:
+\begin{tcolorbox}
+	\begin{itemize}
+		\item Calculate the one-body $\braket{\alpha|\hat{h}|\beta}$ and two-body $\braket{\alpha\beta|\hat{v}|\gamma\delta}$ matrix elements.  \\
+		\item Begin iteration procedure:
+		\begin{enumerate}
+			\item Start with a guess for coefficient matrix. Usually an identity matrix $C^{(0)}_{i\alpha}$,  and density matrix $\rho^{(0)}_{\gamma\delta}$. For $\alpha, \gamma, \delta \in N_{\text{st}}$ and $i \in N_{p}$ ($N_{\text{st}}$ - number of states and $N_{p}$ - number of particles). 
+			\item The Hartree-Fock matrix on first iteration is computed as 
+			 \[ \hat{h}^{\text{HF}}_{\alpha \beta}(0) = \epsilon_\alpha \delta_{\alpha\beta} + \sum_{\gamma\delta}^{N_{\text{st}}} \rho^{(0)}_{\gamma\delta} \braket{\alpha\beta|\hat{v}|\gamma\delta}  \] 
+			 \item Diagonalize the Hartree-Fock matrix. Compute  $C^{(1)}_{i\alpha}$,   $\rho^{(1)}_{\gamma\delta}$ and $\epsilon_i^{HF}$
+			 \item For every iteration check the convergence:
+			 \[\frac{\sum_{i}^{N_p} |\epsilon_i^{(n)}- \epsilon_i^{(n-1)}|}{N_{st}} \leq \textbf{tolerance},\]
+			 where \textbf{tolerance} usialy a small number ($\approx 10^{-6}$). If convergence test fail compute new $\hat{h}^{\text{HF}}_{\alpha \beta}$ matrix and repeat the procedure.			 	
+		\end{enumerate} 
+		\item After the convergence test is passed, compute the HF energy and store the last version of coefficient matrix. 
+	\end{itemize}
+\end{tcolorbox}
+
 \clearpage
 **\appendix
 \chapter{Coulomb matrix elements}\label{app:1}

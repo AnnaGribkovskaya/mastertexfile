@@ -4,7 +4,7 @@
 \usepackage{braket}
 \usepackage{mathtools}      
 \usepackage{amsmath} 
-
+\usepackage{listings}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \usepackage{tcolorbox}
@@ -1232,8 +1232,98 @@ Fig. $\ref{fig::FHflowchart}$ present the illustration for the HF algorithm. Her
 	\end{itemize}
 \end{tcolorbox}
 
+\subsection{Code structure for HF}
 
+\begin{figure}
+\begin{lstlisting}[language=C++]
+void qdotHFbasis::fillTwoBodyElements(){
+	int NumberOfStates = m_shells.size();	
+	for(int i = 0; i < NumberOfStates; i++) {
+		qstate quantum_state_alpha = m_shells.at(i);
+		int alpha_n = quantum_state_alpha.n();
+		int alpha_m = quantum_state_alpha.m();
+		int alpha_sm = quantum_state_alpha.s();
+			
+		for(int j = 0; j < NumberOfStates; j++) {
+			qstate quantum_state_beta = m_shells.at(j);
+			int beta_n = quantum_state_beta.n();
+			int beta_m = quantum_state_beta.m();
+			int beta_sm = quantum_state_beta.s();
+			
+			for(int k = 0; k < NumberOfStates; k++) {
+				qstate quantum_state_gama = m_shells.at(k);
+				int gama_n = quantum_state_gama.n();
+				int gama_m = quantum_state_gama.m();
+				int gama_sm = quantum_state_gama.s();
+					
+					for(int l = 0; l < NumberOfStates; l++) {
+						qstate quantum_state_delta = m_shells.at(l);
+						int delta_n = quantum_state_delta.n();
+						int delta_m = quantum_state_delta.m();
+						int delta_sm = quantum_state_delta.s();
+							
+							if (alpha_sm == beta_sm && gama_sm == delta_sm ){
+								m_twoBodyElements[i][k][j][l] = Coulomb_HO(homega, alpha_n, alpha_m, gama_n, gama_m, beta_n, beta_m,  delta_n, delta_m);
+							}
+							if ((alpha_sm == delta_sm && gama_sm == beta_sm )){
+								m_twoBodyElements[i][k][l][j] = Coulomb_HO(homega, alpha_n, alpha_m, gama_n, gama_m, delta_n, delta_m, beta_n, beta_m);
+							}
+						}
+					}
+				}
+			}
+		}
+\end{lstlisting}
+\caption{Fill two-body elements}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}[language=C++]
+void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
+	int NumberOfStates = m_shells.size();
+	m_HF.zeros(NumberOfStates,NumberOfStates);
+	double FockElement = 0;
+	
+	for(int i = 0; i < NumberOfStates; i++) {
+		for(int j = 0; j < NumberOfStates; j++) {
+			for(int k = 0; k < NumberOfStates; k++) {
+				for(int l = 0; l < NumberOfStates; l++) {
+					FockElement += DensityMatrix(k,l)*TBME(i,k,j,l);
+					if (FockElement !=0.0){
+					}
+				}
+			}
+			if (i == j) {
+				m_HF(i, i) += m_HOEnergies.at(i);
+			}
+			m_HF(i, j) += FockElement;
+			FockElement = 0.0;
+		}
+	}
+}
+\end{lstlisting}
+\caption{Compute HF matrix}
+\end{figure}
 \subsection{Channels for CCD}
+
+\begin{figure}
+\begin{lstlisting}[language=C++]
+for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
+for(int S = -Smax; S <= Smax; S = S + 2){
+i++;
+ChannelVariety.emplace_back(channel());
+
+for(int i = 0; i < qsys->getFermiLevel(); i++){
+for(int j = 0; j < qsys->getFermiLevel(); j++){
+qstate *QuantumState = qsys->sumState(i,j);
+if(Ml == QuantumState->m() && S == QuantumState->s() && i != j){
+ChannelVariety.back().m_HoleHoleVec.emplace_back(channelindexpair());
+ChannelVariety.back().m_HoleHoleVec.back().set(i, j);
+} delete QuantumState;
+
+\end{lstlisting}
+\caption{Setting up channels}
+\end{figure}
 
 \clearpage
 **\appendix

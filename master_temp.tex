@@ -5,6 +5,25 @@
 \usepackage{mathtools}      
 \usepackage{amsmath} 
 \usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{beaublue}{rgb}{0.74, 0.83, 0.9}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\colorlet{NextBlue}{beaublue!20}
+\lstset{ %
+	backgroundcolor=\color{NextBlue},   % choose the background color
+	basicstyle=\footnotesize,        % size of fonts used for the code
+	breaklines=true,                 % automatic line breaking only at whitespace
+	captionpos=b,                    % sets the caption-position to bottom
+	commentstyle=\color{mygreen},    % comment style
+	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+	keywordstyle=\color{blue},       % keyword style
+	stringstyle=\color{mymauve},     % string literal style
+	columns=flexible,
+}
+
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \usepackage{tcolorbox}
@@ -1308,18 +1327,64 @@ void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
 
 \begin{figure}
 \begin{lstlisting}[language=C++]
+void qdotchannelset::setUpChannels(generalSPclass * qsystem){
+qsys = qsystem;
+int Mlmax = 2*(qsys->getShellsStochastic()-1);
+int Smax = 2;
 for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
-for(int S = -Smax; S <= Smax; S = S + 2){
-i++;
-ChannelVariety.emplace_back(channel());
+	for(int S = -Smax; S <= Smax; S = S + 2){
+		ChannelVariety.emplace_back(channel());
+		for(int i = 0; i < qsys->getFermiLevel(); i++){
+			for(int j = 0; j < qsys->getFermiLevel(); j++){
+				qstate *QuantumState = qsys->sumState(i,j);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && i != j){
+					ChannelVariety.back().m_HoleHoleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_HoleHoleVec.back().set(i, j);
+				} delete QuantumState;
+			}
+		}
+		for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
+			for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
+				qstate *QuantumState = qsys->sumState(a,b);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && a != b){
+					ChannelVariety.back().m_ParticleParticleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_ParticleParticleVec.back().set(a, b);
+				} delete QuantumState;
+			}
+		}
+		for(int c = qsys->getFermiLevel(); c < qsys->getStatesStochastic(); c++){
+			for(int k = 0; k < qsys->getFermiLevel(); k++){
+				qstate *QuantumState = qsys->sumState(c,k);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && c != k){
+					ChannelVariety.back().m_ParticleHoleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_ParticleHoleVec.back().set(c, k);
+				} delete QuantumState;
+			}
+		}
+		for(int c = qsys->getFermiLevel(); c < qsys->getStatesStochastic(); c++){
+			for(int k = 0; k < qsys->getFermiLevel(); k++){
+				qstate *QuantumState = qsys->substractState(c,k);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && c != k){
+					ChannelVariety.back().m_ParticleMinusHoleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_ParticleMinusHoleVec.back().set(c, k);
+				} delete QuantumState;
+			}
+		}
+		for(int l = 0; l < qsys->getFermiLevel(); l++){			
+			for(int d = qsys->getFermiLevel(); d < qsys->getStatesStochastic(); d++){
+				qstate *QuantumState = qsys->sumState(l,d);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && l != d){
+					ChannelVariety.back().m_HoleParticleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_HoleParticleVec.back().set(l, d);
+				} delete QuantumState;
+			}
+		}
+	}
+}
+}
 
-for(int i = 0; i < qsys->getFermiLevel(); i++){
-for(int j = 0; j < qsys->getFermiLevel(); j++){
-qstate *QuantumState = qsys->sumState(i,j);
-if(Ml == QuantumState->m() && S == QuantumState->s() && i != j){
-ChannelVariety.back().m_HoleHoleVec.emplace_back(channelindexpair());
-ChannelVariety.back().m_HoleHoleVec.back().set(i, j);
-} delete QuantumState;
+
+
 
 \end{lstlisting}
 \caption{Setting up channels}

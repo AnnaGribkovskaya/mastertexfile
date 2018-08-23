@@ -608,7 +608,7 @@ In this case Hamiltonian can be rewritten as
 
 \chapter{Coupled Cluster method} \label{ch:coupled_cluster}
 Coupled cluster (CC) method for quantum chemistry was first introduced by J. Cizek in the late 1960s \cite{cizekCorrelationProblemsAtomic}. A few years later he publish a new article on the topic in collaboration with and J. Paldus \cite{cizekCorrelationProblemAtomic1966}. CC is an \textit{ab initio} numerical method widely used for approximate solution of electronic Schr\"{o}dinger equation because it is both reliable and computationally affordable. This section is based on a very detailed and comprehensive overview of the method provided by Crawford and Schaefer in \cite{crawfordIntroductionCoupledCluster2007}. Coupled cluster method is based on the same basic concepts that are underlying many other many-body methods, such as many-body perturbation theory and full configuration interaction. The main critical difference is use of "exponential ansatz" of the wave function which is discussed below.\\
-In this chapter we discuss some critical ideas for the CC, such as cluster expansion of the wave function , exponential ansatz, Campbell-Baker-Hausdorff (BCH) expansion, second quantization and particle-hole formalizm, normal-ordering and correlation operator in application for CC method. Some of this ideas we have already mention in previuos chapter and some are completely new. The CC method can be described in two different ways using algebraic and diagrammatic formalisms. Both are correct and provide same results, but diagrammatic one is a way faster. However, for understanding of the method and it's origin we need to begin with algebraic form of the equations.\\
+In this chapter we discuss some critical ideas for the CC, such as cluster expansion of the wave function , exponential ansatz, Campbell-Baker-Hausdorff (BCH) expansion, second quantization and particle-hole formalism, normal-ordering and correlation operator in application for CC method. Some of this ideas we have already mention in previous chapter and some are completely new. The CC method can be described in two different ways using algebraic and diagrammatic formalisms. Both are correct and provide same results, but diagrammatic one is a way faster. However, for understanding of the method and it's origin we need to begin with algebraic form of the equations.\\
 \section{Cluster functions and Exponential Anzats} 
 As we have already discussed above Slater Determinant can be used to describe a wave function of the electrons. In Dirac notations it can be written as follows:
 \begin{equation}
@@ -617,7 +617,7 @@ As we have already discussed above Slater Determinant can be used to describe a 
 here $\phi_i(\bm{x_1})$ is a one-electron wave function, that describes motion of each electron separately, the $\bm{x_1}$ is a vector of coordinates, both spatial and spin. \\
 Keeping in mind that we are working with fermions, electronic wave function should be antisymmetric. \\
 Such description has some drawbacks, for example it fails to take into account the instantaneous interactions that keep apart electrons with opposite spins. For more details please refer to  \cite{bartlettApplicationsPostHartree2007} and \cite{ModernQuantumChemistry}. \\
-The most important idea of CC method is exponential exopantion of wave function. 
+The most important idea of CC method is exponential expansion of wave function. 
 \begin{equation}\label{eq:exponential ansatz}
 \ket{\Psi}=e^{\hat{T}}\ket{\Phi_0}.
 \end{equation}
@@ -630,7 +630,7 @@ Where $\hat{T}$ is cluster operator:
 \hat{T_n}= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
 \end{align}
 here values $t_i^a $ and $t_{i,j}^{a,b}$ are called cluster amplitudes. \\
-After introducing the exponential ansatz we need a reciepe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation (REFERENCE!!!) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
+After introducing the exponential ansatz we need a recipe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation (REFERENCE!!!) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
 \begin{equation}
 	\hat{H}e^{\hat{T}}\ket{\Phi_0}=Ee^{\hat{T}}\ket{\Phi_0}.
 \end{equation}
@@ -794,7 +794,7 @@ The one-body term does not contribute because it is not possible to construct fu
 \end{eqnarray}
 Contribution from other terms are obtained in the similar manner, one just need to kepp in mind that for terms with cluster operator, like $\braket{\Phi_{ij}^{ab}|(\hat{F}_\text{N}\hat{T}_2)_c|\Phi_0}$ and $\braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N}\hat{T}_2)_c|\Phi_0}$ the Connected Cluster Theorem $\ref{theo:connected}$ must be satisfied.\\
 The final expression for the amplitudes in case of CCD approximation is the following:
-\begin{eqnarray}
+\begin{eqnarray}\label{eq:CCD_ampl}
 0 =\braket{ab||ij} + \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} ) + \frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab} \nonumber &+\\
  \frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd} + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac} + 
  \frac{1}{2} P(ij)(ab) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac} t_{lj}^{db} \nonumber & + \\
@@ -1170,7 +1170,8 @@ One more solution is to map each non-zero value with a unique address. This meth
 The method is described in details here \cite{leikangerFullConfigurationInteraction}.
 
 \part{Implementation and results}
-In this part we present the implementation of algorithms presented in the thesis. This part has the following structure:\\
+In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. 
+This part has the following structure:\\
 \begin{itemize}
 \item Section $\ref{sec:impl1}$ present a general structure of the code and description of all classes used.
 \item Section (REF) 
@@ -1324,6 +1325,33 @@ void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
 \caption{Compute HF matrix}
 \end{figure}
 \subsection{Channels for CCD}
+The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$. Such transition is prohibited if it does not preserve quantum numbers for spin and angular momentum. The preserved quantum numbers are the following:
+\begin{align}
+m_r + m_s = m_p + m_q,\\
+s_r + s_s = s_p + s_q.
+\end{align}
+If this condition is not met we have $\braket{ab||cd} = 0$.\\
+For amplitude equation presented in ($\ref{eq:CCD_ampl}$) we need matrix elements of the following form:
+\begin{align}\label{eq:TBME_channels}
+\braket{ab||ij}&,\\
+\braket{kl||ij}&,\\
+\braket{ab||cd}&,\\
+\braket{kb||cj}&,\\
+\braket{kl||cd}&.\\
+\end{align}
+As we have already mentioned indexes $a,b,c,d,...$ correspond to states which are not occupied in the reference determinant and are called particle states, while  indexes $i,j,k,l,...$ correspond to states which are occupied in the reference determinant and are called hole states. Taking into account the fact that we can possible make only some combinations of two states, namely hole-hole, particle-particle, particle-hole and hole-particle pairs we only are able to set up some  specific types of interaction matrices:
+\begin{align}
+V_{pppp},V_{ppph}, V_{pphh}, V_{phhh},V_{hhpp},V_{hhhp},V_{hppp},V_{hhhh}.
+\end{align}
+All together there are eight matrices. Splitting the TBME matrix into parts is not the only thing here, the main idea is to right each block into a "channel" to satisfy the conservation of quantum numbers is the goal. Let's consider how this cam by done.\\
+We start with creating a vectors for combination of two states. On Fig. $\ref{f:vectors_for_channels}$ one may see how this is implemented in C++. We mapping two states into one state which is a sum of the two:
+\begin{align}
+\ket{ab} \rightarrow \ket{A}, \\
+\ket{ij} \rightarrow \ket{I}, \\
+\ket{ai} \rightarrow \ket{AI}, \\
+\ket{ia} \rightarrow \ket{IA}, \\
+\end{align}
+All new states have quantum numbers which are just sums of the original ones. For example, $\ket{A}$ has quantum numbers $m_A = m_a+m_b$ and  $s_A = s_a+s_b$. We loop over all possible sum's for spin and angular momentum, which is just $\{-2,0,2\}$ for spin and $\{-2(R-1), \dots 0, \dots , 2(R-1)\}$. Here $R$ is shell number. After doing so we have vectors with pairs of states which satisfy the conservation laws. This allow us to store only non-zero matrix elements.\\
 
 \begin{figure}
 \begin{lstlisting}[language=C++]
@@ -1361,15 +1389,6 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 				} delete QuantumState;
 			}
 		}
-		for(int c = qsys->getFermiLevel(); c < qsys->getStatesStochastic(); c++){
-			for(int k = 0; k < qsys->getFermiLevel(); k++){
-				qstate *QuantumState = qsys->substractState(c,k);
-				if(Ml == QuantumState->m() && S == QuantumState->s() && c != k){
-					ChannelVariety.back().m_ParticleMinusHoleVec.emplace_back(channelindexpair());
-					ChannelVariety.back().m_ParticleMinusHoleVec.back().set(c, k);
-				} delete QuantumState;
-			}
-		}
 		for(int l = 0; l < qsys->getFermiLevel(); l++){			
 			for(int d = qsys->getFermiLevel(); d < qsys->getStatesStochastic(); d++){
 				qstate *QuantumState = qsys->sumState(l,d);
@@ -1383,12 +1402,62 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 }
 }
 
+\end{lstlisting}
+\caption{Setting up channels} \label{f:vectors_for_channels}
+\end{figure}
 
 
+Having such vectors we may build up all needed matrices. Let's consider how this is done on Fig.  $\ref{f:MatV_for_channels}$. 
+
+Mapping two states into a single one has one more advantage, we now may use the matrix-matrix multiplications to compute the correlation energy and amplitudes. Here is a brief explanation  of how it works.
+
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+void ccd::setUpInterractionMatrixBlocks(){
+	for(channel onechannel : ChannelVariety){
+		m_ppppVBlock.emplace_back(symblock(onechannel.m_ParticleParticleVec.size(), onechannel.m_ParticleParticleVec.size()));
+		for(unsigned int ab = 0; ab < onechannel.m_ParticleParticleVec.size(); ab++){
+			channelindexpair AB = onechannel.m_ParticleParticleVec.at(ab);
+			for(unsigned int cd = 0; cd < onechannel.m_ParticleParticleVec.size(); cd++){
+				channelindexpair CD = onechannel.m_ParticleParticleVec.at(cd);
+				m_ppppVBlock.back().setElement((int)ab, (int)cd, qsys->TBME(AB.first(), AB.second(), CD.first(), CD.second())) ;
+			}
+		}		
+		m_hhhhVBlock.emplace_back(symblock(onechannel.m_HoleHoleVec.size(), onechannel.m_HoleHoleVec.size()));
+		for(unsigned int kl = 0; kl < onechannel.m_HoleHoleVec.size(); kl++){
+			channelindexpair KL = onechannel.m_HoleHoleVec.at(kl);
+			for(unsigned int ij = 0; ij < onechannel.m_HoleHoleVec.size(); ij++){
+				channelindexpair IJ = onechannel.m_HoleHoleVec.at(ij);
+				m_hhhhVBlock.back().setElement((int)kl,(int)ij, qsys->TBME(KL.first(), KL.second(), IJ.first(), IJ.second()));
+			}
+		}
+			
+		m_hhppVBlock.emplace_back(symblock(onechannel.m_HoleHoleVec.size(), onechannel.m_ParticleParticleVec.size()));
+		for(unsigned int kl = 0; kl < onechannel.m_HoleHoleVec.size(); kl++){
+			channelindexpair KL = onechannel.m_HoleHoleVec.at(kl);
+			for(unsigned int cd = 0; cd < onechannel.m_ParticleParticleVec.size(); cd++){
+				channelindexpair CD = onechannel.m_ParticleParticleVec.at(cd);
+				m_hhppVBlock.back().setElement((int)kl,(int)cd, qsys->TBME(KL.first(), KL.second(), CD.first(), CD.second())) ;
+			}
+		}				
+		m_pphhVBlock.emplace_back(symblock(onechannel.m_ParticleParticleVec.size(), onechannel.m_HoleHoleVec.size()));
+		for(unsigned int kl = 0; kl < onechannel.m_HoleHoleVec.size(); kl++){
+			channelindexpair KL = onechannel.m_HoleHoleVec.at(kl);
+			for(unsigned int cd = 0; cd < onechannel.m_ParticleParticleVec.size(); cd++){
+				channelindexpair CD = onechannel.m_ParticleParticleVec.at(cd);
+				m_pphhVBlock.back().setElement((int)cd,(int)kl, qsys->TBME(CD.first(), CD.second(), KL.first(), KL.second())) ;
+			}
+		}
+	}
+}
 
 \end{lstlisting}
-\caption{Setting up channels}
+\caption{Setting up interaction matrix} \label{f:MatV_for_channels}
 \end{figure}
+
+
+
+
 
 \clearpage
 **\appendix

@@ -1407,10 +1407,17 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 \end{figure}
 
 
-Having such vectors we may build up all needed matrices. Let's consider how this is done on Fig.  $\ref{f:MatV_for_channels}$. 
+Having such vectors we may build up all needed matrices. Let's consider how this is done on Fig.  $\ref{f:MatV_for_channels}$. For every matrix we need ($V_{pppp}, V_{pphh},V_{hhpp}, V_{hhhh}$) we pick two vectors with the indexes corresponding to needed combination of states and store the matrix element into one of blocks. This is done for all channels that have been created when we set up the vectors. We do not do this for matrices like $V_{phhh}$ due to the reasons that will be discussed below in this section.\\
+Mapping two states into a single one has even more advantages, we now may use the matrix-matrix multiplications to compute the correlation energy and amplitudes. Here is a brief explanation  of how it works. Let's take for example the second leaner term \footnote{The term linear is used to denote that we have only one amplitude to multiply with interaction matrix element. Terms with two amplitudes are considered quadratic.} in ($\ref{eq:CCD_ampl}$):
 
-Mapping two states into a single one has one more advantage, we now may use the matrix-matrix multiplications to compute the correlation energy and amplitudes. Here is a brief explanation  of how it works.
-
+\begin{equation}
+ \sum_{cd}\braket{ab||cd}t_{cd}^{ij} \rightarrow V_{ab}^{cd} \times T_{cd}^{ij} \rightarrow V_{A}^{C} \times T_{C}^{I} \rightarrow (VT)_{A}^{I},
+\end{equation}
+which is just an ordinary matrix-matrix multiplication.\\
+However not all terms in  ($\ref{eq:CCD_ampl}$) can be tackled as easy as this one. For example, this one:
+\begin{align}
+bla
+\end{align}
 \begin{figure}
 	\begin{lstlisting}[language=C++]
 void ccd::setUpInterractionMatrixBlocks(){
@@ -1450,7 +1457,6 @@ void ccd::setUpInterractionMatrixBlocks(){
 		}
 	}
 }
-
 \end{lstlisting}
 \caption{Setting up interaction matrix} \label{f:MatV_for_channels}
 \end{figure}

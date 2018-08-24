@@ -795,16 +795,13 @@ The one-body term does not contribute because it is not possible to construct fu
 Contribution from other terms are obtained in the similar manner, one just need to kepp in mind that for terms with cluster operator, like $\braket{\Phi_{ij}^{ab}|(\hat{F}_\text{N}\hat{T}_2)_c|\Phi_0}$ and $\braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N}\hat{T}_2)_c|\Phi_0}$ the Connected Cluster Theorem $\ref{theo:connected}$ must be satisfied.\\
 The final expression for the amplitudes in case of CCD approximation is the following:
 \begin{eqnarray}\label{eq:CCD_ampl}
-0 =\braket{ab||ij} + \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} ) + \frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab} \nonumber &+\\
- \frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd} + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac} + 
- \frac{1}{2} P(ij)(ab) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac} t_{lj}^{db} \nonumber & + \\
+0 =\braket{ab||ij} + \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} ) +\frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd} 
+\nonumber &+\\
+ \frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab}  + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac} + 
+  P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac} t_{lj}^{db} \nonumber & + \\
  \frac{1}{4} \sum_{klcd}\braket{kl||cd}t_{ij}^{cd} t_{kl}^{ab}  
-- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{ij}^{ac} t_{kl}^{bd}- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{ab} t_{jl}^{cd} &  
+- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{dc}t_{lj}^{ab}- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{lk}^{ac}t_{ij}^{db}&  
 \end{eqnarray}
-
-
-
-
 
 
 \chapter{Monte Carlo Methods in Quantum Physics}
@@ -867,13 +864,14 @@ As in DMC we may study two processes independently, namely:
 C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef1}
 C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} \rightarrow C_{\textbf{I}}\\ \label{eq:FCIQMC_coef2}
 \end{align}
-After this we need to discretize the coefficients. To simulate this stochastically we should create a population of walkers in the SD space. Each walker has a sign and belog to any determinant. Number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).In order to run the simulation we need to consider three processes:\\
+After this we need to discretize the coefficients. To simulate this stochastically we should create a population of walkers in the SD space. Each walker has a sign and belong to any determinant. Number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).In order to run the simulation we need to consider three processes:\\
 \begin{enumerate}
 	\item \textbf{Spawning}. Aa soon as walker can be positioned on any determinant, we consider random walker at determinant $D_{\textbf{J}}$.After this we randomly pick up a connected determinant  $D_{\textbf{I}}$ (assuming $|H_{\textbf{IJ}}|\neq 0$). The probability to spawn a walker from $\textbf{J} \rightarrow \textbf{I} $ is proportional to $\tau |H_{\textbf{IJ}}| $ and sign $- sgn(H_{\textbf{IJ}})$. The spawning process is corresponding to equation ($\ref{eq:FCIQMC_coef2}$) and can be formulated as $ - \tau H_{\textbf{IJ}} C_{\textbf{J}} + C_{\textbf{I}} \rightarrow  C_{\textbf{I}} $.
 	\item \textbf{Birth/Death}. Here we simulate creation or destruction of the already existing walker at some determinant, for example $D_{\textbf{I}}$ . This process corresponds to the  equation ($\ref{eq:FCIQMC_coef1}$) and the probability is now proportional to $- \tau (H_{\textbf{II}} - E) $ and sign distinguish between either walker is created or destroyed. Negative sign corresponds to death and positive sign corresponds to birth.
 	\item \textbf{Annihilation}. All pairs of walkers with opposite sign are removed, if they belong to the same determinant.
 \end{enumerate}
 The population control is carried out by varying of the remaining parameter, so-called shift $E$. This parameter can influence the population dynamics in a following way - if the value of $E$ exceeds the lowest eigenvalue, then the population of walkers will increase and vice versa. 
+
 \subsection{Coupled Cluster Quantum Monte Carlo}
 Following the same procedure as for FCIQMC we present a CC wave function in a similar way as we did it for CI in equation ($\ref{eq:fciqmcWF}$). The CC wave function is represented by the following expansion:
 \begin{equation}\label{eq:ccqmcWF}
@@ -917,9 +915,6 @@ The main point here is to generate and store only non-composite clusters. This i
 
 
 SAMPLING
-
-
-
 
 
 
@@ -1346,10 +1341,10 @@ V_{pppp},V_{ppph}, V_{pphh}, V_{phhh},V_{hhpp},V_{hhhp},V_{hppp},V_{hhhh}.
 All together there are eight matrices. Splitting the TBME matrix into parts is not the only thing here, the main idea is to right each block into a "channel" to satisfy the conservation of quantum numbers is the goal. Let's consider how this cam by done.\\
 We start with creating a vectors for combination of two states. On Fig. $\ref{f:vectors_for_channels}$ one may see how this is implemented in C++. We mapping two states into one state which is a sum of the two:
 \begin{align}
-\ket{ab} \rightarrow \ket{A}, \\
-\ket{ij} \rightarrow \ket{I}, \\
-\ket{ai} \rightarrow \ket{AI}, \\
-\ket{ia} \rightarrow \ket{IA}, \\
+\ket{ab} &\rightarrow \ket{A}, \\
+\ket{ij} &\rightarrow \ket{I}, \\
+\ket{ai} &\rightarrow \ket{AI}, \\
+\ket{ia} &\rightarrow \ket{IA}. \\
 \end{align}
 All new states have quantum numbers which are just sums of the original ones. For example, $\ket{A}$ has quantum numbers $m_A = m_a+m_b$ and  $s_A = s_a+s_b$. We loop over all possible sum's for spin and angular momentum, which is just $\{-2,0,2\}$ for spin and $\{-2(R-1), \dots 0, \dots , 2(R-1)\}$. Here $R$ is shell number. After doing so we have vectors with pairs of states which satisfy the conservation laws. This allow us to store only non-zero matrix elements.\\
 
@@ -1408,16 +1403,9 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 
 
 Having such vectors we may build up all needed matrices. Let's consider how this is done on Fig.  $\ref{f:MatV_for_channels}$. For every matrix we need ($V_{pppp}, V_{pphh},V_{hhpp}, V_{hhhh}$) we pick two vectors with the indexes corresponding to needed combination of states and store the matrix element into one of blocks. This is done for all channels that have been created when we set up the vectors. We do not do this for matrices like $V_{phhh}$ due to the reasons that will be discussed below in this section.\\
-Mapping two states into a single one has even more advantages, we now may use the matrix-matrix multiplications to compute the correlation energy and amplitudes. Here is a brief explanation  of how it works. Let's take for example the second leaner term \footnote{The term linear is used to denote that we have only one amplitude to multiply with interaction matrix element. Terms with two amplitudes are considered quadratic.} in ($\ref{eq:CCD_ampl}$):
 
-\begin{equation}
- \sum_{cd}\braket{ab||cd}t_{cd}^{ij} \rightarrow V_{ab}^{cd} \times T_{cd}^{ij} \rightarrow V_{A}^{C} \times T_{C}^{I} \rightarrow (VT)_{A}^{I},
-\end{equation}
-which is just an ordinary matrix-matrix multiplication.\\
-However not all terms in  ($\ref{eq:CCD_ampl}$) can be tackled as easy as this one. For example, this one:
-\begin{align}
-bla
-\end{align}
+
+
 \begin{figure}
 	\begin{lstlisting}[language=C++]
 void ccd::setUpInterractionMatrixBlocks(){
@@ -1461,8 +1449,93 @@ void ccd::setUpInterractionMatrixBlocks(){
 \caption{Setting up interaction matrix} \label{f:MatV_for_channels}
 \end{figure}
 
+Mapping two states into a single one has even more advantages, we now may use the matrix-matrix multiplications to compute the correlation energy and amplitudes. Here is a brief explanation  of how it works. Let's take for example the second leaner term \footnote{The name linear is used to denote that we have only one amplitude to multiply with interaction matrix element. Terms with two amplitudes are considered quadratic.} in ($\ref{eq:CCD_ampl}$):
 
+\begin{equation}
+\sum_{cd}\braket{ab|v|cd}t_{cd}^{ij} \rightarrow V_{ab}^{cd} \times T_{cd}^{ij} \rightarrow V_{A}^{C} \times T_{C}^{I} \rightarrow (VT)_{A}^{I},
+\end{equation}
+which is just an ordinary matrix-matrix multiplication.\\
+However not all terms in  ($\ref{eq:CCD_ampl}$) can be tackled as easy as this one. For example, the thierd leaner term:
+\begin{align}
+\sum_{kc}\braket{kb|v|cj}t_{ik}^{ac} \rightarrow V_{kb}^{cj} \times T_{ik}^{ac},
+\end{align}
+cannot be straightforward implemented as matrix-matrix multiplication. In order to do this we need to perform a following transformation:
+\begin{align}
+\sum_{kc}\braket{kb|v|cj}t_{ik}^{ac} \rightarrow \sum_{kc}\braket{kc|\tilde{v}|jb}\tilde{t}_{ai}^{kc} \rightarrow \tilde{V}_{kc}^{jb}\times \tilde{T}_{ai}^{kc} \rightarrow \tilde{V}\times\tilde{T}.
+\end{align}
+It is important to take into account all preserved quantities while we make such permutation of indexes. The new product should obey the same conservation laws as the original one. For the term under consideration that means the following transformation:
+\begin{equation}\label{eq:L3transform}
+k+b=c+j=a+c=i+k \Rightarrow k-c=j -b=a-i=k-c.
+\end{equation}
+Such transformation require a new block interaction matrix. In order to set it up we need to set up the vectors with indexes that correspond the transformation described in ($\ref{eq:L3transform}$). As one can see we transformed "hole plus particle" indexes into "hole minus particle". On Fig. $\ref{f:vectors_for_channelsHminusP}$ we first set up the vectors with index pairs corresponding to such states. After this is done we can set up the corresponding interaction matrix itself the same way as we did it before. 
 
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+for(int l = 0; l < qsys->getFermiLevel(); l++){
+	for(int d = qsys->getFermiLevel(); d < qsys->getStatesStochastic(); d++){
+		qstate QuantumState = qsys->substractState(l,d);
+		if(Ml == QuantumState.m() && S == QuantumState.s() && l != d){
+			ChannelVariety.back().m_HoleMinusParticleVec.emplace_back(channelindexpair());
+			ChannelVariety.back().m_HoleMinusParticleVec.back().set(l, d);
+		} //delete QuantumState;
+	}
+}
+
+for(int c = qsys->getFermiLevel(); c < qsys->getStatesStochastic(); c++){
+         	for(int k = 0; k < qsys->getFermiLevel(); k++){
+         		qstate QuantumState = qsys->substractState(c,k);
+         		if(Ml == QuantumState.m() && S == QuantumState.s() && c != k){
+         			ChannelVariety.back().m_ParticleMinusHoleVec.emplace_back(channelindexpair());
+         			ChannelVariety.back().m_ParticleMinusHoleVec.back().set(c, k);
+         		} //delete QuantumState;
+         	}
+}
+\end{lstlisting}
+\caption{Setting up channels for rotated clusters} \label{f:vectors_for_channelsHminusP}
+\end{figure}
+
+Other terms in the amplitude equitation can be considered in a similar manner. For the first quadratic term does not require any transformation and can be expressed as a product of three matrices:
+\begin{equation}
+\sum_{klcd}\braket{kl|v|cd}t_{ij}^{cd} t_{kl}^{ab} \rightarrow \tilde{V}_{kl}^{cd} \times \tilde{T}_{ij}^{kl} \times \tilde{T}_{kl}^{ab }. 
+\end{equation}
+Other terms are a bit more complicated, but are based on the same technique:
+\begin{align}
+\sum_{klcd}\braket{kl||cd}t_{ac}^{ik} t_{bd}^{jl}   &\rightarrow  \tilde{T}_{ai}^{ck}\times\tilde{V}_{ck}^{ld}\times\tilde{T}_{ld}^{dj} \label{eq:Q2} \\ 
+\sum_{klcd}\braket{kl||cd}t_{ik}^{dc}t_{lj}^{ab} &\rightarrow     \tilde{T}_{l}^{abj}\times \tilde{V}_{kcd}^{l} \times  \tilde{T}_{i}^{kcd}, \label{eq:Q3} \\ 
+\sum_{klcd}\braket{kl||cd}t_{lk}^{ac}t_{ij}^{db} &\rightarrow \tilde{T}_{klc}^{a} \times  \tilde{V}_{d}^{klc}\times \tilde{T}_{bij}^{d}. \label{eq:Q4}
+\end{align}
+Transformation for ($\ref{eq:Q2}$) is trivial, but ($\ref{eq:Q3}$) and ($\ref{eq:Q4}$) need some comments. For the two last quadratic terms in ($\ref{eq:CCD_ampl}$) we need to map three states into a single one. In order to do this we need to set up new vectors and ineraction matrix blocks. On Fig. $\ref{f:vectors_for_Q4}$ we present a method to store indexec needed for such transformation - three indexes are stored into one "hole plus hole minus particle" state and one into a single "particle" state. Thansformation is made in a similar manner as it has been made in  ($\ref{eq:L3transform}$) for leaner term, the only difference is that now we need to change the number of indexes not only thier positions. However all quantum numbers should be preserved according to the same rules as before.\\
+After this transformation we use matrix multiplication for each term and compute amplitudes on the next iteration. 
+
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
+   	for(int S = -Smax; S <= Smax; S++){
+   		ChannelVariety2.emplace_back(channel());
+   		for(int a = 0; a < qsys->getStatesStochastic(); a++){
+   			qstate  OneQS = qsys->oneState(a);
+   			if(Ml == OneQS.m() && S == OneQS.s()){
+   				for(int i = 0; i < qsys->getFermiLevel(); i++){
+   					for(int j = 0; j < qsys->getFermiLevel(); j++){
+  						for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
+					qstate QuantumState = qsys->sumSubstractState(i,j,b);
+					if( QuantumState.m() == OneQS.m()
+					&& QuantumState.s()  == OneQS.s()){
+					ChannelVariety2.back().m_HolePlusHoleMinusParticleVec.emplace_back(channelindexpair());
+					ChannelVariety2.back().m_HolePlusHoleMinusParticleVec.back().setThree(i, j, b);
+					ChannelVariety2.back().m_ParticleVec.emplace_back(channelindexpair());
+					ChannelVariety2.back().m_ParticleVec.back().setOne(a);
+  							}
+   						}
+   					}
+   				}
+   			}
+   		}
+   	}
+}
+\end{lstlisting}
+\caption{Setting up channels for rotated clusters} \label{f:vectors_for_Q4}
+\end{figure}
 
 
 \clearpage

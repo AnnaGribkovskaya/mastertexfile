@@ -6,7 +6,7 @@
 \usepackage{amsmath} 
 \usepackage{listings}
 \usepackage{color}
-
+\usepackage{lscape}
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{beaublue}{rgb}{0.74, 0.83, 0.9}
@@ -359,9 +359,6 @@ where \textit{contractions between strings} mean we are only considering contrac
 	and so on. 
 \end{theorem}
 
-
-
-
  
 \section{Normal-Ordered Electronic Hamiltonian}
 In section $\ref{sec:operator in 2q}$ we have presented the operator representation in the second quantized form. Equation ($\ref{eq:Ham in 2q}$) that provides the second quantized form of the electronic Hamiltonian can be rewritten using Wick's theorem as the normal ordered operator string. This is a very convenient approach for the derivation of the coupled cluster equations that are provided in Chapter $\ref{ch:coupled_cluster}$.  \\
@@ -400,10 +397,6 @@ After this the normal-ordered Hamiltonian can be written as:
 \hat{H}_N = \hat{H} - \braket{\Phi_0|H|\Phi_0}
 \end{eqnarray}
 One may say that the normal-ordered form of the operator is obtained by subtracting the reference expectation value of this operator from the operator itself. In this case $\hat{H}_N$ may be referred to as correlation operator.
-
-
-
-
 
 
 
@@ -450,8 +443,12 @@ In this section we are presenting formalism that is used in many articles and te
 Slater Determinant discussed above is composed using so-called \textit{occupied orbitals}. However they are chosen from a set of single-particle functions that contains also some extra functions. This additional functions are called \textit{virtual orbitals}. There is a convention regarding how to label this occupied and virtual orbitals. It may seen a bit odd, but for occupied orbitals we use name "hole states" and for virtual orbitals we use "particle states". Hole states are labeled with letters \textit{i,j,k} and particle states are labeled with letters \textit{a,b,c}.\\
 
 
+
 %Any system of many particles can by described as a reference determinant.
+
+
 \chapter{Quantum Dot}
+
 
 \section{Introduction to Quantum Dots}
 In this part we provide a theoretical description of 2-dimensional quantum dots. However it's worth talking about what are quantum dots and why are they so interesting before deriving equations. \textit{QDs are sometimes called artificial atoms, due to the fact that they as real atoms has electrons confined inside.} The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
@@ -461,26 +458,35 @@ PRODUCTION. The synthesis of QDs require very high precision and can be accompli
 USAGE. QDs have many applications. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications \cite{zhuQuantumDots2013}. 
 
 \subsection{Mathematical description of Quantum Dots}\label{sec:math_qd}
-Before we can start derive equations we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
+Before presenting equations for quantum dots we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
 \begin{enumerate}
-	\item Electrons are confined by  Harmonic Oscillator potential $V(r)=\frac{m\omega^2 r^2}{2}$.
+	\item Electrons are confined by Harmonic Oscillator potential $V(r)_{HO}=\frac{m\omega^2 r^2}{2}$.
 	\item Electrons interact via two-body Coulomb potential  $V(r_{ij})=\frac{1}{r_{ij}}$.
 	\item The Hamiltonian is considered to be two-dimensional.
 	\item The HO potential is spherically symmetric, giving in parabolic quantum dot.
+	\item External magnetic field is not present.
 \end{enumerate}
 
-!!!!!\\
-We have already presented the Hamiltonian of such system in Section $\ref{sec:manybody}$ equations $\ref{H1H2}$. The unperturbed Hamiltonian eigenvalue can be presented as :
+Mathematical description of Quantum Dots has been provided in many other master thesis, for example in \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUM}, so we are not aiming to derive all the equations and present a detailed description here. We have already presented the electronic Hamiltonian of in Section ($\ref{sec:operator in 2q}$). Fro QD the one-body operator corresponds to kinetic energy and external potential and a two-body operator corresponds to Coulomb interaction between two particles:
+\begin{align}
+\hat{H}_0&= \hat{T}+\hat{V}_{HO} \rightarrow \frac{1}{2} \textbf{r}^2-\frac{\nabla_\textbf{r}^2}{2} ,\\
+\hat{V}&= \sum_{i<j}\frac{1}{r_{ij}},
+\end{align}
+here $\textbf{r}$ is position of the particle, $r_{ij}$ is distance between particles.
+In previous Chapter we mention single-particle wave functions. This functions can be obtained using the one-body part of the Hamiltonian and are well-known functions corresponding to so-called quantum Harmonic oscillator. For a more detailed information please refer to \cite{sakuraiModernQuantumMechanics1993}. The single particle wave functions in polar coordinates can be then written as:
+\begin{equation}
+\phi_\text{SP}(r,\theta)= \bigg[ \frac{2n!}{(n+|m|)!} \bigg]^{\frac{1}{2}} \frac{1}{2\pi} e^{im\theta}r^{|m|}L_n^{|m|}(r^2)e^{\frac{-r^2}{2}},
+\end{equation}
+here $r=|\textbf{r}|$, $L_n$ are the Laguerre polynomials, $n$ and $m$ are magnetic and principal quantum numbers respectively.
+The single particle energy can be presented as :
 \begin{eqnarray}
-E_0= \sum_{i=1}^{N}\epsilon(i),\\
-\epsilon(i)= 1+|m_i|+ 2n_i.
+\epsilon(i)= 1+|m_i|+ 2n_i,
 \end{eqnarray}
-
-!!!\\
-
+the single particle energy is measured in units $\hbar\omega$. On Fig. $\ref{tab:c}$ the shell structure of QD is presented.
+The two-body matrix elements are computed using the algorithm presented in the article \cite{EnergySpectraFewelectron}.
 
 \begin{table}[h!]
-	\caption{Quantum numbers for the single-particle basis using a harmonic oscillator in two dimensions.}
+	\caption{Quantum numbers for the single-particle basis using a harmonic oscillator in two dimensions.} 
 	\label{tab:c}
 	\begin{center}
 		\begin{tabular}{ccccc}
@@ -507,6 +513,46 @@ E_0= \sum_{i=1}^{N}\epsilon(i),\\
 		\end{tabular}
 	\end{center}
 \end{table}
+
+
+
+\chapter{Homogeneous Electron Gas}
+The Homogeneous Electron Gas (HEG) or, as it sometimes called, the free electron gas is a very useful model in the condensed matter physics as it allows to study the many-fermion system without additional complication caused by lattice symmetry.  This makes useful for study metals, i.e modeling the properties of valence electrons.\\
+Below are main assumptions to be made for this model:
+\begin{itemize}
+	\item We assume to have a certain number of electrons $N_e$ in a cubic box of a certain length $L$. Volume of the cube is $\Omega= L^2$.
+	\item No external forces are present, except those provided by background ions. The density of the background charge is constant and given by $N/\Omega$, here $N$ is number of ions.
+	\item System is neutral and ions are stationary.
+\end{itemize}
+
+ HEG model allows us to solve the Hartree-Fock equations for system of many interacting particles in the analytical form. Additionally it also allows us to get the total energy and Hamiltonian matrix elements in the basis for Hartree-Fock. This make the model one of the best options to implement a so called post Hartree-Fock methods, for example, CC, FCI  and  Monte Carlo methods for many-body problems.\\
+ This properties make HEG a perfect system to test the many-body solvers before using it for other systems.
+ \section{Hamiltonian for Homogeneous Electron Gas}
+The Hamiltonian for HEG is given by:
+\begin{equation}
+\hat{H}=\hat{H}_{el}+\hat{H}_{b}+\hat{H}_{el-b},
+\end{equation}
+with $\hat{H}_{el}$ is the electronic part given by:
+\begin{equation}
+\hat{H}_{el}=\sum_{i=1}^N\frac{p_i^2}{2m}+\frac{e^2}{2}\sum_{i\ne j}\frac{e^{-\mu |\mathbf{r}_i-\mathbf{r}_j|}}{|\mathbf{r}_i-\mathbf{r}_j|},
+\end{equation}
+and $\hat{H}_{b}$ being the operator corresponding to background charge from ions, given by:
+\begin{equation}
+\hat{H}_{b}=\frac{e^2}{2}\int\int d\mathbf{r}d\mathbf{r}'\frac{n(\mathbf{r})n(\mathbf{r}')e^{-\mu |\mathbf{r}-\mathbf{r}'|}}{|\mathbf{r}-\mathbf{r}'|},
+\end{equation}
+and $\hat{H}_{el-b}$ being the operator corresponding to interactions between electrons and the positive background charge, given by:
+\begin{equation}
+\hat{H}_{el-b}=-\frac{e^2}{2}\sum_{i=1}^N\int d\mathbf{r}\frac{n(\mathbf{r})e^{-\mu |\mathbf{r}-\mathbf{x}_i|}}{|\mathbf{r}-\mathbf{x}_i|},
+\end{equation}
+here $\mu$ is a convergence factor, $n(\textbf{r})$ is background charge density. In thermodynamical limit $\mu \rightarrow 0$. \\
+
+
+
+
+
+
+
+
 
 
 \chapter{The Hatree-Fock theory}\label{ch:HF}
@@ -589,7 +635,7 @@ h_{\alpha\beta}^{HF}=\langle \alpha | h | \beta \rangle+
 \end{equation}
 once we obtain a matrix eigenvalue problem:
 \begin{equation} \label{eig}
-\hat{h}^{HF}\hat{C}=\epsilon^{\mathrm{HF}}\hat{C}.
+\hat{h}^{HF}C=\epsilon^{\mathrm{HF}}C.
 \end{equation}
 To simplify computations in our program we use so called density matrix. It is defined as
 \begin{equation} \label{dens}
@@ -601,9 +647,19 @@ In this case Hamiltonian can be rewritten as
 \sum_{\gamma\delta} \rho_{\gamma\delta}\langle \alpha\gamma|\hat{v}|\beta\delta\rangle_{AS}.
 \end{equation}
 \section{Hartree-Fock basis}
-
-
-
+After we have implemented the Hartree-Fock algorithm, we have compute the ground state energy and also have a coefficient matrix $C$. This coefficient allow us to perform a transformation to a Hartree-Fock basis. This can be done as follows:
+\begin{equation}
+\braket{ab|cd}=\sum_{ijkl}C_i^aC_j^bC_k^cC_l^d \braket{ij|kl}.
+\end{equation}
+Naive implementation of the formula above scales as $N^8$.
+However one may mention that there are only one common index for each coefficient and the TBME so the transformation can be dome  by performing intermediate computations such as:
+\begin{align}
+\braket{aj|kl}=\sum_{i}C_i^a \braket{ij|kl},\\
+\braket{ab|kl}=\sum_{j}C_j^b \braket{aj|kl},\\
+\braket{ab|cl}=\sum_{k}C_k^c \braket{ab|kl},\\
+\braket{ab|cd}=\sum_{l}C_l^d \braket{ab|cl}.
+\end{align} 
+Such transformations scale as $N^5$.
 
 
 \chapter{Coupled Cluster method} \label{ch:coupled_cluster}
@@ -630,7 +686,7 @@ Where $\hat{T}$ is cluster operator:
 \hat{T_n}= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
 \end{align}
 here values $t_i^a $ and $t_{i,j}^{a,b}$ are called cluster amplitudes. \\
-After introducing the exponential ansatz we need a recipe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation (REFERENCE!!!) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
+After introducing the exponential ansatz we need a recipe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation () and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
 \begin{equation}
 	\hat{H}e^{\hat{T}}\ket{\Phi_0}=Ee^{\hat{T}}\ket{\Phi_0}.
 \end{equation}
@@ -651,7 +707,7 @@ The amplitude expressions can be computed using the same projection technique, o
 \begin{equation}\label{eq:ampl simple}
 \bra{\Phi_{ij...}^{ab...}}\hat{H} e^{\hat{T}}\ket{\Phi_0} = E\bra{\Phi_{ij...}^{ab...}} e^{\hat{T}}\ket{\Phi_0}.
 \end{equation}
-!!!!!!!!!!!!!!!!!!!ADD TEXT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 \subsection{Hausdorff Expansion} \label{sec:Hausdorf}
 Expressions for energy and amplitudes in the section above are not useful for practical computations. In order to obtain equations that can be efficiently implemented in computer programs we are going to use so called similarly transformed Hamiltonian. It is a well known procedure in quantum mechanics. 
 
@@ -1173,24 +1229,27 @@ This part has the following structure:\\
 \end{itemize}
 
 \section{General structure of the code}\label{sec:impl1}
-Code has the following base classes:
+Code has the following classes:
 \begin{enumerate}
-\item Class \textit{GENERALSPCLASS} is base class and contains the following virtual functions:
-	\begin{enumerate}
-	\item \textit{getQuantumDotStates},
-	\item \textit{getQuantumDotStatesNumber},
-	\item \textit{TBME},
-	\item \textit{getSPenergies},
-	\end{enumerate}
-\item \textit{channelset} is another base class with virtual functions:
+\item  \textit{generalspclass} 
+	\begin{itemize}
+	\item \textit{qdotspbasis}
+	\item \textit{qdotHFbasis}
+	\end{itemize}
+\item \textit{CoulombFunctions}	
+\item \textit{symblock}
+\item \textit{ccd}
+\item \textit{qstate}
+\item \textit{channel}
+\item \textit{channelindexpair}
+\item \textit{channelset}
+\begin{itemize}
+	\item \textit{qdotchannelset}
+\end{itemize}
 \end{enumerate}
-And following derived classes:
+The base class \textit{generalspclass} has two derived classes \textit{qdotspbasis} and \textit{qdotHFbasis}. This base class generate objects for the solvers and allow us to switch between different bases and systems of interest. The \textit{qdotspbasis} provides TBME, single particle energies for QD in the HO basis as well as other important quantities such as number of electrons, number of shells, number of states etc. The \textit{qdotHFbasis} provides all these quantities in the Hartree-Fock basis.
 
 \section{Implementation of Hartree-Fock solver}
-
-
-
-
 % Define block styles
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
 text width=5.5em, text badly centered, node distance=3cm, inner sep=0pt]
@@ -1247,7 +1306,7 @@ Fig. $\ref{fig::FHflowchart}$ present the illustration for the HF algorithm. Her
 	\end{itemize}
 \end{tcolorbox}
 
-\subsection{Code structure for HF}
+\subsection{Code structure for HF}\label{sec:code_for_HF}
 
 \begin{figure}
 \begin{lstlisting}[language=C++]
@@ -1319,6 +1378,8 @@ void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
 \end{lstlisting}
 \caption{Compute HF matrix}
 \end{figure}
+\subsection{Code for CCD}
+
 \subsection{Channels for CCD}
 The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$. Such transition is prohibited if it does not preserve quantum numbers for spin and angular momentum. The preserved quantum numbers are the following:
 \begin{align}
@@ -1537,12 +1598,43 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 \caption{Setting up channels for rotated clusters} \label{f:vectors_for_Q4}
 \end{figure}
 
+\section{CCQMC implementation}
 
 \clearpage
 **\appendix
 \chapter{Coulomb matrix elements}\label{app:1}
 
 
+
+\begin{landscape}
+	
+	\begin{table}[h]
+		\centering
+		\captionsetup{width=.8\textwidth}
+		\caption{CCD results comparison between our block CCD solver ($\Delta E_{CCD}^M$), Millers's results, Hansen's CCD results ($\Delta E_{CCD}^H$) for the HEG. Results of Baardsen ($\Delta E_{CCD}^B$).	Results are presented for $14$ electrons. Mixing parameter $\alpha=0.8$ for Miller's results, and $\alpha=0.3$ for Hansen's and our results. All energies are presented in Hartree units.} \label{tab:CCDcompar}
+		\begin{tabular}{rrllll}
+			$r_s$ & States & $\Delta E_{CCD}$  & $\Delta E_{CCD}$ & $\Delta E_{CCD}$ & $\Delta E_{CCD}$\\
+			\hline
+			\hline
+			1.0 & 54 & -0.3178228436889338 & -0.317822843688933   &  		 & -0.3178230699319597	\\
+			1.0 & 66 & -0.3926965898061968 & -0.3926965898061966  &  		 & -0.3926968074770883	\\
+			1.0 & 114 & -0.4479105961757175 & -0.4479105961757175 & -0.447909& -0.4479109389185168 | -0.447911467077516  \\
+			1.0 & 162 & -0.4805572589306421 & -0.4805572589306416 &  		 & -0.4805570782443644 |	-0.480557602520734  \\
+			1.0 & 186 & -0.4855229317521320 & -0.4855229317521318 & -0.485523& -0.4855227418241643 |	-0.485523265841696  \\
+			1.0 & 246 & -0.4929245740023971 & -0.4929245740023975 &  		 & -0.4929243692209997 | -0.492924891224881	\\ 
+			1.0 & 294 & -0.4984909094066806 & -0.4984909094066818 &  		 & -0.4984906939593081 |	-0.49849121565881   \\
+			1.0 & 342 & -0.5019526761547777 & -0.5019526761547779 &  		 & -0.5019524529049423 |	-0.501952973776421  \\
+			1.0 & 358 & -0.5025196736076414 & -0.502519673607641  & -0.502523& -0.5025194488388951 |  -0.50251996951923   \\ \hline
+			0.5 & 114 & -0.5120153541478306 & -0.5120153541478306 & -0.512015& -0.5120152296730576 |        \\
+			0.5 & 186 &	-0.5114620616957333	&			    	  & -0.553329& -0.553329520936618  | -0.553329746087795 \\
+			0.5 & 342 & -0.5729645498903680 & -0.572964549890367  &  		 & -0.572964399507113  |	-0.572964623901421\\ 
+			0.5 & 358 &	-0.5297417436322546	&		    		  & -0.573678& -0.5736804143578934 | -0.573680638707031\\ \hline	
+			2.0 & 114 & -0.3577968843144996 & -0.3577968843144996 & -0.357798& -0.3577955282575221 | -0.357799041020026	\\
+			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &  		 & -0.4014117905655018 | -0.401414909785224	\\
+		\end{tabular}
+	\end{table}
+	
+\end{landscape}
 
 
 \printbibliography 

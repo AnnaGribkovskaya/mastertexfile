@@ -1156,7 +1156,7 @@ Code has the following classes:
 	\item \textit{qdotchannelset}
 \end{itemize}
 \end{enumerate}
-The base class \textit{generalspclass} has two derived classes \textit{qdotspbasis} and \textit{qdotHFbasis}. This base class generate objects for the solvers and allow us to switch between different bases and systems of interest. The \textit{qdotspbasis} provides TBME, single particle energies for QD in the HO basis as well as other important quantities such as number of electrons, number of shells, number of states etc. The \textit{qdotHFbasis} provides all these quantities in the Hartree-Fock basis.
+The base class \textit{generalspclass} has two derived classes \textit{qdotspbasis} and \textit{qdotHFbasis}. This base class generate objects for the solvers and allow us to switch between different bases and systems of interest. The \textit{qdotspbasis} provides TBME, single particle energies for QD in the HO basis as well as other important quantities such as number of electrons, number of shells, number of states etc. The \textit{qdotHFbasis} provides all these quantities in the Hartree-Fock basis. 
 
 \section{Implementation of Hartree-Fock solver}
 % Define block styles
@@ -1216,38 +1216,40 @@ Fig. $\ref{fig::FHflowchart}$ present the illustration for the HF algorithm. Her
 \end{tcolorbox}
 
 \subsection{Code structure for HF}\label{sec:code_for_HF}
-\subsection{Results for Haertree-Fock}
+The Hartree-Fock algorithm uses the following methods:
+\begin{itemize}
+\item \textit{CalculateSPenergies} to compute the single-particle energies,
+\item \textit{fillTwoBodyElements} to compute the Coloumb integrals,
+\item \textit{computeHFmatrix} to set up the Hartree-Fock matrix,
+\item \textit{computeHartreeFockEnergyDifference} method used to test the convergence.
+\item \textit{computeHartreeFockEnergy} to compute the ground state energy itself.
+\end{itemize}
+The code for algorithm is presented on Fig. $\ref{f:applyHF}$.
+ 
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+void qdotHFbasis::applyHartreeFockMethod(){
+	int NumberOfStates = m_shells.size();
+	arma::mat C(NumberOfStates, NumberOfStates);
+	C.eye();
+	setCoefficientMatrix(C);
+	double difference = 10; 
+	double epsilon = 10e-8;
+	eigval_previous.zeros(NumberOfStates);
+	while (epsilon < difference && i < 200){
+		arma::mat x_DensityMatrix = computeDensityMatrix();
+		computeHFmatrix(x_DensityMatrix);
+		arma::eig_sym(eigval, eigvec, m_HF);
+		setCoefficientMatrix(eigvec);
+		difference = computeHartreeFockEnergyDifference();
+		eigval_previous = eigval;
+	}
+}
+\end{lstlisting}
+\caption{Implementation of Hartree-Fock algorithm} \label{f:applyHF}
+\end{figure}
 
-\begin{table}[h!]
-	\begin{center}
-		\begin{tabular}{|c c| c c| c c| c c|}
-			%\cline{1-12}
-			%         & \multicolumn{1}{c}{N=2} & \multicolumn{5}{c}{N=6}  \\
-			%\cline{1-12}
-			\hline
-			\multirow{2}{*}{} & 
-			\multicolumn{1}{c}{N=2} \vline& 
-			\multicolumn{2}{c}{N=6} \vline&
-			\multicolumn{2}{c}{N=12} \vline&
-			\multicolumn{2}{c}{N=20} \vline\\
-			\hline
-			$R$  & $E_{HF}$ & $Z$ & $E_{HF}$ & $Z$  & $E_{HF}$ &$Z$ &  $E_{HF}$  \\
-			\hline
-			$  3 $   & $3.16269$  &$ 3 $  & $21.5932$    &$  3 $   & $73.7655$     &$ 3$  & $-          $   \\
-			$  4 $   & $3.16269$  &$ 4 $  & $20.7669$    &$  4 $   & $70.6738$     &$ 4$  & $177.963    $   \\
-			$  5 $   & $3.16192$  &$ 5 $  & $20.7484$    &$  5 $   & $67.5699$     &$ 5$  & $168.426    $   \\
-			$  6 $   & $3.16192$  &$ 6 $  & $20.7203$    &$  6 $   & $67.2969$     &$ 6$  & $161.34     $   \\
-			$  7 $   & $3.16191$  &$ 7 $  & $20.7201$    &$  7 $   & $66.9347$     &$ 7$  & $159.959    $   \\
-			$  8 $   & $3.16191$  &$ 8 $  & $20.7192$    &$  8 $   & $66.9231$     &$ 8$  & $158.4      $   \\
-			$  9 $   & $3.161909$ &$ 9 $  & $20.7192$    &$  9 $   & $66.9122$     &$ 9$  & $158.226013 $   \\
-			$  10$   & $3.161909$ &$ 10$  & $20.71921$   &$  10$   & $66.912035$   &$ 10$ & $158.017668 $   \\
-			$  11$   & $-       $ &$ 11$  & $20.719216$  &$  11$   & $66.911365$   &$ 11$ & $158.010277 $   \\
-			$  12$   & $-       $ &$ 12$  & $20.719216$  &$  12$   & $66.911364$   &$ 12$ & $158.004953 $   \\
-			\hline                                                                                    
-		\end{tabular}
-		 \caption{ Ground-state energies measured in a.u. obtained numerically for different number of shells (R) and electrons (N).  Oscillator strength $\omega=1$.}   \label{tab:resultsHF}
-	\end{center}
-\end{table}
+
 
 
 
@@ -1323,7 +1325,7 @@ void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
 \end{figure}
 \subsection{Code structure for CCD}
 
-\subsection{Channels for CCD}
+\subsubsection{Channels for CCD}
 The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$. Such transition is prohibited if it does not preserve quantum numbers for spin and angular momentum. The preserved quantum numbers are the following:
 \begin{align}
 m_r + m_s = m_p + m_q,\\
@@ -1543,6 +1545,76 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 
 \section{CCQMC implementation}
 
+
+\subsection{Results}
+\subsubsection{The Hartree-Fock results}
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c c| c c| c c| c c|}
+			%\cline{1-12}
+			%         & \multicolumn{1}{c}{N=2} & \multicolumn{5}{c}{N=6}  \\
+			%\cline{1-12}
+			\hline
+			\multirow{2}{*}{} & 
+			\multicolumn{1}{c}{N=2} \vline& 
+			\multicolumn{2}{c}{N=6} \vline&
+			\multicolumn{2}{c}{N=12} \vline&
+			\multicolumn{2}{c}{N=20} \vline\\
+			\hline
+			$R$  & $E_{HF}$ & $R$ & $E_{HF}$ & $R$  & $E_{HF}$ &$R$ &  $E_{HF}$  \\
+			\hline
+			$  3 $   & $3.16269$  &$ 3 $  & $21.593198$  &$  3 $   & $73.765549$   &$ 3$  & $-          $   \\
+			$  4 $   & $3.16269$  &$ 4 $  & $20.766919$  &$  4 $   & $70.673849$   &$ 4$  & $177.963297 $   \\
+			$  5 $   & $3.16192$  &$ 5 $  & $20.748402$  &$  5 $   & $67.569930$   &$ 5$  & $168.792442 $   \\
+			$  6 $   & $3.16192$  &$ 6 $  & $20.720257$  &$  6 $   & $67.296869$   &$ 6$  & $161.339721 $   \\
+			$  7 $   & $3.16191$  &$ 7 $  & $20.720132$  &$  7 $   & $66.934745$   &$ 7$  & $159.958722 $   \\
+			$  8 $   & $3.16191$  &$ 8 $  & $20.719248$  &$  8 $   & $66.923094$   &$ 8$  & $158.400172 $   \\
+			$  9 $   & $3.161909$ &$ 9 $  & $20.719248$  &$  9 $   & $66.912244$   &$ 9$  & $158.226013 $   \\
+			$  10$   & $3.161909$ &$ 10$  & $20.719217$  &$  10$   & $66.912035$   &$ 10$ & $158.226030 $   \\
+			$  11$   & $3.161909$ &$ 11$  & $20.719216$  &$  11$   & $66.911365$   &$ 11$ & $158.010277 $   \\
+			$  12$   & $3.161909$ &$ 12$  & $20.719216$  &$  12$   & $66.911364$   &$ 12$ & $158.004953 $   \\
+			\hline                                                                                    
+		\end{tabular}
+		\caption{ Ground-state energies for QD measured in a.u. obtained numerically for different number of shells (R) and electrons (N).  Oscillator strength $\omega=1$.}   \label{tab:resultsHF}
+	\end{center}
+\end{table}
+
+\subsubsection{The CCD results}
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c c| c c| c c| c c|}
+			%\cline{1-12}
+			%         & \multicolumn{1}{c}{N=2} & \multicolumn{5}{c}{N=6}  \\
+			%\cline{1-12}
+			\hline
+			\multirow{2}{*}{} & 
+			\multicolumn{1}{c}{$\omega$=0.1} \vline& 
+			\multicolumn{2}{c}{$\omega$=0.5} \vline&
+			\multicolumn{2}{c}{$\omega$=1} \vline&
+			\multicolumn{2}{c}{$\omega$=2} \vline\\
+			\hline
+			$R$  & $\Delta E_{corr}$ & $R$ & $\Delta E_{corr}$ & $R$  & $\Delta E_{corr}$ &$R$ &  $\Delta E_{corr}$  \\
+			\hline
+			$  3 $   & $-0.084668$  &$ 3 $  & $-0.117877$  &$  3 $   & $-0.123643$   &$ 3$  & $-0.125520$   \\
+			$  4 $   & $-0.084892$  &$ 4 $  & $-0.125975$  &$  4 $   & $-0.137418$   &$ 4$  & $-0.144715$   \\
+			$  5 $   & $-0.082373$  &$ 5 $  & $-0.129695$  &$  5 $   & $-0.143977$   &$ 5$  & $-0.153792$   \\
+			$  6 $   & $-0.082521$  &$ 6 $  & $-0.131944$  &$  6 $   & $-0.147998$   &$ 6$  & $-0.159730$   \\
+			$  7 $   & $-0.082579$  &$ 7 $  & $-0.133271$  &$  7 $   & $-0.150504$   &$ 7$  & $-0.163497$   \\
+			$  8 $   & $-0.082654$  &$ 8 $  & $-0.134251$  &$  8 $   & $-0.152288$   &$ 8$  & $-0.166194$   \\
+			$  9 $   & $-0.082708$  &$ 9 $  & $-0.134938$  &$  9 $   & $-0.153566$   &$ 9$  & $-0.168154$   \\
+			$  10$   & $-0.082749$  &$ 10$  & $-0.135473$  &$  10$   & $-0.154552$   &$ 10$ & $-0.169664$   \\
+			$  11$   & $-0.082782$  &$ 11$  & $-0.135886$  &$  11$   & $-0.155319$   &$ 11$ & $-0.170848$   \\
+			$  12$   & $-0.082808$  &$ 12$  & $-0.136220$  &$  12$   & $-0.155939$   &$ 12$ & $-0.171805$   \\
+			\hline                                                                                    
+		\end{tabular}
+		\caption{Coupled Cluster Doubles correlation energy for QD for two electrons and different values of $\omega$ in atomic units. }   \label{tab:resultsCCD}
+	\end{center}
+\end{table}
+
+
+
+
+
 \part{Possible improvements and further research}
 
 \section{Smart Storage of Coulomb matrix elements}
@@ -1660,9 +1732,6 @@ $p_{sel}$ represent a number of samples in each time-step. This parameter must b
 p_{\text{excit}} = \frac{1}{N_{ex}}.
 \end{equation}
 This parameter represent probability to select excited state (not reference).
-
-
-
 
 
 Lets compute some particular probabilities:\\

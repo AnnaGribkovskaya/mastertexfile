@@ -3,9 +3,11 @@
             marginparsep=0cm,marginparwidth=0cm,top=2cm}
 \usepackage{braket}
 \usepackage{mathtools}      
+\usepackage{tabularx}
 \usepackage{amsmath} 
 \usepackage{listings}
 \usepackage{color}
+\usepackage{multirow}
 \usepackage{lscape}
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -64,10 +66,11 @@
 
 %\chapter{}
 \chapter*{Introduction}
+\textbf{PEREPISAT'!!!!!!!!!!!!!!!!!!!!!!!!!!!}
 This thesis is devoted to study of Quantum Dots (QDs). The detailed mathematical description of QDs is provided below, but in the most general way one may say that QDs are man-made devices that are small enough to posses quantum properties, such as energy shell structure, tunneling effect and etc. Most commonly such devices are fabricated using semiconductors and their size vary from few nanometers to hundreds of nanometers (one nanometer or nm is equal to $1\times 10^{-9} m$). In literature one may find name "artificial atoms" when referring to such  semiconductor nanostructures. This name reflect the fact that QDs and atoms share many similar properties, however this is not completely legit name, though QD are larger then atoms. For atoms size is usually measured in picometres  (one picometre or pm is equal to $1\times 10^{-12} m$).  Normal size of an atom vary form 53 pm for hydrogen atom (this quantity is also known as Bohr radius), to  273 pm for cesium (which is considered to be one of the largest atoms). As one can mention even the small QDs correspond 10 atoms in diameter. Apart from this QDs are very similar to the atoms. The name Quantum Dot reflect the fact that we have a structure that is small enough to have quantum properties and also that this structure is spatially localized. The properties of QDs lie between those of individual discrete atoms or molecules and bulk semiconductors. This fact make such particles matter of great interest both for science and industry. Below in chapter (!!!!!!!) one can find a brief history of QDs and also  some of their applications.  \\
 The aim of this thesis is to study QD numerically. 
 
-	SHOULD ADD MORE LATELY!!! And do not forget reference to chapters afterwards!!
+\textbf{	SHOULD ADD MORE LATELY!!! And do not forget reference to chapters afterwards!!}
 	
 \part{Theory}
 \chapter{Quantum mechanics}
@@ -404,32 +407,6 @@ One may say that the normal-ordered form of the operator is obtained by subtract
 % and its expectation value is a correlation energy.
 
 
-\section{Matrix Elements of Hamiltonian}
-It is convenient to introduce formulas for different matrix elements of Hamiltonian. We are going to use them lately. \\
-!!!!PERENESTI POTOM V DRUGOE MESTO!!!!!!!!!1
-Matrix elements between determinants that differs more then two orthonormal spin orbitals are zero by construction, so we are not going to consider such term.\\
-Let us choose one determinant to be single or double excitation on another. \\
-For double excitation:
-\begin{equation}
-\ket{\Phi_{m}}=a^\dagger_r a^\dagger_s a_q a_p \ket{\Phi_n}.
-\end{equation}
-In this case the corresponding matrix element then is:
-\begin{equation}
-\bra{\Phi_n} \hat{H}\ket{\Phi_{m}}=\braket{rs|pq}_{AS}.
-\end{equation}
-For single excitation:
-\begin{equation}
-\ket{\Phi_{m}}=a^\dagger_r  a_p \ket{\Phi_n}.
-\end{equation}
-And corresponding matrix element then is:
-\begin{equation}
-\bra{\Phi_n} \hat{H}\ket{\Phi_{m}}=\sum_{k}^{N-1}\braket{rk|pk}_{AS}.
-\end{equation}
-here sum runs over all common orbitals present in the determinants.\\
-We also need to compute the diagonal matrix element:
-\begin{equation}
-\bra{\Phi_n} \hat{H}\ket{\Phi_{n}}=\sum_{p\in n} \braket{p|\hat{h}|p} + \frac{1}{2} \sum_{p,q \in n}^{N-1}\braket{pq|pq}_{AS}.
-\end{equation}
 
 \section{Particle-Hole representation}
 In this section we are presenting formalism that is used in many articles and text books on the topic.\\
@@ -513,40 +490,6 @@ The two-body matrix elements are computed using the algorithm presented in the a
 		\end{tabular}
 	\end{center}
 \end{table}
-
-
-
-\chapter{Homogeneous Electron Gas}
-The Homogeneous Electron Gas (HEG) or, as it sometimes called, the free electron gas is a very useful model in the condensed matter physics as it allows to study the many-fermion system without additional complication caused by lattice symmetry.  This makes useful for study metals, i.e modeling the properties of valence electrons.\\
-Below are main assumptions to be made for this model:
-\begin{itemize}
-	\item We assume to have a certain number of electrons $N_e$ in a cubic box of a certain length $L$. Volume of the cube is $\Omega= L^2$.
-	\item No external forces are present, except those provided by background ions. The density of the background charge is constant and given by $N/\Omega$, here $N$ is number of ions.
-	\item System is neutral and ions are stationary.
-\end{itemize}
-
- HEG model allows us to solve the Hartree-Fock equations for system of many interacting particles in the analytical form. Additionally it also allows us to get the total energy and Hamiltonian matrix elements in the basis for Hartree-Fock. This make the model one of the best options to implement a so called post Hartree-Fock methods, for example, CC, FCI  and  Monte Carlo methods for many-body problems.\\
- This properties make HEG a perfect system to test the many-body solvers before using it for other systems.
- \section{Hamiltonian for Homogeneous Electron Gas}
-The Hamiltonian for HEG is given by:
-\begin{equation}
-\hat{H}=\hat{H}_{el}+\hat{H}_{b}+\hat{H}_{el-b},
-\end{equation}
-with $\hat{H}_{el}$ is the electronic part given by:
-\begin{equation}
-\hat{H}_{el}=\sum_{i=1}^N\frac{p_i^2}{2m}+\frac{e^2}{2}\sum_{i\ne j}\frac{e^{-\mu |\mathbf{r}_i-\mathbf{r}_j|}}{|\mathbf{r}_i-\mathbf{r}_j|},
-\end{equation}
-and $\hat{H}_{b}$ being the operator corresponding to background charge from ions, given by:
-\begin{equation}
-\hat{H}_{b}=\frac{e^2}{2}\int\int d\mathbf{r}d\mathbf{r}'\frac{n(\mathbf{r})n(\mathbf{r}')e^{-\mu |\mathbf{r}-\mathbf{r}'|}}{|\mathbf{r}-\mathbf{r}'|},
-\end{equation}
-and $\hat{H}_{el-b}$ being the operator corresponding to interactions between electrons and the positive background charge, given by:
-\begin{equation}
-\hat{H}_{el-b}=-\frac{e^2}{2}\sum_{i=1}^N\int d\mathbf{r}\frac{n(\mathbf{r})e^{-\mu |\mathbf{r}-\mathbf{x}_i|}}{|\mathbf{r}-\mathbf{x}_i|},
-\end{equation}
-here $\mu$ is a convergence factor, $n(\textbf{r})$ is background charge density. In thermodynamical limit $\mu \rightarrow 0$. \\
-
-
 
 
 
@@ -660,6 +603,106 @@ However one may mention that there are only one common index for each coefficien
 \braket{ab|cd}=\sum_{l}C_l^d \braket{ab|cl}.
 \end{align} 
 Such transformations scale as $N^5$.
+
+\chapter{Homogeneous Electron Gas}
+The Homogeneous Electron Gas (HEG) or, as it sometimes called, the free electron gas is a very useful model in the condensed matter physics as it allows to study the many-fermion system without additional complication caused by lattice symmetry.  This makes useful for study metals, i.e modeling the properties of valence electrons.\\
+Below are main assumptions to be made for this model:
+\begin{itemize}
+	\item We assume to have a certain number of electrons $N_e$ in a cubic box of a certain length $L$. Volume of the cube is $\Omega= L^2$.
+	\item No external forces are present, except those provided by background ions. The density of the background charge is constant and given by $N/\Omega$, here $N$ is number of ions.
+	\item System is neutral and ions are stationary.
+\end{itemize}
+
+HEG model allows us to solve the Hartree-Fock equations for system of many interacting particles in the analytical form. Additionally it also allows us to get the total energy and Hamiltonian matrix elements in the basis for Hartree-Fock. This make the model one of the best options to implement a so called post Hartree-Fock methods, for example, CC, FCI  and  Monte Carlo methods for many-body problems.This properties make HEG a perfect system to test the many-body solvers before using it for other systems.\\
+Theoretical description of the HEG in this chapter is based on the lecture notes of S.Kvaal for Fys-Kjm4480/9480 \cite{s.kvaal.LectureNotesFysKjm44802015}.
+\section{Hamiltonian for Homogeneous Electron Gas}
+The Hamiltonian for HEG is given by:
+\begin{equation}
+\hat{H}=\hat{H}_{el}+\hat{H}_{b}+\hat{H}_{el-b},
+\end{equation}
+with $\hat{H}_{el}$ is the electronic part given by:
+\begin{equation}
+\hat{H}_{el}=\sum_{i=1}^N\frac{p_i^2}{2m}+\frac{e^2}{2}\sum_{i\ne j}\frac{e^{-\mu |\mathbf{r}_i-\mathbf{r}_j|}}{|\mathbf{r}_i-\mathbf{r}_j|},
+\end{equation}
+and $\hat{H}_{b}$ being the operator corresponding to background charge from ions, given by:
+\begin{equation}
+\hat{H}_{b}=\frac{e^2}{2}\int\int d\mathbf{r}d\mathbf{r}'\frac{n(\mathbf{r})n(\mathbf{r}')e^{-\mu |\mathbf{r}-\mathbf{r}'|}}{|\mathbf{r}-\mathbf{r}'|},
+\end{equation}
+and $\hat{H}_{el-b}$ being the operator corresponding to interactions between electrons and the positive background charge, given by:
+\begin{equation}
+\hat{H}_{el-b}=-\frac{e^2}{2}\sum_{i=1}^N\int d\mathbf{r}\frac{n(\mathbf{r})e^{-\mu |\mathbf{r}-\mathbf{x}_i|}}{|\mathbf{r}-\mathbf{x}_i|},
+\end{equation}
+here $\mu$ is a convergence factor, $n(\textbf{r})$ is background charge density. In thermodynamical limit $\mu \rightarrow 0$. \\
+The single-particle wave functions are given py plane wave:
+\begin{equation}
+\psi_{\mathbf{k}\sigma}(\mathbf{r})= \frac{1}{\sqrt{\Omega}}\exp{(i\mathbf{kr})}\xi_{\sigma},
+\end{equation}
+here $\mathbf{k}$ is a wave number and $\xi_{\sigma}$ denotes spin (up and down):
+\begin{equation}
+\xi_{\sigma=+1/2}=\left(\begin{array}{c} 1 \\ 0 \end{array}\right) \hspace{0.5cm}
+\xi_{\sigma=-1/2}=\left(\begin{array}{c} 0 \\ 1 \end{array}\right).
+\end{equation}
+The periodic boundary conditions are assumed, so that wave numbers are only allowed to have some certain values:
+\begin{equation}
+k_i=\frac{2\pi n_i}{L}\hspace{0.5cm} i=x,y,z \hspace{0.5cm} n_i=0,\pm 1,\pm 2, \dots
+\end{equation}
+The single-particle energy is then given by:
+\begin{align}
+\varepsilon_{n_{x}, n_{y}, n_{z}} = \frac{\hbar^{2}}{2m}
+\left( \frac{2\pi }{L}\right)^{2}
+\left( n_{x}^{2} + n_{y}^{2} + n_{z}^{2}\right).
+\end{align}
+The antisymmetrized matrix elements are given by:
+\begin{align} \tag{5}
+& \langle \mathbf{k}_{p}m_{s_{p}}\mathbf{k}_{q}m_{s_{q}}
+|\tilde{v}|\mathbf{k}_{r}m_{s_{r}}\mathbf{k}_{s}m_{s_{s}}\rangle_{AS} 
+\nonumber \\
+& = \frac{4\pi }{L^{3}}\delta_{\mathbf{k}_{p}+\mathbf{k}_{q},
+	\mathbf{k}_{r}+\mathbf{k}_{s}}\left\{ 
+\delta_{m_{s_{p}}m_{s_{r}}}\delta_{m_{s_{q}}m_{s_{s}}}
+\left( 1 - \delta_{\mathbf{k}_{p}\mathbf{k}_{r}}\right) 
+\frac{1}{|\mathbf{k}_{r}-\mathbf{k}_{p}|^{2}}
+\right. \nonumber \\
+& \left. - \delta_{m_{s_{p}}m_{s_{s}}}\delta_{m_{s_{q}}m_{s_{r}}}
+\left( 1 - \delta_{\mathbf{k}_{p}\mathbf{k}_{s}} \right)
+\frac{1}{|\mathbf{k}_{s}-\mathbf{k}_{p}|^{2}} 
+\right\} ,
+\end{align}
+here $\delta_{\mathbf{k}_{p}\mathbf{k}_{r}}$ and $\delta_{\mathbf{k}_{p}\mathbf{k}_{s}}$ are Kronecker delta functions.\\
+Table $\ref{tab:spnumbers}$ presents the shell structure for the HEG in three dimensions.
+
+
+\begin{table}[!ht]
+	\begin{center}
+		\begin{tabular}{ |c | r | r | r | c|} 
+			\hline
+			$n_x^2+n_y^2+n_z^2$& $n_x$ & $n_y$ & $n_z$ & $N_{\uparrow \downarrow}$ \\
+			\hline
+			\hline
+			0& 0  & 0  & 0  & 2 \\ \hline
+			1& -1 & 0  & 0  &  \\ 
+			1& 1  & 0  & 0  &  \\ 
+			1& 0  & -1 & 0  &  \\ 
+			1& 0  & 1  & 0  &  \\ 
+			1& 0  & 0  & -1 &  \\ 
+			1& 0  & 0  & 1  & 14 \\ 	\hline
+			2& -1 & -1 & 0  &  \\ 
+			2& -1 & 1  & 0  &  \\ 
+			2& 1  & -1 & 0  &  \\ 
+			2& 1  & 1  & 0  &  \\ 
+			2& -1 & 0  & -1 &  \\ 
+			2& -1 & 0  & 1  &  \\ 
+			2& 1  & 0  & -1 &  \\ 
+			2& 1  & 0  & 1  &  \\ 
+			2& 0  & -1 & -1 &  \\ 
+			2& 0  & -1 & 1  &  \\ 
+			2& 0  & 1  & -1 &  \\ 
+			2& 0  & 1  & 1  & 38 \\ 	\hline
+		\end{tabular} 
+		\caption{Single-particle state energies for HEG in atomic units. $N_{\uparrow \downarrow }$ stands for the total number of spin-orbitals.}
+		\label{tab:spnumbers}
+	\end{center}
+\end{table}
 
 
 \chapter{Coupled Cluster method} \label{ch:coupled_cluster}
@@ -779,8 +822,9 @@ Let us consider this one more carefully, because it can help us to state a so-ca
 \end{eqnarray}
 As we can see there is no fully contracted terms in the expression above. Two other terms can be written as:
 \begin{align*}
-\hat{T}_1\hat{F}_\text{N}\hat{T}_1= \sum_{ijab} t_i^at_j^b \bigg( \sum_{pq}f_{pq} \{c_a^\dagger c_ic_p^\dagger c_q  c_b^\dagger c_j \} +  \sum_{q}f_{jq}\{c_a^\dagger c_i  c_q  c_b^\dagger \} +  \sum_{p}f_{pb}\{c_a^\dagger c_i   c_p^\dagger c_j \} + f_{jb}\{c_a^\dagger c_i \}\bigg)\nonumber \\
-\hat{T}_1^2\hat{F}_\text{N} =\sum_{ijab}  \sum_{pq}f_{pq}  t_i^at_j^b \{c_a^\dagger c_ic_b^\dagger c_j  c_p^\dagger c_q   \} \nonumber \\
+\hat{T}_1\hat{F}_\text{N}\hat{T}_1 &= \nonumber \\ 
+\sum_{ijab} t_i^at_j^b \bigg( &\sum_{pq}f_{pq} \{c_a^\dagger c_ic_p^\dagger c_q  c_b^\dagger c_j \} +  \sum_{q}f_{jq}\{c_a^\dagger c_i  c_q  c_b^\dagger \} +  \sum_{p}f_{pb}\{c_a^\dagger c_i   c_p^\dagger c_j \} + f_{jb}\{c_a^\dagger c_i \}\bigg)\nonumber \\
+\hat{T}_1^2\hat{F}_\text{N} =&\sum_{ijab}  \sum_{pq}f_{pq}  t_i^at_j^b \{c_a^\dagger c_ic_b^\dagger c_j  c_p^\dagger c_q   \} \nonumber \\
 \end{align*}
 Non of the above contribute to the energy expectation value. However the term $[\hat{F}_\text{N},\hat{T}_1] $ does. Using this to facts we may now formulate the connected contraction theorem:
 \begin{theorem} Connected Cluster Theorem \\ \label{theo:connected}
@@ -866,6 +910,26 @@ These methods are flexible and at the same time accurate for many-body systems. 
 The essence of VMC method is to choose a trial wave function, depending on some parameters and then for this particular trial wave function to find expectation values of operators and optimize the parameters.\\
 At the same time PMC methods also use trial wave functions. In general PMC is a stochastic application of power method to compute expectation values for eigenstate corresponding to largest absolute eigenvalue.The main advantage of the PMC methods compared to the common matrix diagonalization algorithms, for example iterative and deterministic Lanczos algorithm, is that for stochastic method we do not need to store the whole vector, but just some randomly sampled elements of the vector \cite{umrigarObservationsVariationalProjector2015}. \\
 In this thesis we are implementing a coupled cluster Monte Carlo (CCMC) method which has much in common with one of the PMC methods a diffusion Monte Carlo (DMC) method. In order to simplify the explanation we start with some quick recap on what is DMC.\\
+
+\section{Variational Monte Carlo} \label{sec:VMC}
+The expectation value of energy is expressed as following:
+\begin{equation}\label{eq:energyinqm}
+\langle E \rangle = \frac{\int d\boldsymbol{R}\Psi^{\ast}(\boldsymbol{R})H(\boldsymbol{R})\Psi(\boldsymbol{R})}
+{\int d\boldsymbol{R}\Psi^{\ast}(\boldsymbol{R})\Psi(\boldsymbol{R})},
+\end{equation}
+where $\Psi(\boldsymbol{R})$ is a wave-function of the system and $H(\boldsymbol{R})$ is a Hamiltonian. $\boldsymbol{R}$ stands for the spatial coordinates of all the particles. For the system containing many particles both wave-function and Hamiltonian depend on all coordinates of all the particles. In this case integral (\ref{eq:energyinqm}) becomes multidimensional.  Additional challenge is a wave-function which is unknown. For the VMC algorithm  one can replace it with some kind of parametrized function, usually referred to as trial wave function. If the trial wave-function is chosen to take into account as much physics of the system as possible, the value of $\langle E \rangle$ converged to ground state energy $\langle E_0 \rangle$.\\
+
+The main steps of VMC method are the following:
+\begin{itemize}
+	\item Choice of a trial wave-function which depends on variational parameters.
+	\item Evaluation of the expectation value of the Hamiltonian.
+	\item Minimization algorithm in space of variational parameters.
+	\item Monte Carlo calculations with optimal parameters and error estimation.
+\end{itemize}
+
+
+
+
 \section{Diffusion Monte Carlo} \label{sec:DMC}
 The DMC method employ the imaginary time propagator:
 \begin{equation}
@@ -882,17 +946,15 @@ This equation is very similar to a classical equation:
 \frac{\partial C }{ \partial t} = D \frac{\partial^2 C }{ \partial t^2} - kC,
 \end{equation}
 here $D$ is diffusion constant, $C$ is concentration of particles and $k$ proportionality coefficient describing source or sink of particles. First part on the right hand side of this equation describe a classical diffusion process and the second part is just a first order rate equation. The meaning of $k$ is the following - particles can be destroyed or created proportional to $k$.\\
-If we compare two equations together ($\ref{eq:imaginary_schrod}$) and ($\ref{eq:diffusion}$) they are not really alike, due to imaginary time and a wave function. However similarities between this two allow us to use some techniques normally used for classical simulations to imaginary-time Schr\"{o}dinger equation. Monte Carlo methods are capable to simulate both diffusion and rate, so we can just build up a method that combine this two processes into one.  \\
-First we require $\tau \rightarrow \infty $ we obtain time-independent equation. 
+If we compare two equations together ($\ref{eq:imaginary_schrod}$) and ($\ref{eq:diffusion}$) they are not really alike, due to imaginary time and a wave function. However similarities between this two allow us to use some techniques normally used for classical simulations to imaginary-time Schr\"{o}dinger equation. Monte Carlo methods are capable to simulate both diffusion and rate, so one can just build up a method that combine this two processes into one. \\
+In this thesis we do not aim to dig into the DMC method and derive any equations. The main idea of the DMC is to represent the wave function as a population of random walkers. The trial wave function obtained for the VMC can be used as input for DMC method to improve the result. The DMC is one of the most accurate methods for the many body problems so far.\\
 
-
-First lets consider a kinetic energy term in the equation. 
 
 
 \section{Stochastic Coupled Cluster Theory}
 In chapter $\ref{ch:coupled_cluster}$ we have introduced a coupled cluster method. However, the main problem with exact coupled cluster computations is with system size. Scaling starts with the sixth order of $N$ (here $N$ represents system size) that makes even small systems very costly in computations. Coupled Cluster Monte Carlo (CCMC) is a new method which has been first described by Alex Thom in \cite{thomStochasticCoupledCluster2010}. The method has been developed similarly to Full Configuration Interaction Quantum Monte Carlo (FCIQMC) of Alavi \textit{et al.} in \cite{boothFermionMonteCarlo2009}, \cite{clelandCommunicationsSurvivalFittest2010} and \cite{boothApproachingChemicalAccuracy2010}.\\
 In order to explain how we get to CCMC algorithm we first present a brief description of FCIQMC. \\
-\subsection{Full Configuration Interaction Quantum Monte Carlo}
+\subsection{Full Configuration Interaction Quantum Monte Carlo} \label{sec:FCIQMC}
 The CI wave function is represented by the following expansion:
  \begin{equation}\label{eq:fciqmcWF}
 \ket{\Psi_{\text{CI}}}= C_0\ket{D_0} + \sum_{ai} C_i^a \ket{D_i^a} + \sum_{i<j,a<b}C_{ij}^{ab}\ket{D_{ij}^{ab}} + \dots,
@@ -947,56 +1009,48 @@ After this we can present the CC equations:
 &\braket{D_{ij}^{ab}|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
 \end{align} 
 and so on.\\
-\subsubsection{A representative example}
-Here we follow Thom in his article from 2010 \cite{thomStochasticCoupledCluster2010} to present a simple idea of CCQMC for a system that has only four states, two occupied (i,j) and two virtual (a,b). Here we use generic index for determinant so that $ \ket{D_{ij}^{ab}} = \ket{D_\textbf{n}} $.
-As it has been already done for the FCIQMC we need an operator ($\ref{eq:projector}$) that projects the solution $\Psi_{CC}$ to itself and reproduce the same eigenfunctions.\\
-After this we obtain:
-\begin{align}
-\braket{D_{\textbf{n}|}| 1-\tau (\hat{H}-E)|\Psi_{CC}}, \label{key} \\
-\big(1-\tau(H_{\textbf{nn}}-E)\big)\big(t_i^a t_j^b-t_i^b t_j^a + t_{ij}^{ab}\big)  \nonumber \\
-- \frac{\tau}{N_0} \sum_{\textbf{m} \neq \textbf{n}} H_{\textbf{nm}} \braket{D_{\textbf{m}}|\Psi_{CC}} = (t_i^a t_j^b-t_i^b t_j^a + t_{ij}^{ab}),
-\end{align}
-where we consider determinants $D_{\textbf{n}}$ and $D_{\textbf{m}}$ to be connected,so that  $H_\textbf{nm} \neq 0 $. This equation is similar to equation ($\ref{eq:CIprojected}$). Once aging following the same procedure as for FCIQMC we are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding operators are named "excitors" \footnote{Here one should be careful with terminology because it can differ from one article to another. Imaginary particles for stochastic approach to solve the Schr\"{o}dinger equation were first introdused by Andersen article  \cite{andersonRandomWalkSimulation1975} and were called "psips". In this thesis we follow the Thom and Spencer in \cite{spencerDevelopmentsStochasticCoupled2016}  and name operators as "excitors" and particles as "excips". In some articles both particles and operators are addressed to as "excitors".}. In this case excips on the Hartree-Fock determinant are represented by $N_0$ and all the other amplitudes $t_{\textbf{I}}$ are represented by walkers in the excited space. In case of stochastic coupled cluster theory we should consider products of excitors as well as a single ones. Following the notations from the article we use square brackets to do so, $[t_i^a t_j^b ]$, $[t_i^b t_j^a ]$  and $t_{ij}^{ab}$ should by considered separately. \\
-Spawn and death steps corresponding to equations are described in a following way:
-\begin{align}
-\end{align}
+Let's now consider the following equations:
+\begin{equation}\label{eq::CCQMCproj}
+\braket{D_0|1-\delta \tau (\hat{H}-E)|\Psi_{CC}}=\braket{D_\textbf{m}|\Psi_{CC}},
+\end{equation}
+here $\delta \tau$ is just a small positive number. 
+Here we must make a remark regarding the value of $\delta \tau$. It must satisfy the following inequality:
+\begin{equation}
+\delta \tau \leq \frac{2}{E_{max} - E},
+\end{equation}
+here $E_{max}$ is the largest eigenvalue of $\hat{H}$, $E$ should be close to the ground state energy. It is common to take $E$ equal to reference energy in the beginning of simulation.
+Let's now consider a projection on a single excited determinant $D_{\boldsymbol{m}}$:
+\begin{equation}
+\langle D_{\boldsymbol{m}}|e^{\hat{T}}D_0\rangle = t_{\boldsymbol{m}} + \mathcal{O}(\hat{T}^2),
+\end{equation}
+here we  do not consider contributions from the higher terms. After doing this we obtain: 
+\begin{equation}\label{CCbf2}
+t_{\boldsymbol{m}} - \delta \tau \langle D_{\boldsymbol{m}}|(\hat{H}-E)|\Psi_{CC}\rangle = t_{\boldsymbol{m}}.
+\end{equation}
+Now we are ready to rewrite the equation ($\ref{eq:CCQMC1}$) in an iterative way:
+\begin{equation}\label{eq:CCiter}
+ t_{\{\boldsymbol{m}\}}(\tau) - \delta \tau \langle D_{\boldsymbol{i}}|(\hat{H}-E)|\Psi_{CC}(\tau)\rangle = t_{\boldsymbol{m}}(\tau + \delta \tau).
+\end{equation}
+Second term in the equation above is not easy to evaluate. The solution here is to do it stochastically by sampling this term. In order to do this we should consider two stochastic processes: sampling of the wave function and sampling of the action of Hamiltonian\\
+\textbf{Sampling of the wave function} is achieved by a random selection of all possible clusters and after this is done collapsing them into an excited determinant.\\
+\textbf{Sampling of the action of Hamiltonian} is done after this. Once we get an excited determinant $D_\textbf{n}$ we select another excited determinant $D_\textbf{m}$ a single or double excitation of this chosen determinant and compute the corresponding $t_\textbf{m}$. However this is not a very efficient algorithm as we have to sample a large number of Monte Carlo cycles. This comes from the fact that many clusters have small amplitudes. A better way is to follow the same discretization procedure as have been done in the FCIQMC method. Here we follow Thom in his article from 2010 \cite{thomStochasticCoupledCluster2010} \\ 
+We are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding operators are named "excitors" \footnote{Here one should be careful with terminology because it can differ from one article to another. Imaginary particles for stochastic approach to solve the Schr\"{o}dinger equation were first introdused by Andersen article  \cite{andersonRandomWalkSimulation1975} and were called "psips". In this thesis we follow the Thom and Spencer in \cite{spencerDevelopmentsStochasticCoupled2016}  and name operators as "excitors" and particles as "excips". In some articles both particles and operators are addressed to as "excitors".}.
 
+\subsubsection{CCQMC algorithm}
+In section $\ref{sec:FCIQMC}$ we have already presented the main steps for the FCIQMC. For the CCQMC method we have a very similar algorithm:
+\begin{enumerate}
+	\item \textbf{Spawning}. After selecting a number of clusters and collapsing them into an excited determinant $D_{\textbf{n}}$ one should pick a connected determinant   $D_{\textbf{m}}$. A new excip is created with the probability proportional to $|\delta \tau H_{\textbf{nm}}|$. 
+	\item \textbf{Birth/Death}. Once we selected a determinant it is associated  with a population of excips living on it (might be zero as we have composite clusters). This excip can die with probability $- \tau (H_{\textbf{nn}} - E)$. "Die" in this case means that we should generate a new excip with opposite sign. This part is different from FCIQMC. 
+	\item \textbf{Annihilation}. This part is same as in FCIQMC. Annihilation means that all pairs of walkers with opposite sign are removed, if they belong to the same determinant.
+\end{enumerate}
 
-
-
-The main point here is to generate and store only non-composite clusters. This is achieved as follows:
-\begin{itemize}
-\item 
-\end{itemize} 
-
-
-SAMPLING
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\chapter{Stochastic}
 \section{Normalization}
 Our description uses intermediate normalization as an assumption and it requires a normalization constant to be introduced. 
-!!!!DOPISAT' POCHEMU!!
 \begin{equation}
 \ket{\Psi_{\text{CC}}}=N_0 e^{\frac{\hat{T}}{N_0}} \ket{D_0}.
 \end{equation}
 here $N_0$ is normalization constant.\\
-Such normalization allows to produce fractional populations on excitors, needed for convergence.
+Such normalization allows to produce fractional populations on excitors, needed for convergence. 
 \section{Sampling probabilities}
 
 We have to sample a wave function. In this case a wave function is approximated by the exponential expansion in terms of cluster operator. We will conduct sampling by selecting a particular cluster from the expansion. Here we need to introduce some definitions.\\
@@ -1010,7 +1064,7 @@ The probability to choose a cluster of certain size is given by
 \begin{equation}
 	p_{\text{size}} = \frac{1}{2^{s+1}}.
 \end{equation}
-here $s$ is size of a cluster. \\
+here $s$ is size of a cluster. 
 Each cluster has it's amplitude $A$.\\
 After we have selected a cluster of size $s$, we need another probability - a probability to select a combination of excitors $e$.
 
@@ -1019,6 +1073,45 @@ p_{\text{clust}} (e|s)= s! \prod_{i=1}^s \frac{|N_i|}{N_{ex}}.
 \end{equation}
 
 here $|N_i|$ is a population on excitor $i$, module here is needed because population of each excitor is stored with sing and can in some cases be negative.\\
+
+\subsubsection{Generation probabilities}
+We need to compute and asses the generation probability for any excited determinant in order to compute the spawning probability. Here we present the generation probability to obtain a double excitation for HEG, meaning we have two exicted determinants $\ket{\Phi_{m}}$ and $\ket{\Phi_n}$ connected through a double excitation such as $ \ket{\Phi_{m}}=a^\dagger_r a^\dagger_s a_q a_p \ket{\Phi_n}.$ 
+the value we need to compute is the following:
+\begin{equation}
+p_{excit}(n,m) = p_{excit}(r,s|p,q)p_{excit}(p,q),
+\end{equation}
+here $p_{excit}(p,q)$ is a probability to pick two occupied orbitals and $p_{excit}(r,s|p,q)$ is a probability to pick up two excited orbitals, after we have already chosen the occupied ones. \\
+For the system with number of electrons equal $N_e$ the probability to pick up two of them is given by:
+\begin{equation}
+p_{excit}(p,q)= \binom{N}{2}^{-1}= \frac{2}{N_e(N_e-1)}.
+\end{equation}
+The conditional probability need a bit more care:
+\begin{align}
+p_{excit}(r,s|p,q) = p_{excit}(r|s,p,q)p_{excit}(s|p,q) + p_{excit}(s|r,p,q)p_{excit}(r|p,q).
+\end{align}
+For HEG the values $p_{excit}(r|s,p,q)$ and $p_{excit}(s|r,p,q)$ are equal to one, because there is only one possibility to pick up the second excited orbital if all the other orbitals are already known. The formula is then simplifies to:
+\begin{align}
+p_{excit}(r,s|p,q) = p_{excit}(s|p,q) + p_{excit}(r|p,q).
+\end{align}
+This values only depend on the number of electrons and the size of the basis set, that is why we are able to compute them before running the algorithm:
+
+\begin{equation}
+p_{excit}(s|p,q) = \frac{1}{N_{virt}},
+\end{equation}
+
+here $N_{virt}$ is a number of all possible combinations of virtual states that can be chosen for a known pair of occupied states. In case of excitation from reference this value is always the same for a given pair (p,q). If we spawn from already excited determinants (not from reference) we should check if the sates already existing in the parent determinant are not counted in the  $N_{virt}$. If it is the case we should subtract them to avoid double counting. This should be done on the fly, as soon as it is too costly to recalculate such value for all possible excited determinants.\\
+For the single excitation $ \ket{\Phi_{m}}=a^\dagger_r a_p \ket{\Phi_n}.$  the probability is given by:
+\begin{equation}
+p_{excit}(r,p) = p_{excit}(r|p)p_{excit}(p),
+\end{equation}
+here $p_{excit}(p)$ is a probability to select one occupied orbital and is given by:
+\begin{equation}
+p_{excit}(p)=\frac{1}{N_e}.
+\end{equation}
+The $ p_{excit}(r|p)$ is a probability to select the virtual one after this. 
+However for the HEG we do not need the single excitations, so we haven't implement this.
+
+\subsubsection{Spawn and death probabilities}
 Combining these probabilities together we get:
 \begin{equation}
 p_{select}(e)= \frac{s!\prod_{i=1}^{s} |N_i|}{2^{s+1}N_{ex}}.
@@ -1027,198 +1120,14 @@ It is also important that we use sample same number of excips at each time step:
 \begin{equation}
 p_{sel}= N_0+N_{ex}.
 \end{equation}
-
-While sampling we need just these: $\delta \tau$, $A=N_0$, $p_{sel}$, $p_{\text{select}}$ and $p_{\text{clust}}$ and $p_{\text{excit}}$.
-\begin{equation}
-p_{\text{excit}} = \frac{1}{N_{ex}}. 
-\end{equation}
-
 Spawn probability is:
 \begin{equation}
-p_{\text{total}} = \frac{|\delta \tau H_{nm}A|}{p_{\text{select}}p_{sel}p_{\text{clust}}p_{\text{excit}}} 
+p_{\text{total}} = \frac{|\delta \tau H_{nm}A|}{p_{\text{select}}p_{sel}p_{\text{clust}}p_{\text{excit}}}. 
 \end{equation} 
 Death probability is: 
 \begin{equation}
-p_{\text{death}} = \frac{|\delta \tau (H_{mm} - S)A|}{p_{\text{select}}p_{sel}p_{\text{clust}}} 
+p_{\text{death}} = \frac{|\delta \tau (H_{mm} - S)A|}{p_{\text{select}}p_{sel}p_{\text{clust}}}.
 \end{equation}
-
-
-
-
-\section{Sampling}
-
-Number of single-, double- and triple-excitations including Pauli exclusion principle are defined by the following formulas:
-
-\begin{equation}\label{eq:num_singles}
-N_s = \frac{1}{2}F(N-F)
-\end{equation}
-
-\begin{equation}\label{eq:num_doubles}
-N_d = \frac{1}{2^4}F(F-2)(N-F)^2
-\end{equation}
-
-\begin{equation}\label{eq:num_triples}
-N_t = \frac{1}{2^4}F(3F-4)(N-F)^3
-\end{equation}
-Where $F$ is the Fermi level and $N$ is the number of single-particle states in the system. So we choose single or double proportionally to their amount for a given system configuration.
-\begin{equation}
-P_1 = \frac{A \delta \tau \bra{D_m}\hat{H} \ket{D_n}}{p_{\text{select}}p_{sel}p_{\text{clust}}p_{\text{excit}}}
-\end{equation}
-\begin{equation}
-P_2 = \frac{A \delta \tau (\bra{D_n}\hat{H} \ket{D_n}-S)}{p_{\text{select}}p_{sel}p_{\text{clust}}}
-\end{equation}
-where
-\begin{equation}
-\delta \tau \leq \frac{2}{E_{max} - S}
-\end{equation}
-where $E_{max}$ is the largest eigenvalue of the most excited determinant available in a given one-electron basis and $S \approx E_0$.\\
-Parameter A is known as amplitude total amplitude of the cluster. It depends on size of the cluster.
-\begin{equation}
-A = N_0  \prod_{i=1}^s \frac{N_i}{N_0}
-\end{equation},
-where $N_i$ -- is population on the excip number $i$.
-
-We select cluster size according exponential distribution:
-\begin{equation}
-p_{size}(s)=\frac{1}{2^{s+1}}
-\end{equation}
-
-\begin{equation}
-p_{\text{clust}} (e|s)= s! \prod_{i=1}^s \frac{|N_i|}{N_{ex}}.
-\end{equation}
-Represents number of possibilities to choose excitations (excitors) within chosen cluster. Also $N_{ex}$ is total number of excited determinants that can by sampled in the system (doubles, if we choose CCD method). This number can be calculated using equations ($\ref{eq:num_singles}$),($\ref{eq:num_doubles}$) and ($\ref{eq:num_triples}$).
-
-\begin{equation}
-p_{select}(e)= p_{size}(s) p_{\text{clust}} (e|s) =  \frac{s!\prod_{i=1}^{s} |N_i|}{2^{s+1}N_{ex}}.
-\end{equation}
-
-
-
-\begin{equation}
-p_{sel}= 1+N_{s}+N_{d}+N_{t}.
-\end{equation}
-$p_{sel}$ represent a number of samples in each time-step. This parameter must by constant and depend on total number of possible excited determinants combine with reference.
-
-
-\begin{equation}
-p_{\text{excit}} = \frac{1}{N_{ex}}.
-\end{equation}
-This parameter represent probability to select excited state (not reference).
-
-
-
-
-
-Lets compute some particular probabilities:\\
-
-
-
-\begin{enumerate}
-\item For a cluster of size zero:
-
-\begin{align}
-p_{size} = \frac{1}{2},\\
-p_{sel} = 1+N_{s}+N_{d}+N_{t} = 2N_0,\\
-p_{excit}=\frac{1}{N_{ex}} = \frac{1}{N_d}, for doubles\\
-A = N_0,\\
-p_{clust}=1\\
-\delta \tau = \frac{2}{E_m  - S},\\
-p_{death}=0, by constraction\\
-p_{spawn} = \frac{2}{|E_m  - S|} \frac{|AH_{m0}|}{ p_{sel}  p_{size} p_{clust}p_{excit} }=
-\frac{2}{|E_m  - S|} \frac{N_0|H_{m0}|}{ \frac{1}{2}  2N_0 \frac{1}{N_d} }=\\
-p_{spawn} = \frac{2N_d|H_{m0}|}{|E_m  - S|} 
-\end{align}
- 
-\item For cluster size 1 we have three possibilities:\\
-1) Parent is a singly exited determinant.
-
-\begin{itemize}
-	\item no spawn
-	\item death according to:
-\begin{align}
-p_{size} = \frac{1}{4},\\
-p_{sel} =  2N_0,\\
-p_{excit}= \frac{1}{N_d}\\
-A = N_0\frac{N_i}{N_0}=N_i,\\
-p_{clust}=1!\frac{1}{N_0}\\
-\delta \tau = \frac{2}{E_m  - S},\\
-p_{death} = \frac{2}{|E_m - S|} \frac{|A(H_{mm}-S)|}{ p_{sel}  p_{size} p_{clust} }=\\
-\frac{4}{|E_m  - S|} \frac{|H_{mm}-S|N_dN_i}{N_0 }
-\end{align}
-here $N_i$ population on chosen excip $i$. Normally in the beginning of simulation it is $i= +1,-1$.
-\end{itemize}
-
-2) Parent is a doubly exited determinant.
-
-\begin{itemize}
-\item can spawn only singly excited determinant with probability:
-\begin{align}\label{eq:spawn_ziae_1}
-p_{spawn} = \frac{2}{E_m - S} \frac{|AH_{mn}|}{ p_{sel}  p_{size} p_{clust} p_{excit} }=\\
-\frac{2}{|E_m  - S|} \frac{|H_{mn}|}{2N_0 \frac{1}{4} \frac{1}{N_d} \frac{1}{N_0}} =\\
-p_{spawn} =\frac{4|H_{mn}|N_d}{|E_m  - S|}
-\end{align}
-\item death according to:
-\begin{align}
-p_{death} = \frac{2}{E_m - S} \frac{|A(H_{mm}-S)|}{ p_{sel}  p_{size} p_{clust} }= \frac{2}{|E_m - S|} \frac{A|H_{mm}-S|N_i}{ 2N_0 \frac{1}{4} \frac{1}{N_0}}=\\
-p_{death} = \frac{4|H_{mm}-S|N_i}{|E_m - S|} 
-\end{align}
-\end{itemize}
-3) Parent is a triply exited determinant.
-\begin{itemize}
-\item can spawn only singly or doubly excited determinant with same probability as before ($\ref{eq:spawn_ziae_1}$).
-\item $p_{death} = 1$ as we do not count triples.
-\end{itemize}
-
-\item For cluster size 2 we have two possibilities:\\
-1) Parent is a doubly exited determinant.
-\begin{itemize}
-	\item can spawn only singly excited determinant with probability:
-\begin{align}
-p_{size} = \frac{1}{8},\\
-A = N_0\frac{N_i}{N_0}\frac{N_j}{N_0}=\frac{N_jN_i}{N_0},\\
-p_{clust}=2!\frac{|N_i|}{N_0}\frac{|N_j|}{N_0}=\frac{2|N_jN_i|}{N_0^2}\\
-\delta \tau = \frac{2}{E_m  - S},\\
-p_{spawn} = \frac{2}{|E_m - S|} \frac{|A(H_{mn}-S)|}{ p_{sel}  p_{size} p_{clust} p_{excit}  }=\\
-p_{spawn} = \frac{2}{|E_m - S|} \frac{  | \frac{N_jN_i}{N_0} (H_{mn}-S)|}{2N_0 \frac{1}{8} \frac{2|N_jN_i|}{N_0^2} \frac{1}{N_d} }=\\
-p_{spawn} = \frac{4}{|E_m - S|} \frac{ |\frac{N_jN_i}{N_0} (H_{mn}-S)|}{ \frac{|N_jN_i|}{N_0} \frac{1}{N_d} }=\frac{4|H_{mn}-S|N_d}{|E_m - S|}\label{eq:spawn_ziae_2}
-\end{align}
-	\item death according to:
-\begin{align}
-	p_{death} = \frac{2}{E_m - S} \frac{A|H_{mm}-S|}{ p_{sel}  p_{size} p_{clust} }=
-	 \frac{2}{E_m - S} \frac{\frac{N_jN_i}{N_0}|H_{mm}-S|}{ 2N_0 \frac{1}{8} \frac{2N_jN_i}{N_0^2} }=\\
-	 p_{death} =  \frac{4|H_{mn}-S|}{|E_m - S|}
-\end{align}
-\end{itemize}
-3) Parent is a triply exited determinant.
-\begin{itemize}
-	\item can spawn only singly or doubly excited determinant with same probability as before ($\ref{eq:spawn_ziae_2}$).
-	\item $p_{death} = 1$ as we do not count triples.
-\end{itemize}
-
-\item Cluster size 3:
-
-Parent is a triply exited determinant.
-\begin{itemize}
-	\item can spawn only singly or doubly excited determinant with  probability  
-\begin{align}
-	p_{size} = \frac{1}{16},\\
-	A = N_0\frac{N_i}{N_0}\frac{N_j}{N_0}\frac{N_k}{N_0}=\frac{N_jN_iN_k}{N_0^2},\\
-	p_{clust}=3!\frac{|N_i|}{N_0}\frac{|N_j|}{N_0}\frac{|N_k|}{N_0}=\frac{6|N_jN_iN_k|}{N_0^3}\\
-	\delta \tau = \frac{2}{E_m  - S},\\
-	p_{spawn} = \frac{2}{E_m - S} \frac{|A(H_{mn}-S)|}{ p_{sel}  p_{size} p_{clust} p_{excit}  }=\\
-	p_{spawn} = \frac{2}{E_m - S} \frac{\frac{|N_jN_iN_k|}{N_0^2}|H_{mn}-S|}{ 2N_0 \frac{1}{16} \frac{6|N_jN_iN_k|}{N_0^3} \frac{1}{N_d}}= \\
-p_{spawn} = \frac{8N_d|H_{mn}-S|}{3(E_m - S)}
-\end{align}
-	\item $p_{death} = 1$ as we do not count triples.
-\end{itemize}
-\end{enumerate}
-\subsection{Sing Problem}
-\chapter{Coulomb matrix elements}
-Coulomb matrix elements are required for all methods described in this thesis. In case of Hartree Fock method they can be just computed on the fly, using the formulas presented in Appendix $\ref{app:1}$ . However, after we made a transformation to the Hartree Fock basis, we need they to be stored and assessed in a most quickly and efficient way possible. \\
-One solution is to store them as four-dimensional array, mapping the unique set of indexes $pqrs$ to a certain value. This method is inefficient, because due to symmetry requirements such array will contain a lot of zeros.\\
-Another solution is to store only non-zero values in one array and associated set of indexes  in the other. This improvement will save a lot of memory, but require a costly search through the vector of indexes, to find a position of needed combination $pqrs$.\\
-One more solution is to map each non-zero value with a unique address. This method combine advantages of the two described above and allow us to save both memory and avoid search.\\
-The method is described in details here \cite{leikangerFullConfigurationInteraction}.
 
 \part{Implementation and results}
 In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. 
@@ -1307,6 +1216,40 @@ Fig. $\ref{fig::FHflowchart}$ present the illustration for the HF algorithm. Her
 \end{tcolorbox}
 
 \subsection{Code structure for HF}\label{sec:code_for_HF}
+\subsection{Results for Haertree-Fock}
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c c| c c| c c| c c|}
+			%\cline{1-12}
+			%         & \multicolumn{1}{c}{N=2} & \multicolumn{5}{c}{N=6}  \\
+			%\cline{1-12}
+			\hline
+			\multirow{2}{*}{} & 
+			\multicolumn{1}{c}{N=2} \vline& 
+			\multicolumn{2}{c}{N=6} \vline&
+			\multicolumn{2}{c}{N=12} \vline&
+			\multicolumn{2}{c}{N=20} \vline\\
+			\hline
+			$R$  & $E_{HF}$ & $Z$ & $E_{HF}$ & $Z$  & $E_{HF}$ &$Z$ &  $E_{HF}$  \\
+			\hline
+			$  3 $   & $3.16269$  &$ 3 $  & $21.5932$    &$  3 $   & $73.7655$     &$ 3$  & $-          $   \\
+			$  4 $   & $3.16269$  &$ 4 $  & $20.7669$    &$  4 $   & $70.6738$     &$ 4$  & $177.963    $   \\
+			$  5 $   & $3.16192$  &$ 5 $  & $20.7484$    &$  5 $   & $67.5699$     &$ 5$  & $168.426    $   \\
+			$  6 $   & $3.16192$  &$ 6 $  & $20.7203$    &$  6 $   & $67.2969$     &$ 6$  & $161.34     $   \\
+			$  7 $   & $3.16191$  &$ 7 $  & $20.7201$    &$  7 $   & $66.9347$     &$ 7$  & $159.959    $   \\
+			$  8 $   & $3.16191$  &$ 8 $  & $20.7192$    &$  8 $   & $66.9231$     &$ 8$  & $158.4      $   \\
+			$  9 $   & $3.161909$ &$ 9 $  & $20.7192$    &$  9 $   & $66.9122$     &$ 9$  & $158.226013 $   \\
+			$  10$   & $3.161909$ &$ 10$  & $20.71921$   &$  10$   & $66.912035$   &$ 10$ & $158.017668 $   \\
+			$  11$   & $-       $ &$ 11$  & $20.719216$  &$  11$   & $66.911365$   &$ 11$ & $158.010277 $   \\
+			$  12$   & $-       $ &$ 12$  & $20.719216$  &$  12$   & $66.911364$   &$ 12$ & $158.004953 $   \\
+			\hline                                                                                    
+		\end{tabular}
+		 \caption{ Ground-state energies measured in a.u. obtained numerically for different number of shells (R) and electrons (N).  Oscillator strength $\omega=1$.}   \label{tab:resultsHF}
+	\end{center}
+\end{table}
+
+
 
 \begin{figure}
 \begin{lstlisting}[language=C++]
@@ -1378,7 +1321,7 @@ void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
 \end{lstlisting}
 \caption{Compute HF matrix}
 \end{figure}
-\subsection{Code for CCD}
+\subsection{Code structure for CCD}
 
 \subsection{Channels for CCD}
 The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$. Such transition is prohibited if it does not preserve quantum numbers for spin and angular momentum. The preserved quantum numbers are the following:
@@ -1516,7 +1459,7 @@ Mapping two states into a single one has even more advantages, we now may use th
 \sum_{cd}\braket{ab|v|cd}t_{cd}^{ij} \rightarrow V_{ab}^{cd} \times T_{cd}^{ij} \rightarrow V_{A}^{C} \times T_{C}^{I} \rightarrow (VT)_{A}^{I},
 \end{equation}
 which is just an ordinary matrix-matrix multiplication.\\
-However not all terms in  ($\ref{eq:CCD_ampl}$) can be tackled as easy as this one. For example, the thierd leaner term:
+However not all terms in  ($\ref{eq:CCD_ampl}$) can be tackled as easy as this one. For example, the third leaner term:
 \begin{align}
 \sum_{kc}\braket{kb|v|cj}t_{ik}^{ac} \rightarrow V_{kb}^{cj} \times T_{ik}^{ac},
 \end{align}
@@ -1600,9 +1543,235 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 
 \section{CCQMC implementation}
 
+\part{Possible improvements and further research}
+
+\section{Smart Storage of Coulomb matrix elements}
+Coulomb matrix elements are required for all methods described in this thesis. In case of Hartree Fock method they can be just computed on the fly, using the formulas presented in Appendix $\ref{app:2}$ . However, after we made a transformation to the Hartree Fock basis, we need they to be stored and assessed in a most quickly and efficient way possible. \\
+One solution is to store them as four-dimensional array, mapping the unique set of indexes $pqrs$ to a certain value. This method is inefficient, because due to symmetry requirements such array will contain a lot of zeros.\\
+Another solution is to store only non-zero values in one array and associated set of indexes  in the other. This improvement will save a lot of memory, but require a costly search through the vector of indexes, to find a position of needed combination $pqrs$.\\
+One more solution is to map each non-zero value with a unique address. This method combine advantages of the two described above and allow us to save both memory and avoid search.\\
+The method is described in details here \cite{leikangerFullConfigurationInteraction}.
+
 \clearpage
 **\appendix
-\chapter{Coulomb matrix elements}\label{app:1}
+\chapter{Matrix Elements of Hamiltonian}\label{app:1}
+It is convenient to introduce formulas for different matrix elements of Hamiltonian. \\
+Matrix elements between determinants that differs more then two orthonormal spin orbitals are zero by construction, so we are not going to consider such term.\\
+Let us choose one determinant to be single or double excitation on another. \\
+For double excitation:
+\begin{equation}
+\ket{\Phi_{m}}=a^\dagger_r a^\dagger_s a_q a_p \ket{\Phi_n}.
+\end{equation}
+In this case the corresponding matrix element then is:
+\begin{equation}
+\bra{\Phi_n} \hat{H}\ket{\Phi_{m}}=\braket{rs|pq}_{AS}.
+\end{equation}
+For single excitation:
+\begin{equation}
+\ket{\Phi_{m}}=a^\dagger_r  a_p \ket{\Phi_n}.
+\end{equation}
+And corresponding matrix element then is:
+\begin{equation}
+\bra{\Phi_n} \hat{H}\ket{\Phi_{m}}=\sum_{k}^{N-1}\braket{rk|pk}_{AS}.
+\end{equation}
+here sum runs over all common orbitals present in the determinants.\\
+We also need to compute the diagonal matrix element:
+\begin{equation}
+\bra{\Phi_n} \hat{H}\ket{\Phi_{n}}=\sum_{p\in n} \braket{p|\hat{h}|p} + \frac{1}{2} \sum_{p,q \in n}^{N-1}\braket{pq|pq}_{AS}.
+\end{equation}
+
+\chapter{Coulomb matrix elements}\label{app:2}
+In the article by Anisimovas and Matulis \cite{anisimovasEnergySpectraFewelectron1998} there is an algorithm to compute a Coulomb matrix elements in a closed form. The final expression is the following:
+
+
+\begin{align}
+& \braket{12|V|34}= \delta_{m_1+m_2,m_3+m_4} \;  \left[ \prod_{i=1}^4 \frac{n_i !}{(n_i+|m_i|!)} \right]^{1/2}  \nonumber \\
+&\times \sum_{(4)j=0}^{n} \Bigg[ \frac{(-1)^{j_1+j_2+j_3+j_4}} {j_1!j_2!j_3!j_4!} \; \left[ \prod_{k=1}^4 \begin{pmatrix} n_k+|m_k|\\n_k-j_k\end{pmatrix}  \right]  \; \frac{1}{2^{\frac{G+1}{2}}} \nonumber  \\
+&\times \sum_{(4)l=0}^{\gamma}\left( \delta_{l_1,l_2} \; \delta_{l_3,l_4} \; (-1)^{\gamma_2+\gamma_3-l_2-l_3} \left[ \prod_{t=1}^4 \begin{pmatrix} \gamma_t\\l_t\end{pmatrix} \right] \; \Gamma \left(1+\frac{\Lambda}{2} \right) \; \Gamma \left(\frac{G - \Lambda +1}{2}\right)    \right)  \Bigg]
+\end{align} 
+here
+\begin{align*}
+&\gamma_1=j_1+j_4+\frac{|m_1|+m_1}{2}+\frac{|m_4|-m_4}{2} \\
+&\gamma_2=j_2+j_3+\frac{|m_2|+m_2}{2}+\frac{|m_3|-m_3}{2} \\
+&\gamma_3=j_3+j_2+\frac{|m_3|+m_3}{2}+\frac{|m_2|-m_2}{2} \\
+&\gamma_4=j_4+j_1+\frac{|m_4|+m_4}{2}+\frac{|m_1|-m_1}{2} \\
+&G=\sum_{i}^4 \gamma_i, \text{   }  \Lambda = \sum_{i}^4 l_i, \text{   } \sum_{(4)j=0}^{n}=\sum_{j_1=0}^{n_1}\sum_{j_2=0}^{n_2}\sum_{j_3=0}^{n_3}\sum_{j_4=0}^{n_4}\\
+\end{align*}
+This matrix elements are computed using function \textit{Coulomb$\_$HO} realized in class \textit{Coulomb$\_$Functions}. One should be careful because it does not include spin.
+
+
+
+\chapter{Some additional calculations on sampling probabilities}\label{app:3}
+
+Number of single-, double- and triple-excitations including Pauli exclusion principle are defined by the following formulas:
+
+\begin{equation}\label{eq:num_singles}
+N_s = \frac{1}{2}F(N-F)
+\end{equation}
+
+\begin{equation}\label{eq:num_doubles}
+N_d = \frac{1}{2^4}F(F-2)(N-F)^2
+\end{equation}
+
+\begin{equation}\label{eq:num_triples}
+N_t = \frac{1}{2^4}F(3F-4)(N-F)^3
+\end{equation}
+Where $F$ is the Fermi level and $N$ is the number of single-particle states in the system. So we choose single or double proportionally to their amount for a given system configuration.
+\begin{equation}
+P_1 = \frac{A \delta \tau \bra{D_m}\hat{H} \ket{D_n}}{p_{\text{select}}p_{sel}p_{\text{clust}}p_{\text{excit}}}
+\end{equation}
+\begin{equation}
+P_2 = \frac{A \delta \tau (\bra{D_n}\hat{H} \ket{D_n}-S)}{p_{\text{select}}p_{sel}p_{\text{clust}}}
+\end{equation}
+where
+\begin{equation}
+\delta \tau \leq \frac{2}{E_{max} - S}
+\end{equation}
+where $E_{max}$ is the largest eigenvalue of the most excited determinant available in a given one-electron basis and $S \approx E_0$.\\
+Parameter A is known as amplitude total amplitude of the cluster. It depends on size of the cluster.
+\begin{equation}
+A = N_0  \prod_{i=1}^s \frac{N_i}{N_0}
+\end{equation},
+where $N_i$ -- is population on the excip number $i$.
+
+We select cluster size according exponential distribution:
+\begin{equation}
+p_{size}(s)=\frac{1}{2^{s+1}}
+\end{equation}
+
+\begin{equation}
+p_{\text{clust}} (e|s)= s! \prod_{i=1}^s \frac{|N_i|}{N_{ex}}.
+\end{equation}
+Represents number of possibilities to choose excitations (excitors) within chosen cluster. Also $N_{ex}$ is total number of excited determinants that can by sampled in the system (doubles, if we choose CCD method). This number can be calculated using equations ($\ref{eq:num_singles}$),($\ref{eq:num_doubles}$) and ($\ref{eq:num_triples}$).
+
+\begin{equation}
+p_{select}(e)= p_{size}(s) p_{\text{clust}} (e|s) =  \frac{s!\prod_{i=1}^{s} |N_i|}{2^{s+1}N_{ex}}.
+\end{equation}
+
+
+
+\begin{equation}
+p_{sel}= 1+N_{s}+N_{d}+N_{t}.
+\end{equation}
+$p_{sel}$ represent a number of samples in each time-step. This parameter must by constant and depend on total number of possible excited determinants combine with reference.
+
+
+\begin{equation}
+p_{\text{excit}} = \frac{1}{N_{ex}}.
+\end{equation}
+This parameter represent probability to select excited state (not reference).
+
+
+
+
+
+Lets compute some particular probabilities:\\
+
+
+
+\begin{enumerate}
+	\item For a cluster of size zero:
+	
+	\begin{align}
+	p_{size} = \frac{1}{2},\\
+	p_{sel} = 1+N_{s}+N_{d}+N_{t} = 2N_0,\\
+	p_{excit}=\frac{1}{N_{ex}} = \frac{1}{N_d}, for doubles\\
+	A = N_0,\\
+	p_{clust}=1\\
+	\delta \tau = \frac{2}{E_m  - S},\\
+	p_{death}=0, by constraction\\
+	p_{spawn} = \frac{2}{|E_m  - S|} \frac{|AH_{m0}|}{ p_{sel}  p_{size} p_{clust}p_{excit} }=
+	\frac{2}{|E_m  - S|} \frac{N_0|H_{m0}|}{ \frac{1}{2}  2N_0 \frac{1}{N_d} }=\\
+	p_{spawn} = \frac{2N_d|H_{m0}|}{|E_m  - S|} 
+	\end{align}
+	
+	\item For cluster size 1 we have three possibilities:\\
+	1) Parent is a singly exited determinant.
+	
+	\begin{itemize}
+		\item no spawn
+		\item death according to:
+		\begin{align}
+		p_{size} = \frac{1}{4},\\
+		p_{sel} =  2N_0,\\
+		p_{excit}= \frac{1}{N_d}\\
+		A = N_0\frac{N_i}{N_0}=N_i,\\
+		p_{clust}=1!\frac{1}{N_0}\\
+		\delta \tau = \frac{2}{E_m  - S},\\
+		p_{death} = \frac{2}{|E_m - S|} \frac{|A(H_{mm}-S)|}{ p_{sel}  p_{size} p_{clust} }=\\
+		\frac{4}{|E_m  - S|} \frac{|H_{mm}-S|N_dN_i}{N_0 }
+		\end{align}
+		here $N_i$ population on chosen excip $i$. Normally in the beginning of simulation it is $i= +1,-1$.
+	\end{itemize}
+	
+	2) Parent is a doubly exited determinant.
+	
+	\begin{itemize}
+		\item can spawn only singly excited determinant with probability:
+		\begin{align}\label{eq:spawn_ziae_1}
+		p_{spawn} = \frac{2}{E_m - S} \frac{|AH_{mn}|}{ p_{sel}  p_{size} p_{clust} p_{excit} }=\\
+		\frac{2}{|E_m  - S|} \frac{|H_{mn}|}{2N_0 \frac{1}{4} \frac{1}{N_d} \frac{1}{N_0}} =\\
+		p_{spawn} =\frac{4|H_{mn}|N_d}{|E_m  - S|}
+		\end{align}
+		\item death according to:
+		\begin{align}
+		p_{death} = \frac{2}{E_m - S} \frac{|A(H_{mm}-S)|}{ p_{sel}  p_{size} p_{clust} }= \frac{2}{|E_m - S|} \frac{A|H_{mm}-S|N_i}{ 2N_0 \frac{1}{4} \frac{1}{N_0}}=\\
+		p_{death} = \frac{4|H_{mm}-S|N_i}{|E_m - S|} 
+		\end{align}
+	\end{itemize}
+	3) Parent is a triply exited determinant.
+	\begin{itemize}
+		\item can spawn only singly or doubly excited determinant with same probability as before ($\ref{eq:spawn_ziae_1}$).
+		\item $p_{death} = 1$ as we do not count triples.
+	\end{itemize}
+	
+	\item For cluster size 2 we have two possibilities:\\
+	1) Parent is a doubly exited determinant.
+	\begin{itemize}
+		\item can spawn only singly excited determinant with probability:
+		\begin{align}
+		p_{size} = \frac{1}{8},\\
+		A = N_0\frac{N_i}{N_0}\frac{N_j}{N_0}=\frac{N_jN_i}{N_0},\\
+		p_{clust}=2!\frac{|N_i|}{N_0}\frac{|N_j|}{N_0}=\frac{2|N_jN_i|}{N_0^2}\\
+		\delta \tau = \frac{2}{E_m  - S},\\
+		p_{spawn} = \frac{2}{|E_m - S|} \frac{|A(H_{mn}-S)|}{ p_{sel}  p_{size} p_{clust} p_{excit}  }=\\
+		p_{spawn} = \frac{2}{|E_m - S|} \frac{  | \frac{N_jN_i}{N_0} (H_{mn}-S)|}{2N_0 \frac{1}{8} \frac{2|N_jN_i|}{N_0^2} \frac{1}{N_d} }=\\
+		p_{spawn} = \frac{4}{|E_m - S|} \frac{ |\frac{N_jN_i}{N_0} (H_{mn}-S)|}{ \frac{|N_jN_i|}{N_0} \frac{1}{N_d} }=\frac{4|H_{mn}-S|N_d}{|E_m - S|}\label{eq:spawn_ziae_2}
+		\end{align}
+		\item death according to:
+		\begin{align}
+		p_{death} = \frac{2}{E_m - S} \frac{A|H_{mm}-S|}{ p_{sel}  p_{size} p_{clust} }=
+		\frac{2}{E_m - S} \frac{\frac{N_jN_i}{N_0}|H_{mm}-S|}{ 2N_0 \frac{1}{8} \frac{2N_jN_i}{N_0^2} }=\\
+		p_{death} =  \frac{4|H_{mn}-S|}{|E_m - S|}
+		\end{align}
+	\end{itemize}
+	3) Parent is a triply exited determinant.
+	\begin{itemize}
+		\item can spawn only singly or doubly excited determinant with same probability as before ($\ref{eq:spawn_ziae_2}$).
+		\item $p_{death} = 1$ as we do not count triples.
+	\end{itemize}
+	
+	\item Cluster size 3:
+	
+	Parent is a triply exited determinant.
+	\begin{itemize}
+		\item can spawn only singly or doubly excited determinant with  probability  
+		\begin{align}
+		p_{size} = \frac{1}{16},\\
+		A = N_0\frac{N_i}{N_0}\frac{N_j}{N_0}\frac{N_k}{N_0}=\frac{N_jN_iN_k}{N_0^2},\\
+		p_{clust}=3!\frac{|N_i|}{N_0}\frac{|N_j|}{N_0}\frac{|N_k|}{N_0}=\frac{6|N_jN_iN_k|}{N_0^3}\\
+		\delta \tau = \frac{2}{E_m  - S},\\
+		p_{spawn} = \frac{2}{E_m - S} \frac{|A(H_{mn}-S)|}{ p_{sel}  p_{size} p_{clust} p_{excit}  }=\\
+		p_{spawn} = \frac{2}{E_m - S} \frac{\frac{|N_jN_iN_k|}{N_0^2}|H_{mn}-S|}{ 2N_0 \frac{1}{16} \frac{6|N_jN_iN_k|}{N_0^3} \frac{1}{N_d}}= \\
+		p_{spawn} = \frac{8N_d|H_{mn}-S|}{3(E_m - S)}
+		\end{align}
+		\item $p_{death} = 1$ as we do not count triples.
+	\end{itemize}
+\end{enumerate}
+
+
+
+
 
 
 
@@ -1618,19 +1787,19 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 			\hline
 			1.0 & 54 & -0.3178228436889338 & -0.317822843688933   &  		 & -0.3178230699319597	\\
 			1.0 & 66 & -0.3926965898061968 & -0.3926965898061966  &  		 & -0.3926968074770883	\\
-			1.0 & 114 & -0.4479105961757175 & -0.4479105961757175 & -0.447909& -0.4479109389185168 | -0.447911467077516  \\
-			1.0 & 162 & -0.4805572589306421 & -0.4805572589306416 &  		 & -0.4805570782443644 |	-0.480557602520734  \\
-			1.0 & 186 & -0.4855229317521320 & -0.4855229317521318 & -0.485523& -0.4855227418241643 |	-0.485523265841696  \\
-			1.0 & 246 & -0.4929245740023971 & -0.4929245740023975 &  		 & -0.4929243692209997 | -0.492924891224881	\\ 
-			1.0 & 294 & -0.4984909094066806 & -0.4984909094066818 &  		 & -0.4984906939593081 |	-0.49849121565881   \\
-			1.0 & 342 & -0.5019526761547777 & -0.5019526761547779 &  		 & -0.5019524529049423 |	-0.501952973776421  \\
-			1.0 & 358 & -0.5025196736076414 & -0.502519673607641  & -0.502523& -0.5025194488388951 |  -0.50251996951923   \\ \hline
-			0.5 & 114 & -0.5120153541478306 & -0.5120153541478306 & -0.512015& -0.5120152296730576 |        \\
-			0.5 & 186 &	-0.5114620616957333	&			    	  & -0.553329& -0.553329520936618  | -0.553329746087795 \\
-			0.5 & 342 & -0.5729645498903680 & -0.572964549890367  &  		 & -0.572964399507113  |	-0.572964623901421\\ 
-			0.5 & 358 &	-0.5297417436322546	&		    		  & -0.573678& -0.5736804143578934 | -0.573680638707031\\ \hline	
-			2.0 & 114 & -0.3577968843144996 & -0.3577968843144996 & -0.357798& -0.3577955282575221 | -0.357799041020026	\\
-			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &  		 & -0.4014117905655018 | -0.401414909785224	\\
+			1.0 & 114 & -0.4479105961757175 & -0.4479105961757175 & -0.447909& -0.4479109389185168  \\
+			1.0 & 162 & -0.4805572589306421 & -0.4805572589306416 &  		 & -0.4805570782443644  \\
+			1.0 & 186 & -0.4855229317521320 & -0.4855229317521318 & -0.485523& -0.4855227418241643  \\
+			1.0 & 246 & -0.4929245740023971 & -0.4929245740023975 &  		 & -0.4929243692209997 	\\ 
+			1.0 & 294 & -0.4984909094066806 & -0.4984909094066818 &  		 & -0.4984906939593081  \\
+			1.0 & 342 & -0.5019526761547777 & -0.5019526761547779 &  		 & -0.5019524529049423 \\
+			1.0 & 358 & -0.5025196736076414 & -0.502519673607641  & -0.502523& -0.5025194488388951 \\ \hline
+			0.5 & 114 & -0.5120153541478306 & -0.5120153541478306 & -0.512015& -0.5120152296730576 \\
+			0.5 & 186 &	-0.5114620616957333	&			    	  & -0.553329& -0.553329520936618  \\
+			0.5 & 342 & -0.5729645498903680 & -0.572964549890367  &  		 & -0.572964399507113  \\ 
+			0.5 & 358 &	-0.5297417436322546	&		    		  & -0.573678& -0.5736804143578934 \\ \hline	
+			2.0 & 114 & -0.3577968843144996 & -0.3577968843144996 & -0.357798& -0.3577955282575221 \\
+			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &  		 & -0.4014117905655018 \\
 		\end{tabular}
 	\end{table}
 	

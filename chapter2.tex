@@ -1,0 +1,60 @@
+\chapter{Quantum Dot}
+
+\section{Introduction to Quantum Dots}
+
+The mathematical description of quantum dots (QD) is presented below, but in the most general sense one may say that QDs are man-made devices that are small enough to posses quantum properties, such as energy shell structure, tunneling effect and etc. Most commonly such devices are fabricated using semiconductors and their size vary from few nanometers to hundreds of nanometers (one nanometer or nm is equal to $1\times 10^{-9} m$). In literature one may find name "artificial atoms" when referring to such  semiconductor nanostructures. This name reflect the fact that QDs and atoms share many similar properties, however this is not completely legit name, though QD are larger then atoms. For atoms size is usually measured in picometres  (one picometre or pm is equal to $1\times 10^{-12} m$).  Normal size of an atom vary form 53 pm for hydrogen atom (this quantity is also known as Bohr radius), to  273 pm for cesium (which is considered to be one of the largest atoms). As one can mention even the small QDs correspond 10 atoms in diameter. Apart from this QDs are very similar to the atoms. The name Quantum Dot reflect the fact that we have a structure that is small enough to have quantum properties and also that this structure is spatially localized. The properties of QDs lie between those of individual discrete atoms or molecules and bulk semiconductors. This fact make such particles matter of great interest both for science and industry.\\
+In this part we provide a theoretical description of two-dimensional quantum dots. However it's worth consider first what are quantum dots and why are they so interesting. In literature QDs are sometimes called artificial atoms. This comes from the fact that QD share many of their properties with real atoms despite being artificially created. The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
+Today we have many types of QDs, with a large field of application. It is a growing research area. History of quantum dots traces back to 1980, when they were first discovered in glass crystals \cite{ekimovaiQuantumSizeEffect1981}. However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. \cite{murraySynthesisCharacterizationNearly1993} managed to make a colloidal QD. Since then the interest to QDs is constantly growing. Today QDs have a large field of applications from medicine to quantum computing. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications \cite{zhuQuantumDots2013}.  \\
+
+\subsection{Mathematical description of Quantum Dots}\label{sec:math_qd}
+Before presenting equations for quantum dots we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
+\begin{itemize}
+	\item Electrons are confined by Harmonic Oscillator potential $V(r)_{HO}=\frac{m\omega^2 r^2}{2}$.
+	\item Electrons interact via two-body Coulomb potential  $V(r_{ij})=\frac{1}{r_{ij}}$.
+	\item The Hamiltonian is considered to be two-dimensional.
+	\item The HO potential is spherically symmetric, giving in parabolic quantum dot.
+	\item External magnetic field is not present.
+\end{itemize}
+
+Mathematical description of Quantum Dots has been provided in many other master thesis, for example in \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUM}, so we are not aiming to derive all the equations and present a detailed description here. We have already presented the electronic Hamiltonian of in Section ($\ref{sec:operator in 2q}$). Fro QD the one-body operator corresponds to kinetic energy and external potential and a two-body operator corresponds to Coulomb interaction between two particles:
+\begin{align}
+\hat{H}_0&= \hat{T}+\hat{V}_{HO} \rightarrow \frac{1}{2} \textbf{r}^2-\frac{\nabla_\textbf{r}^2}{2} ,\\
+\hat{V}&= \sum_{i<j}\frac{1}{r_{ij}},
+\end{align}
+here $\textbf{r}$ is position of the particle, $r_{ij}$ is distance between particles.
+In previous Chapter we mention single-particle wave functions. This functions can be obtained using the one-body part of the Hamiltonian and are well-known functions corresponding to so-called quantum Harmonic oscillator. For a more detailed information please refer to \cite{sakuraiModernQuantumMechanics1993}. The single particle wave functions in polar coordinates can be then written as:
+\begin{equation}
+\phi_\text{SP}(r,\theta)= \bigg[ \frac{2n!}{(n+|m|)!} \bigg]^{\frac{1}{2}} \frac{1}{2\pi} e^{im\theta}r^{|m|}L_n^{|m|}(r^2)e^{\frac{-r^2}{2}},
+\end{equation}
+here $r=|\textbf{r}|$, $L_n$ are the Laguerre polynomials, $n$ and $m$ are magnetic and principal quantum numbers respectively.
+The single particle energy can be presented as :
+\begin{eqnarray}
+\epsilon(i)= 1+|m_i|+ 2n_i,
+\end{eqnarray}
+the single particle energy is measured in units $\hbar\omega$. On Fig. $\ref{tab:c}$ the shell structure of QD is presented.
+The two-body matrix elements are computed using the algorithm presented in the article \cite{EnergySpectraFewelectron}. The details for this calculations are provided in Appendix $\ref{app:2}$.
+
+\begin{table}[h!]
+	\caption{Quantum numbers for the single-particle basis using a harmonic oscillator in two dimensions.} 
+	\label{tab:c}
+	\begin{center}
+		\begin{tabular}{ccccc}
+			\hline
+			\multicolumn{1}{c}{ Shell number } & \multicolumn{1}{c}{ $(n, m)$ } & \multicolumn{1}{c}{ Energy } & \multicolumn{1}{c}{ Degeneracy } & \multicolumn{1}{c}{ $N$ } \\
+			7            & $(0,-6)$ $(1,-4)$ $(2,-2)$ $(3,0)$  $(2,\ 2)$  $(1,\ 4)$  $(0,\ 6)$ & $7\hbar\omega$ & 14         & 56  \\
+			\hline
+			6            & $(0,-5)$ $(1,-3)$ $(2,-1)$ $(2,\ 1)$  $(1,\ 3)$  $(0,\ 5)$         & $6\hbar\omega$ & 12         & 42  \\
+			\hline
+			5            & $(0,-4)$ $(1,-2)$ $(2,0)$ $(1,\ 2)$ $(0,\ 4)$                  & $5\hbar\omega$ & 10          & 30  \\
+			\hline
+			4            & $(0,-3)$ $(1,-1)$ $(1, 1)$ $(0,\ 3)$                          & $4\hbar\omega$ & 8            & 20  \\
+			\hline
+			3            & $(0,-2)$ $(1,0)$  $(0,\ 2)$                                    & $3\hbar\omega$ & 6          & 12  \\
+			\hline
+			2            & $(0,-1)$  $(0,\ 1)$                                             & $2\hbar\omega$ & 4          & 6   \\
+			\hline
+			1            & $(0,0)$                                                       & $\hbar\omega$  & 2          & 2   \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{table}

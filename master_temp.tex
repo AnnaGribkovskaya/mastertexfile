@@ -1550,11 +1550,15 @@ A single iteration after some time is then goes af follows:
 \begin{itemize}
 \item Function \textit{sampleReference} select clusters of size zero, which is the reference determinant, functions \textit{sampleClusterSizeOne} and \textit{sampleClusterSizeTwo} select clusters of size one, which is a double excitation of the reference and cluster of size two respectively. 
 \item All exitors that have been spawned or killed are then stored in the \textit{TemporaryStorage} vector and the corresponding excips are stored in vector \textit{TemporaryStoragePopulation}.
-\item In the end of one MC iteration this two vectors are used to update \textit{StorageCumulativeDeterminants} vector and \textit{StorageCumulativePopulation}. These two contain the total number of excips and exitors after the time $n \delta\tau$, here $n$ is number of iterations done so far. 
-\item After this all temporary vectors are cleared and the number of excips in the excitor space is updated. This value is used on next iteration to calculate the number of sampling attempts. There are many different schemes of sampling, in this simulation we used the following: $N_{attempts}(\tau)= N_0(\tau-1)+N_{ex}(\tau-1)$, here 
+\item In the end of one MC iteration this two vectors are used to update \textit{StorageCumulativeDeterminants} vector and \textit{StorageCumulativePopulation}. These two contain the total number of excips and excitors after the time $n \delta\tau$, here $n$ is number of iterations done so far. 
+\item After this all temporary vectors are cleared and the number of excips in the excitor space is updated. This value is used on next iteration to calculate the number of sampling attempts. There are many different schemes of sampling, in this simulation we used the following: $N_{attempts}(\tau)= N_0(\tau-1)+N_{ex}(\tau-1)$, here $N_{attempts}(\tau)$ is number of sampling attempts on current step, $N_0(\tau-1)$ is reference population on the previous step and $_{ex}(\tau-1)$ is excitor space population on previous step.
 \end{itemize}
-
-
+Here we need to mention sign of excip to be killed or spawned. Killing process does not cause any difficulties because we just create excip with the opposite sing. However the spawning process is rather complicated. First we consider the excips spawned from reference. In order to determine the sign we need to take into account the following:
+\begin{itemize}
+\item sign of $H_{n0}$.
+\item possible sign change if the from reordering of the creation and annihilation operators. This comes from the fact that we store determinants in an ordered way, so that any excited determinant $\ket{D_{ij}^{ab}}$ should satisfy the following rule $a<b$ and $i<j$. If it is not the case we reorder operators and should change the sign of excip is the number of permutation needed for the reordering is odd.
+\end{itemize} 
+For the spawning from other determinants we should consider some additional possible sources of sign change 
 
 
 \subsection{Results}

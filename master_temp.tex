@@ -904,7 +904,7 @@ The final expression for the amplitudes in case of CCD approximation is the foll
 \end{eqnarray}
 
 
-\chapter{Monte Carlo Methods in Quantum Physics}
+\chapter{Monte Carlo Methods in Quantum Physics}\label{ch:MCalgo}
 Quantum Monte Carlo(QMC) methods are widely used nowadays for systems with large number of particles. In main distinction of these simulation techniques is in their stochastic nature, which is not the case for other simulation methods, such as molecular dynamics. For more on the topic please refer to \cite{hammondMonteCarloMethods1994} and \cite{kalosMonteCarloMethods2008}. \\
 These methods are flexible and at the same time accurate for many-body systems. There are two most common types of QMC, firs is variational Monte Carlo method (VMC) and projector Monte Carlo method (PMC). For PMC methods differ by a form of projector, e.i. exponential or linear. The most common choice is an exponential one also sometimes called as imaginary time propagator.\\
 The essence of VMC method is to choose a trial wave function, depending on some parameters and then for this particular trial wave function to find expectation values of operators and optimize the parameters.\\
@@ -990,7 +990,7 @@ After this we need to discretize the coefficients. To simulate this stochastical
 \end{enumerate}
 The population control is carried out by varying of the remaining parameter, so-called shift $E$. This parameter can influence the population dynamics in a following way - if the value of $E$ exceeds the lowest eigenvalue, then the population of walkers will increase and vice versa. 
 
-\subsection{Coupled Cluster Quantum Monte Carlo}
+\subsection{Coupled Cluster Quantum Monte Carlo}\label{sec:CCQMC}
 Following the same procedure as for FCIQMC we present a CC wave function in a similar way as we did it for CI in equation ($\ref{eq:fciqmcWF}$). The CC wave function is represented by the following expansion:
 \begin{equation}\label{eq:ccqmcWF}
 \ket{\Psi_{\text{CC}}}= N_0 e^{\frac{\hat{T}}{N_0}}\ket{D_0},
@@ -1544,6 +1544,17 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 \end{figure}
 
 \section{CCQMC implementation}
+In Chapter on Monte Carlo $\ref{ch:MCalgo}$ we have discussed many different Monte Carlo methods. The section $\ref{sec:CCQMC}$ is devoted to CCQMC algorithm. The main idea of the method is to move from the iterative scheme to the numerical sampling of the expectation value of the Hamiltonian. In order to do so we need first to sample the wave function and then sample action of the Hamiltonian. Sampling of the wave function can be described as several independent sampling processes inside one Monte Carlo iteration. This comes from the fact that we are dealing with cluster of different sizes while doing so. As soon as we only implement the method for the HEG we do not have single excitations and would only deal with doubles. The cluster sizes we have to sample can be limited to cluster size one, two and three. All can be sampled independently and then combined on the annihilation step. However such limitation also means we are not going to have triples in the simulation, as soon as we only limit oveselfs to doubles and the combined clusters can only produce the quadrupole excitations, which we do not store anyway as we want to compare our CCQMC with the deterministic solver for CCD. \\
+Before starting the simulation there are no excips in the space of excited determinants, only those on reference. In the FCIQMC or DMC it is common to begin with just a single walker on the $\ket{D_0}$, however this is not the case for CCQMC, we have to start with a number of walkers, usually in range form 100 to 1000. After the simulation begins the population of excitor space start to grow. \\ 
+A single iteration after some time is then goes af follows:
+\begin{itemize}
+\item Function \textit{sampleReference} select clusters of size zero, which is the reference determinant, functions \textit{sampleClusterSizeOne} and \textit{sampleClusterSizeTwo} select clusters of size one, which is a double excitation of the reference and cluster of size two respectively. 
+\item All exitors that have been spawned or killed are then stored in the \textit{TemporaryStorage} vector and the corresponding excips are stored in vector \textit{TemporaryStoragePopulation}.
+\item In the end of one MC iteration this two vectors are used to update \textit{StorageCumulativeDeterminants} vector and \textit{StorageCumulativePopulation}. These two contain the total number of excips and exitors after the time $n \delta\tau$, here $n$ is number of iterations done so far. 
+\item After this all temporary vectors are cleared and the number of excips in the excitor space is updated. This value is used on next iteration to calculate the number of sampling attempts. There are many different schemes of sampling, in this simulation we used the following: $N_{attempts}(\tau)= N_0(\tau-1)+N_{ex}(\tau-1)$, here 
+\end{itemize}
+
+
 
 
 \subsection{Results}
@@ -1610,6 +1621,9 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 		\caption{Coupled Cluster Doubles correlation energy for QD for two electrons and different values of $\omega$ in atomic units. }   \label{tab:resultsCCD}
 	\end{center}
 \end{table}
+
+\subsubsection{The CCQMC results}
+
 
 \begin{figure}[ht!]
 	\centering

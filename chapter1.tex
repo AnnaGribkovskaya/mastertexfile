@@ -1,0 +1,343 @@
+\chapter{Quantum mechanics}
+In the end of 19th century physics had some unsolved problems that couldn't be tackled using already developed theories and methods. This had led to a  significantly different theory with a number of essential distinctions  from that developed before. This new theory was named quantum mechanics. In the classical (or Newtonian mechanics) there is a theoretical possibility to obtain a complete knowledge of the system under consideration. In quantum mechanics this is not possible, neither for some particular moment in time  nor for all other  moments in time. \\
+Let's introduce some concepts here. The \textbf{uncertainty principle} and the \textbf{probability interpretation of the wave function}. The  uncertainty principle (or Heisenberg's uncertainty principle) puts a limit on the precision of our measurement of some particular pairs of physical quantities (e.i. position and momentum). The probability interpretation of the wave function is a bit harder to explain, because one needs a proper mathematical description of the quantum mechanics to understand this. For now we just say that if we consider one single particle in space the probability of finding it in some certain position is related to the wave function. We will derive the expression for the total wave function of the system later in this thesis. Another 
+substantial difference is associated with so-called \textbf{principle of complementarity}. It was formulated by  Niels Bohr, one of the founders of the quantum mechanics. It stands that in order to describe a system we need a pair of certain complementary properties which cannot be observed simultaneously. A good example of such a pair are wave and particle properties of light or electrons. Classical mechanics considered light as a wave and electron as a particle, but this approach failed to explain the photoelectric effect and the diffraction of electrons on a slit. Moreover, position and momentum of the particle also can be considered as a pair of complementary properties. This makes Bohr's principle of the complementarity closely connected to Heisenberg's uncertainty principle. Also one should mention that quantum mechanics allows us to change the number of particles in some particular state. For example, we have a \textbf{creation} operator which increases the number of particles in some given state of the system by one, and \textbf{annihilation} operator which decreases this number by one. The last concept to be mentioned here is the word \textbf{quantum} itself. In physics, "quantum" determines the smallest possible difference between two values or minimal amount of quantity involved in an interaction. This concept is associated with the revolutionary supposition made by Max Planck back in 1900. He assumed that electromagnetic energy could be emitted in a form of some discrete quantities, known as “quantum”. He also introduced a proportionality coefficient for a minimal energy difference, so-called Planck's constant $h = 6.626 \times 10^{-34} \text{ } (kg \cdot m^2\cdot s^{-1})$. As one can see it has a very small value.  \\
+How does it possible to have two theories much different from each other and continue to use both of them? This is perfectly fine even it may seems to be a bit contradictory. In science there is a rule that require for any new theory to agree with the previous ones under some conditions. This rule is called a \textbf{correspondence principle}. In case of quantum mechanics these conditions are named \textbf{classical limit} or \textbf{correspondence limit}. In particular this means that quantum mechanical description of the system should correspond to those obtained by classical theory for large quantum numbers. Mathematically it can be achieved by requirement $h \rightarrow 0$, where $h$ Planck's constant. This principle allows us to determine whether a specific quantum theory is valid or not.\\
+Today we usually say that classical mechanics describes the macroscopic objects and quantum mechanics describes microscopic ones. This arise from the fact that some quantum effects can be observed only for extremely small particles. However this is not enough to describe the difference, because even the observation itself is now different from that in classical physics. 
+For more details on the matter, please refer to \cite{phillipsIntroductionQuantumMechanics2003}. \\
+
+
+\section{Quantum theory}
+In this section we provide a brief description of main assumptions needed for the quantum theory and  some basic notations to be used in the thesis.\\
+As it has been already mentioned quantum theory has been developed though the $20^{\text{th}}$ century. As any other new theory it is based on some assumptions called the postulates of quantum mechanics (QM). In this thesis we do not aim to provide a detailed description on the topic, however some basic introduction is needed.\\
+
+\begin{defn} Hilbert Space.\\
+	Let $\mathscr{H}$ be a complex vector space. The inner product $\braket{\alpha|\beta} $\footnote{$\ket{\alpha}$ and  $\ket{\beta}$ are ket-vectors in Dirac notations.} in that space is defined so that it has the following properties:
+	\begin{enumerate}		
+		\item $\braket{a\alpha|\beta} = a\braket{\alpha|\beta}$, $a \in C$.
+		\item $\braket{\alpha|b\beta} = b^{*}\braket{\alpha|\beta}$, $b \in C$.
+		\item $\overline{\braket{\alpha|\beta}} =\braket{\beta|\alpha}$.
+		\item $||\alpha||^2= \braket{\alpha|\alpha} \geq 0 $.			
+	\end{enumerate}
+\end{defn}
+
+\begin{post}
+	Every instant state of a system is represented by a vector in Hilbert space $\mathscr{H}$.\\
+\textit{Comment}. This is a very strong demand, because it means that any superposition of the different states is also a state of the system. For example, if $\ket{\alpha_1}$ and  $\ket{\alpha_2}$ are vectors describing possible states of the system, then their linear combination $\ket{\alpha}$ is also a state of the same system:
+\begin{equation*}
+\ket{\alpha}=a_1\ket{\alpha_1}+a_2\ket{\alpha_2}, \text{   } a_1\text{  and }  a_2 \in C.
+\end{equation*}
+\end{post}
+\begin{defn}
+Operator $\hat{Q}$ is Hermitian if it satisfies the equation:
+\begin{equation}
+\hat{Q}^\dagger=\hat{Q},
+\end{equation}
+where $\hat{Q}^\dagger$ is adjoint of $\hat{Q}$.
+\end{defn}
+\begin{post}\label{postulat2}
+	Every physical observable is associated with an operator $\hat{Q}$ in a Hilbert space. Action of the operator on state vector results into following eigenvalue equation:
+	\begin{equation}\label{eq:general_eigval eq}
+	\hat{Q}\ket{\alpha}= q\ket{\alpha}, 
+	\end{equation}
+where eigenvalues $q$ are the only measurable values associated with the operator. Eigenvectors determine a complete orthonormal set of vectors for this operator. In addition every operator $\hat{Q}$ associated with a measurable physical quantity must be a linear Hermitian operator. In particular that means it should posses the following properties:
+	\begin{align}
+	&\hat{Q}^\dagger=\hat{Q},\\
+	&(a\hat{Q})^\dagger=a^*\hat{Q}^\dagger,\\
+	&(\hat{Q}\hat{P})^\dagger  =\hat{P}^\dagger \hat{Q}^\dagger,\\
+	&(\hat{Q}+\hat{P})^\dagger =\hat{Q}^\dagger+\hat{P}^\dagger,
+	\end{align}
+	where $a \in C$, and * denote complex conjugate.\\
+\textit{Comment}. The eigenvalue equation ($\ref{eq:general_eigval eq}$) has interesting properties when $\hat{Q}$ is Hermitian operator. They are presented in theorems below.
+\end{post}
+
+\begin{theorem}\label{theorem:eigvalHerm}
+	Set of eigenvalues of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ is set of real numbers. 
+\end{theorem}
+
+\begin{theorem}\label{theorem:eigvecHerm}
+	Eigenvectors of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ that belong to different eigenvalues are orthogonal. 
+\end{theorem}
+
+\begin{theorem}\label{theorem:orhtonormalbasis}
+Set of eigenvectors of any Hermitian operator $\hat{Q}$ on Hilbert space $\mathscr{H}$ can be chosen to be an orthonormal basis for $\mathscr{H}$.
+\end{theorem}
+We do not provide proofs for these Theorems. For more detailed description please refer to \cite{aulettaQuantumMechanics2009}.
+\begin{post}
+	Let $\mathscr{H}_1$ and $\mathscr{H}_2$ be the Hilbert spaces corresponding to two systems. The Hilbert space of joint system is given by tensor product $\mathscr{H}=\mathscr{H}_1 \otimes \mathscr{H}_2$.\\
+\textit{Comment}. As it is shown further in this thesis this postulate provides a method to describe many-particle systems. 
+\end{post}
+\begin{post}
+The time evolution of the quantum mechanical system is given by the Schr\"{o}dinger equation:
+\begin{equation}\label{eq:basic_schrod}
+ i \hbar \frac{\partial }{ \partial t}\ket{\Psi} = \hat{H}\ket{\Psi},
+\end{equation}
+where $\ket{\Psi}=\ket{\Psi(t)}$ .
+\end{post}
+In this thesis we do not consider time-evolution of the system and will be focused on the time-independent Schr\"{o}dinger equation or stationary-state equation:
+\begin{equation}
+\hat{H}\ket{\Psi} = E \ket{\Psi},
+\end{equation}
+where $\hat{H}$ in Hamiltonian, $\ket{\Psi}$ is state vector of the system and $E$ is the expectation value of the energy. It is the energy spectrum we are interested in, so before solving the Schr\"{o}dinger equation we need to agree on the form of Hamiltonian and also construct the state vector. This is presented in the sections below.
+
+
+\subsection{Many-Body problem formulation}
+
+As it has been already mentioned all state functions arethe  vectors in the Hilbert space. When we deal with a system consisting of many particles we need to define the type of these particles. Bosons are the particles with an integer spin and fermions are the particles with an odd half-integer spin. State vectors of these particles belong to different Hilbert spaces and should be studied independently. In this thesis we consider electrons which are fermions and must obey an exclusion principle, formulated by Wolfgang Pauli in 1925.
+\begin{defn}The Pauli exclusion principle.\\
+Two or more identical fermions cannot occupy the same quantum state simultaneously in the same system.
+\end{defn}
+Let's take a closer look at the total wave function and how this principle affect the permutations of the particles withing the system. First we need to mention that the particles are identical and indistinguishable. In quantum mechanics interacting and identical particles are considered indistinguishable, which is different from classical mechanics where all particles are distinguishable. The concept of indistinguishability requires some discussion about what happens to the wave function if we interchange the particles? At this point a difference between bosons and fermions becomes a significant issue. \\
+In order to make a proper mathematical description and be able to drive properties of wave functions we need to define a new operator for permutation of the particles.\\
+\begin{defn}\label{denf:permutation}
+Let $\hat{P_{ij}}$ be the operator that interchanges particles $i$ and $j$. 
+\[\hat{P_{ij}} \ket{ \Psi(x_1 ... x_i ... x_j ...) }=\ket{ \Psi(x_1 ... x_j ... x_i ...) } \]
+\end{defn}
+\begin{theorem} Hermiticity of the permutation operator.\\
+	$\hat{P_{ij}}$ is a Hermitian operator in Hilbert space for identical particles.\\
+	So that $\hat{P_{ij}}^{-1}=\hat{P_{ij}}^\dagger$.
+\end{theorem}
+Considering this property one may define and solve the eigenvalue equation for the permutation operator.
+\begin{eqnarray}
+\hat{P_{ij}}\ket{\Psi}=\epsilon_{ij}\ket{\Psi},\\
+\hat{P_{ij}}\hat{P_{ij}}\ket{\Psi}= \epsilon_{ij}^2 \ket{\Psi},\\
+\epsilon_{ij}^2 =1 \rightarrow \epsilon_{ij} = \pm 1.
+\end{eqnarray}
+\begin{defn}Symmetricity of wave function.\\
+If $\epsilon_{ij}=1$,  $\ket{\Psi}$ considered to be symmetric. In this case it corresponds to bosons.\\
+If $\epsilon_{ij}=-1$,  $\ket{\Psi}$ considered to be antisymmetric. In this case it corresponds to fermions.
+\end{defn}
+The permutation operator is used in Chapter $\ref{ch:HF}$ for construction of total many fermion wave function and in Chapter $\ref{ch:coupled_cluster}$ for amplitudes.
+\subsubsection{The Hamiltonian of many-body system} \label{sec:manybody}
+As it has been already mentioned Hamiltonian is a Hermitian operator. It can be expressed as follows:
+\begin{equation}
+\hat{H}=\hat{T}+\hat{V},
+\end{equation}
+where $\hat{T}$ is the kinetic energy operator and $\hat{V}$ is the potential energy operator. \\
+Here we assume the electrons are confined by a pure isotropic harmonic oscillator (H.O.) potential. Also in this thesis we consider closed shell systems. It means that all possible single-particle states below a certain level are occupied. Such level often called a Fermi level of the system. In particular this assumption means that addition or removal of one electron to such system requires more energy than same the action in a system with non-occupied lowest levels. 
+%That leads to a given number of particles $N = \{2, 6, 12, 20\}$ we may have in our quantum dot. 
+Using natural units ($\hbar=c=e=m_e=1$) one can write Hamiltonian of a such system in Cartesian coordinates as
+\begin{equation}
+\label{eq:finalH}
+\hat{H}=\sum_{i=1}^{N} \left(  -\frac{1}{2} \nabla_i^2 + \frac{1}{2} \omega^2r_i^2  \right)+\sum_{i<j}^{N}\frac{1}{r_{ij}},
+\end{equation}
+$N$ here is number of electrons, $\omega$ is oscillator frequency and $r_{ij}$ distance between two electrons. The first sum here corresponds to the harmonic oscillator and second sum corresponds to the interaction part. The Hamiltonian can be rewritten as
+\begin{equation}
+\hat{H}=\hat{H}_0+\hat{H}_I .
+\end{equation}
+%here $\hat{H}_0$ is a standard H.O. part and $\hat{H}_I$ gives a repulsive interaction part. 
+%For the Hartree-Fock method we need a single-particle basis, which in this case is just a H.O. functions. However we also need to compute elements for the Coulomb interaction matrix. The details are discussed below in a method description part. 
+More detailed the Hamiltonian can be written as 
+\begin{equation}
+\hat{H} = \sum_{i=1}^{N}\hat{h}_0(i) + \sum_{i < j}^{N}\hat{w}(i,j),
+\label{H1H2}
+\end{equation}
+here $ \hat{h}_0(i) $ represents the kinetic energy of the particle, possibly an external potential and the $\hat{w}(i,j)$ term represents the potential energy of Coulomb interaction between two particles. 
+
+\subsection{Second quantization}
+The second quantization is a framework that allows us to write long and cumbersome expressions, such as Slater Determinants and many-body Hamiltonian, in a compact way. This is achived by the usage of so-called creation and annihilation operators.
+\cite{umrigarObservationsVariationalProjector2015}
+\begin{defn} Creation operator. \\
+	We define creation operator as follows:
+	\begin{equation}
+	c_i^\dagger\ket{-}=\ket{i},
+	\end{equation}
+	where $\ket{-}$ is a true vacuum state.\\
+	Creation operator acting on an arbitrary state of some system results into the following expression:
+	\begin{equation}
+	c_i^\dagger\ket{p_1 p_2  \dots p_N}=\ket{i p_1p_2 \dots p_N}	
+	\end{equation}
+\end{defn}
+\begin{defn}
+	Annihilation operator is defined as hermitian adjoint to creation operator. \\
+		\begin{equation}
+		c_i\ket{i}=\ket{-}	
+		\end{equation}
+\end{defn}
+Some important results following from the definition of the operators:
+\begin{enumerate}
+\item $c_i \ket{-}=0$ (no particles).
+\item $c_i^\dagger\ket{p_1 p_2  \dots p_N}=0$ if $i=p_i$ (particle already exists in state vector).
+\item $c_i\ket{p_1 p_2  \dots p_N}=0$ if $i\neq p_i$ (particle does not exist in state vector).
+\end{enumerate}
+\section{Operator representation in second quantized form} \label{sec:operator in 2q}
+The Hamiltonian now considered in form ($\ref{H1H2}$). Omitting the summations and presenting operators in more generic way, it can be written as:
+\begin{equation}
+\hat{H}=\hat{H}_0+\hat{W}
+\end{equation}
+where $\hat{H}_0$ is the so-called one-body term and $\hat{W}$ is the two-body term.
+In a second quantized form the one-body term can be written as:
+\begin{equation}
+\hat{H}_0 = \sum_i^N\hat{h}(i)=\sum_{pq}^{N}\bra{p}\hat{h}\ket{q}c_p^\dagger c_q=\sum_{pq}h_{pq}c_p^\dagger c_q, \\ \label{eq:H0}
+\end{equation}
+where
+\begin{equation}
+h_{pq}=\int_{-\infty}^{\infty}\phi_p(x)^* \hat{h}\phi_q(x) dx.\\
+\end{equation}
+Similarly, the two-body term can be expressed as follows:
+\begin{equation}
+\hat{W}=\sum_{i<j}^{N} \hat{w}(i,j)=\frac{1}{2}\sum_{pqrs}^{N} w_{rs}^{pq}c_p^\dagger c_q^\dagger c_sc_r\\ \label{eq:W},
+\end{equation}
+where
+\begin{equation}
+w_{rs}^{pq}=\bra{pq}\hat{w}\ket{rs}=\int dx_1 \int dx_2 \phi_p(x_1)^*\phi_p(x_2)^* \hat{h}\phi_r(x_1)\phi_s(x_2). 
+\end{equation}
+As soon as we study fermions it's more convenient to write the two-body term in an antisymmetric form:
+\begin{gather}\label{eq:two-body_2q}
+	\hat{W}=\frac{1}{4}\sum_{pqrs} \bra{pq}\hat{w}\ket{rs}_{AS} c_p^\dagger c_q^\dagger c_sc_r,
+\end{gather}
+where
+\begin{gather}
+	\bra{pq}\hat{w}\ket{rs}_{AS}\equiv \bra{pq}\hat{w}\ket{rs}-\bra{pq}\hat{w}\ket{sr}
+\end{gather}
+From here on we just use antisymmetric form, so subscript \textit{AS} can be omitted.\\
+The Hamiltonian in second quantized form can be then written as:
+\begin{equation}\label{eq:Ham in 2q}
+\hat{H}=\sum_{pq}^{N}\bra{p}\hat{h}\ket{q}c_p^\dagger c_q + \frac{1}{4}\sum_{pqrs} \bra{pq}\hat{w}\ket{rs}_{AS} c_p^\dagger c_q^\dagger c_sc_r
+\end{equation}
+\section{Normal ordering and Wick's theorem} \label{sec:Wick}
+As it has been already mention we need second quantization to write long expressions in a compact way. However, we also need rules to deal with this expression written in a second quantized form to compute for example matrix elements of Hamiltonain matrix. After writing the Hamiltonian in a second quantized form we are able use for this purpose the following anti-commutator relations:
+\begin{gather}
+\{c_p,c_q \}=0\\
+\{c_p^\dagger,c_q^\dagger \}=0\\
+\{c_p,c_q^\dagger\} = \delta_{pq} \label{eq:fund_anti}
+\end{gather}
+Equation (\ref{eq:fund_anti})  is a fundamental anti-commutator relation. At the same time when the number of particles growing larger this might become too hard to compute even after all simplification have been done so far. There is an easier way to compute matrix elements. To present it we have to introduce some concepts first.
+\begin{defn} Vacuum expectation value. \\
+	For some arbitrary operator $\hat{O}$ written as string of operators $C_1 \dots C_N$, such that $C_i \in \{c_p^\dagger\} \cup \{c_p\} $ is defined as follows: $ \braket{-|\hat{O}|-}=\bra{-}C_1C_2 \dots C_N \ket{-}$.
+\end{defn}
+Using the definition above, matrix elements can be obtained by the following expression:
+\begin{equation} \label{eq:matrix_elemH0}
+\bra{\Phi}\hat{H}_0\ket{\Phi}=\sum_{pq}\bra{p}\hat{h}\ket{q}\bra{-}c_N \dots c_1 c_p^\dagger c_q c_1^\dagger \dots c_N^\dagger \ket{-},
+\end{equation}
+and
+\begin{equation} \label{eq:matrix_elemW}
+\bra{\Phi}\hat{W}\ket{\Phi}= \frac{1}{4}\sum_{pqrs} \bra{pq}\hat{w}\ket{rs} \bra{-}c_N \dots c_1 c_p^\dagger c_q^\dagger c_s c_r c_1^\dagger \dots c_N^\dagger \ket{-}. 
+\end{equation} 
+As one can see from (\ref{eq:matrix_elemH0}) and (\ref{eq:matrix_elemW}) matrix elements are written in form of vacuum expectation value. After this we introduce Wick's Theorem, which allows us to compute these values using normal ordered operators. 
+\begin{defn} Normal ordering.\\
+	Let $\bar{C}=C_1 \dots C_n$ be an arbitrary operator string consisting of creation and annihilation operators. 
+	Let $\sigma \in S_n$ be a permutation, that results in all the creation operators in the string $\bar{C}$ be on the left side and all the annihilation operators to the right side. Normal ordered string denoted using the braces as $\{C_1 \dots C_n \}$. Normal ordering is defined as:
+\begin{equation}
+	\{C_1 \dots C_n \} \equiv (-1)^{\mid \sigma \mid}[\text{creation operators} ] \times [ \text{annihilation operators}]
+\end{equation}
+\end{defn}
+One should remember that normal order is not a unique sequence of operators, since it is possible to arrange them in a different ways.\\
+Another important concept we need to mention before we can go to the Wick's theorem is contraction between operators.
+
+\begin{defn} Contraction.\\
+	Contraction between two operators is a difference between their current order and a normal order:
+	\begin{equation}
+	\wick{\c1 X \c1 Y}= XY - \{XY\}.
+	\end{equation}
+For creation and annihilation operators one may write four different possible contractions:
+\begin{align}
+\wick{\c1 c_p \c1 c_q} &=  c_p c_q -  \{c_p c_q\}=0,\\
+\wick{\c1 c_p^\dagger \c1 c_q^\dagger}&=  c_p^\dagger c_q^\dagger -  \{c_p^\dagger c_q^\dagger\}=0,\\
+\wick{\c1 c_p^\dagger \c1 c_q}&=  c_p^\dagger c_q-  \{c_p^\dagger c_q\}=0,\\
+\wick{\c1 c_p \c1 c_q^\dagger}&=  c_p c_q^\dagger -  \{c_p c_q^\dagger\}=\delta_{pq}.
+\end{align}
+As one can see the only possible non zero contraction is the last one as it correspond to the anti-commutator relation (\ref{eq:fund_anti}) above.
+\end{defn}
+Below the contraction inside a normal ordered string is defined.
+\begin{defn} Contraction inside the operator string.\\
+	Let $ \bar{C}=C_1 \dots C_n $ be an arbitrary operator string consisting of creation and annihilation operators. Let $(C_q, C_p)$ be a pair of operators and $\sigma$ be any possible permutation that places $C_q$ to the first place in the string and
+	 $C_p$ to the second.
+\begin{equation}
+	\wick{\{ C_1 \dots \c1 C_q  \dots \c1 C_p \dots C_n \} } \equiv (-1)^{\mid \sigma \mid} \wick{ \{  \c1 C_q  \c1 C_p C_{\sigma(3)} \dots C_{\sigma(n)} \} }.
+\end{equation}
+	
+	For an arbitrary $m$ contractions inside one string we have:
+\begin{equation}
+	\overbrace{ \{ C_1 \dots C_n\} }^\text{m contractions}=(-1)^{\mid \sigma \mid} 
+	\wick{\{ \c1 C_{p_1} \c1 C_{q_1} \dots \c2 C_{p_m} \c2 C_{q_m} C_{\sigma(2m+1)}\dots C_{\sigma(n)}  \} }.
+\end{equation}
+\end{defn}
+Now we can finally state the Wick's theorem.
+\begin{theorem}  Wick's theorem.\\
+Any operator string can that contains creation and annihilation operators can be also written as sum of a normal ordered product of these operators and all possible contractions inside this normal ordered product.\\
+Let $ \bar{C}=C_1 \dots C_n $ be an arbitrary operator string consisting of creation and annihilation operators.
+\begin{gather}
+C_1 \dots C_n=\{C_1 \dots C_n\} + \sum_{\text{all single contractins}} \overbrace{ \{ C_1 \dots C_n\} }^\text{one contraction} +\\ \sum_{\text{all double contractins}} \overbrace{ \{ C_1 \dots C_n\} }^\text{two contraction}+ \dots + 
+ \sum_{\text{all $\frac{n}{2}$ contractins}} \overbrace{ \{ C_1 \dots C_n\} }^\text{$\frac{n}{2}$ contraction}.
+\end{gather}
+\end{theorem}
+Outcomes from Wick's theorem:
+\begin{enumerate}
+	\item \[\bra{-} \{C_1 \dots C_n\} \ket{-}=0.\]
+	\item \[\bra{-} C_1 \dots C_n \ket{-}=0,  \forall  \text{ odd } n.\]
+	\item \[\bra{-} C_1 \dots C_n \ket{-}= \sum_{\frac{n}{2}} \overbrace{ \{C_1 \dots C_n\}}^{\text{all contraction}}, \forall \text{ even } n .\]
+\end{enumerate}
+For the derivation of the coupled cluster equations we need to consider a product of normal-ordered strings. To do this efficiently we also state a generalized Wick's theorem.
+\begin{theorem} Generalized Wick's theorem.\\
+The generalized Wick's theorem extends the ordinary Wick's theorem for the case of multiple products of normal ordered strings. In this case the only valid contractions are those between the different strings.\\
+Let's consider a set of operator strings. $C^1_1 ...C^1_i$, $C^2_1 ...C^2_j$ and $C^n_1 ...C^n_k$. Here $n$ is total number of strings. Then if we need to evaluate the following product of a set of normal-ordered strings:
+
+\begin{align}
+\{C_1^1 \dots C_i^1\}\{C_1^2 \dots C_j^2\} ... \{C_1^n \dots C_k^n\} = \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} + \nonumber \\
+\sum_{\text{all single contractins}} \overbrace{ \{C_1^1 \dots C_k^n\}= \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} }^\text{one contraction between strings} + \nonumber \\ \sum_{\text{all double contractins}} \overbrace{ \{C_1^1 \dots C_k^n\}= \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} }^\text{two contractions between strings}+\nonumber \\ \dots + 
+\sum_{\text{all $\frac{n}{2}$ contractins}} \overbrace{ \{C_1^1 \dots C_k^n\}= \{C_1^1 \dots C_i^1|C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\} }^\text{$\frac{n}{2}$ contractions  between strings},
+\end{align}
+where \textit{contractions between strings} mean we are only considering contractions of the a following type:
+	\begin{align}
+	\wick{\{\c1 C_1^1 \dots C_i^1|\c1 C_1^2 \dots C_j^2| ...| C_1^n \dots C_k^n\}},\\
+	\wick{\{\c1 C_1^1 \dots  C_i^1|  C_1^2 \dots C_j^2|\c1 ... \c2... | C_1^n \c2 \dots C_k^n\}},\\
+	\wick{\{\c1 C_1^1 \dots \c3 C_i^1|   C_1^2 ..\c3. C_j^2|\c1 .. \c2. | C_1^n \c2 \dots C_k^n\}},
+	\end{align}
+	and so on. 
+\end{theorem}
+
+ 
+\section{Normal-Ordered Electronic Hamiltonian}
+In section $\ref{sec:operator in 2q}$ we have presented the operator representation in the second quantized form. Equation ($\ref{eq:Ham in 2q}$) that provides the second quantized form of the electronic Hamiltonian can be rewritten using Wick's theorem as the normal ordered operator string. This is a very convenient approach for the derivation of the coupled cluster equations that are provided in Chapter $\ref{ch:coupled_cluster}$.  \\
+Let's start with the one-electron part given by equation ($\ref{eq:H0}$):
+\begin{equation}
+\hat{H_0}=\sum_{pq} \braket{p|\hat{h}|q} \{c_p^\dagger c_q \} + \sum_{i}\braket{i|\hat{h}|i} =\sum_{pq} h_{pq} \{c_p^\dagger c_q \} + \sum_{i}h_{ii}
+\end{equation}
+Second term in the Hamiltonian equation is the two-body part given by ($\ref{eq:two-body_2q}$). One can rewrite it using Wick's theorem as follows:
+\begin{eqnarray}\label{eq::normal1}
+c_p^\dagger c_q^\dagger c_s c_r= \{ c_p^\dagger c_q^\dagger c_s c_r  \} + \wick{\{ \c1 c_p^\dagger c_q^\dagger \c1 c_s c_r \}} + \wick{\{  c_p^\dagger \c1 c_q^\dagger \c1 c_s c_r \}} +\nonumber\\  \wick{\{  \c1 c_p^\dagger  c_q^\dagger  c_s \c1 c_r \}} 
++ \wick{\{  c_p^\dagger \c1 c_q^\dagger  c_s \c1 c_r \}} +\wick{\{\c1  c_p^\dagger \c2 c_q^\dagger \c1 c_s \c2 c_r \}} +\wick{\{\c1  c_p^\dagger \c2 c_q^\dagger \c2 c_s \c1 c_r \}}  
+\end{eqnarray}
+Remembering that the contraction is non-zero only for the operator acting on hole state to the left, we may rewrite ($\ref{eq::normal1} $) as:
+
+\begin{eqnarray}
+ \{ c_p^\dagger c_q^\dagger c_s c_r  \} -\delta_{p \in i} \delta_{ps} \{  c_q^\dagger  c_r  \} +\delta_{q \in i} \delta_{qs}  \{  c_p^\dagger  c_r  \} + \delta_{p \in i} \delta_{pr} \{  c_q^\dagger  c_s  \}-\nonumber\\ \delta_{q \in i} \delta_{qr} \{  c_p^\dagger  c_s  \}-  \delta_{p \in i} \delta_{ps} \delta_{q \in j} \delta_{qr}+ \delta_{p \in i} \delta_{pr} \delta_{q \in j} \delta_{qs}
+\end{eqnarray}
+where $q \in j$ (index $q$ belongs to occupied state) and  $\delta_{q \in j}$ (equality $q=j$ must hold). After this we may rewrite the two-body term in the Hamiltonian and obtain:
+\begin{eqnarray}
+\frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \}-\frac{1}{4}\sum_{qri}\braket{iq|ri}\{ c_q^\dagger  c_r  \} +\frac{1}{4}\sum_{pri}\braket{pi|ri}\{ c_p^\dagger  c_r  \} + \nonumber\\ 
++\frac{1}{4}\sum_{qsi}\braket{iq|is}\{ c_q^\dagger  c_s  \} -\frac{1}{4}\sum_{psi}\braket{pi|is}\{ c_p^\dagger  c_s  \} -\frac{1}{4}\sum_{ij}\braket{ij|ij} + \frac{1}{4}\sum_{ij}\braket{ij|ji}  \nonumber\\ 
+=\frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \} + \sum_{pri}\braket{pi|ri}\{ c_p^\dagger  c_r  \} + \frac{1}{2} \sum_{ij}\braket{ij|ij}.
+\end{eqnarray}
+And finally the Hamiltonian ($\ref{eq:Ham in 2q}$) can be re-written as follows:
+\begin{eqnarray}
+\hat{H} = \sum_{pq} h_{pq} \{c_p^\dagger c_q \} + \sum_{i}h_{ii} + \frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \} + \sum_{pri}\braket{pi|ri}\{ c_p^\dagger  c_r  \} + \nonumber\\ \frac{1}{2} \sum_{ij}\braket{ij|ij} 
+=  \sum_{pq} f_{pq} \{c_p^\dagger c_q \} + \frac{1}{4}\sum_{pqrs}\braket{pq|rs}\{ c_p^\dagger c_q^\dagger c_s c_r  \} + \braket{\Phi_0|H|\Phi_0},
+\end{eqnarray}
+with
+\begin{equation}\label{eq:Fock_operator}
+F_\text{N} = \sum_{pq}f_{pq}\{c_p^\dagger c_q \}=\sum_{pq}\big(h_{pq}\{c_p^\dagger c_q \}+\sum_{i}\braket{pi|qi}\{c_p^\dagger c_q \}\big).
+\end{equation}
+$F_\text{N} $ is the normal-ordered Fock operator. It is discussed in more detailed manner in Chapter $\ref{ch:HF}$.\\
+After this the normal-ordered Hamiltonian can be written as:
+\begin{eqnarray}
+\hat{H}_N = \hat{H} - \braket{\Phi_0|H|\Phi_0}
+\end{eqnarray}
+One may say that the normal-ordered form of the operator is obtained by subtracting the reference expectation value of this operator from the operator itself. In this case $\hat{H}_N$ may be referred to as correlation operator.
+
+
+
+
+% and its expectation value is a correlation energy.
+
+
+
+\section{Particle-Hole representation}
+
+\begin{defn}Fermi vacuum.\\
+	Let $\ket{\Phi_0}$ be n-electron reference determinant constructed from the true vacuum $\ket{-}$. It can be written as a string of creation operators acting on a true vacuum:
+	\[ \ket{\Phi_0} = c^\dagger_i c^\dagger_j ..\ket{-}. \]
+	Such reference determinant is often called a "Fermi vacuum".
+\end{defn}
+The state $\ket{\Phi_0}$ is composed by \textit{occupied orbitals}. However they are chosen from a set of single-particle functions that contains also other functions. This additional functions are called \textit{virtual orbitals}. There is a convention regarding labeling this occupied and virtual orbitals. For occupied orbitals we use name "hole states" and for virtual orbitals we use "particle states". Hole states are labeled with letters \textit{i,j,k} and particle states are labeled with letters \textit{a,b,c}.\\

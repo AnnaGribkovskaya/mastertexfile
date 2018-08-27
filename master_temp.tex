@@ -1129,7 +1129,7 @@ Death probability is:
 p_{\text{death}} = \frac{|\delta \tau (H_{mm} - S)A|}{p_{\text{select}}p_{sel}p_{\text{clust}}}.
 \end{equation}
 
-\part{Implementation and results}
+\part{Implementation}
 In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. 
 This part has the following structure:\\
 \begin{itemize}
@@ -1158,7 +1158,7 @@ Code has the following classes:
 \end{enumerate}
 The base class \textit{generalspclass} has two derived classes \textit{qdotspbasis} and \textit{qdotHFbasis}. This base class generate objects for the solvers and allow us to switch between different bases and systems of interest. The \textit{qdotspbasis} provides TBME, single particle energies for QD in the HO basis as well as other important quantities such as number of electrons, number of shells, number of states etc. The \textit{qdotHFbasis} provides all these quantities in the Hartree-Fock basis. 
 
-\section{Implementation of Hartree-Fock solver}
+\section{Implementation of Hartree-Fock solver for QD}
 % Define block styles
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
 text width=5.5em, text badly centered, node distance=3cm, inner sep=0pt]
@@ -1323,15 +1323,47 @@ void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
 \end{lstlisting}
 \caption{Compute HF matrix}
 \end{figure}
-\subsection{Code structure for CCD}
+\subsection{Algorithm for CCD}
+The CCD algorithm is same both for QD and HEG. The equations for CCD amplitudes should be written in in iterative manner and then computed and updated before the convergence is reached.\\
 
+In the box below the main steps for CCD algorithm are presented: 
+\begin{tcolorbox}
+	\begin{itemize}
+		\item Compute the MBPT2 Energy
+		\item Set up Initial Amplitudes
+		\item Begin iteration procedure:
+		\begin{enumerate} 
+			\item Calculate New Amplitudes.
+			\item Compute the Correlation Energy.
+			\item Compute Energy Difference $=|E_{Corr}^{(n-1)} - E_{Corr}^{(n)}|$.
+			\item If Energy Difference $ > \textbf{tolerance}$:\\
+			 Update Energy and Amplitudes.
+			\item Repeat iterations until Energy Difference become less then \textbf{tolerance}.
+		\end{enumerate} 
+		\item After the convergence test is passed, compute and store the CCD correlation energy.
+	\end{itemize}
+\end{tcolorbox}
+The algorithm described above imply the convergence can be reached after a finite number of iterations. However this is not always the case. For some set of parameters one may obtain divergent solutions or at least solutions that require a huge number of iterations. One of the solutions to such problem might be to use some parameter, known as "mixing parameter" to update the amplitudes in the following way:
+\begin{equation}\label{eq:mizampl}
+t^{n} = at^(n) + (1-a)t^{(n-1)},
+\end{equation}
+here a $\in (0,1]$ in "mixing parameter", $t^{n-1}$ - amplitudes on the previous iteration and $t^{n}$- amplitudes on the current iteration.\\
 \subsubsection{Channels for CCD}
-The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$. Such transition is prohibited if it does not preserve quantum numbers for spin and angular momentum. The preserved quantum numbers are the following:
+The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$.\\
+\textbf{For the QD:}\\
+Such transition is prohibited if it does not preserve quantum numbers for spin and angular momentum. The preserved quantum numbers are the following:
 \begin{align}
 m_r + m_s = m_p + m_q,\\
 s_r + s_s = s_p + s_q.
 \end{align}
-If this condition is not met we have $\braket{ab||cd} = 0$.\\
+\textbf{For the HEG:}\\
+Such transition is prohibited if it does not preserve quantum numbers for spin and wave number. The preserved quantities are the following:
+\begin{align}
+\textbf{k}_r + \textbf{k}_s = \textbf{k}_p + \textbf{k}_q,\\
+s_r + s_s = s_p + s_q.
+\end{align}
+Here is no principal difference between these two besides the mentioned above. Further in the text we are going to use single particle states, not a conserved quantities, so the theoretical description is the same for both systems.
+If this conditions is not met we have $\braket{ab||cd} = 0$.\\
 For amplitude equation presented in ($\ref{eq:CCD_ampl}$) we need matrix elements of the following form:
 \begin{align}\label{eq:TBME_channels}
 \braket{ab||ij}&,\\
@@ -1345,7 +1377,7 @@ As we have already mentioned indexes $a,b,c,d,...$ correspond to states which ar
 V_{pppp},V_{ppph}, V_{pphh}, V_{phhh},V_{hhpp},V_{hhhp},V_{hppp},V_{hhhh}.
 \end{align}
 All together there are eight matrices. Splitting the TBME matrix into parts is not the only thing here, the main idea is to right each block into a "channel" to satisfy the conservation of quantum numbers is the goal. Let's consider how this cam by done.\\
-We start with creating a vectors for combination of two states. On Fig. $\ref{f:vectors_for_channels}$ one may see how this is implemented in C++. We mapping two states into one state which is a sum of the two:
+We start with creating a vectors for combination of two states. On Fig. $\ref{f:vectors_for_channels}$ and $\ref{f:vectors_for_channelsHEG}$ one may see how this is implemented in C++ for QD and HEG respectively. The code is almost the same, except for the number of quantities to be preserved in the system. We mapping two states into one state which is a sum of the two:
 \begin{align}
 \ket{ab} &\rightarrow \ket{A}, \\
 \ket{ij} &\rightarrow \ket{I}, \\
@@ -1404,12 +1436,48 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 }
 
 \end{lstlisting}
-\caption{Setting up channels} \label{f:vectors_for_channels}
+\caption{Setting up channels for QD} \label{f:vectors_for_channels}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{lstlisting}[language=C++]
+void electrongaschannelset::setUpChannels(generalSPclass * qsystem){
+qsys = qsystem;
+int Nmax = qsys->getShellsStochastic() - 1;
+int Smax = 2;
+for(int Nx = -Nmax; Nx <= Nmax; Nx++){
+	for(int Ny = -Nmax; Ny <= Nmax; Ny++){
+		for(int Nz = -Nmax; Nz <= Nmax; Nz++){
+			for(int S = -Smax; S <= Smax; S = S + 2){
+			
+				ChannelVariety.emplace_back(channel());
+				for(int i = 0; i < qsys->getFermiLevel(); i++){
+					for(int j = 0; j < qsys->getFermiLevel(); j++){
+						if(Nx == qsys->sumState(i,j).nx() && Ny == qsys->sumState(i,j).ny() && Nz == qsys->sumState(i,j).nz() && S == qsys->sumState(i,j).s() && i != j){
+						ChannelVariety.back().m_HoleHoleVec.emplace_back(channelindexpair());
+						ChannelVariety.back().m_HoleHoleVec.back().set(i, j);
+						}
+					}
+				}
+				for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
+					for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
+						if(Nx == qsys->sumState(a,b).nx() && Ny == qsys->sumState(a,b).ny() && Nz == qsys->sumState(a,b).nz() && S == qsys->sumState(a,b).s() && a != b){
+						ChannelVariety.back().m_ParticleParticleVec.emplace_back(channelindexpair());
+						ChannelVariety.back().m_ParticleParticleVec.back().set(a, b);
+						}
+					}
+				}
+			}
+		}
+	}
+\end{lstlisting}
+\caption{Setting up channels for HEG.} \label{f:vectors_for_channelsHEG}
 \end{figure}
 
 
 Having such vectors we may build up all needed matrices. Let's consider how this is done on Fig.  $\ref{f:MatV_for_channels}$. For every matrix we need ($V_{pppp}, V_{pphh},V_{hhpp}, V_{hhhh}$) we pick two vectors with the indexes corresponding to needed combination of states and store the matrix element into one of blocks. This is done for all channels that have been created when we set up the vectors. We do not do this for matrices like $V_{phhh}$ due to the reasons that will be discussed below in this section.\\
-
 
 
 \begin{figure}
@@ -1497,7 +1565,7 @@ for(int c = qsys->getFermiLevel(); c < qsys->getStatesStochastic(); c++){
          	}
 }
 \end{lstlisting}
-\caption{Setting up channels for rotated clusters} \label{f:vectors_for_channelsHminusP}
+\caption{Setting up channels for aligned clusters.} \label{f:vectors_for_channelsHminusP}
 \end{figure}
 
 Other terms in the amplitude equitation can be considered in a similar manner. For the first quadratic term does not require any transformation and can be expressed as a product of three matrices:
@@ -1540,7 +1608,7 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
    	}
 }
 \end{lstlisting}
-\caption{Setting up channels for rotated clusters} \label{f:vectors_for_Q4}
+\caption{Setting up channels for rotated clusters.} \label{f:vectors_for_Q4}
 \end{figure}
 
 \section{CCQMC implementation}
@@ -1566,7 +1634,7 @@ For the spawning from other determinants we should consider some additional poss
 	\item sing of cluster amplitude.
 \end{itemize} 
 
-\subsection{Results}
+\chapter{Results and discussion}
 \subsubsection{The Hartree-Fock results}
 \begin{table}[h!]
 	\begin{center}
@@ -1599,7 +1667,7 @@ For the spawning from other determinants we should consider some additional poss
 	\end{center}
 \end{table}
 
-\subsubsection{The CCD results}
+\subsubsection{The CCD results for QD}
 
 \begin{table}[h!]
 	\begin{center}
@@ -1631,6 +1699,25 @@ For the spawning from other determinants we should consider some additional poss
 		\caption{Coupled Cluster Doubles correlation energy for QD for two electrons and different values of $\omega$ in atomic units. }   \label{tab:resultsCCD}
 	\end{center}
 \end{table}
+
+
+\subsubsection{The CCD results for HEG}
+\begin{table}[h]
+	\centering
+	\captionsetup{width=.8\textwidth}
+	\caption{CCD iteration comparison with solver from \cite{Hjorth-Jensenadvancedcoursecomputational2017} for the HEG. Here, $N_e=2$, $N_s=66$, $r_s=1.0$, and there is no mixing. }
+	\begin{tabular}{rlll}
+		n & $\Delta E_{CCD}$     & $\Delta E_{CCD}$ \cite{Hjorth-Jensenadvancedcoursecomputational2017} \\
+		MBPT2 & -0.02080623248720259 & -0.0208062324872026  \\
+		0 & -0.01833394188507821 & -0.0183339418850782  \\
+		1 & -0.01864313296809337 & -0.01864313296809333 \\
+		2 & -0.01860449158525421 & -0.01860449158525414 \\
+		3 & -0.01860932269795203 & -0.01860932269795206 \\
+		4 & -0.01860871870720909 & -0.01860871870720907 \\
+	\end{tabular}
+	\label{tab:unittest}
+\end{table}
+
 
 \subsubsection{The CCQMC results}
 The CCQMC is based on getting the proper population dynamics for the excips. At the same time the sign structure of the excips should be correct. 
@@ -1665,18 +1752,15 @@ The CCQMC is based on getting the proper population dynamics for the excips. At 
 
 
 \begin{landscape}
-	
 	\begin{figure}[ht!]
 		\centering
 		\includegraphics[width=0.8\linewidth]{platFind}
 		\caption{14 electrons rs 0.5 without tunning S etc }
 		\label{fig:platFind}
 	\end{figure}
-	
 \end{landscape}
 
 \begin{landscape}
-	
 	\begin{figure}[ht!]
 		\centering
 		\includegraphics[width=0.8\linewidth]{platFindStune}
@@ -1914,8 +1998,6 @@ Lets compute some particular probabilities:\\
 
 
 
-
-
 \begin{landscape}
 	
 	\begin{table}[h]
@@ -1923,29 +2005,28 @@ Lets compute some particular probabilities:\\
 		\captionsetup{width=.8\textwidth}
 		\caption{CCD results comparison between our block CCD solver ($\Delta E_{CCD}^M$), Millers's results, Hansen's CCD results ($\Delta E_{CCD}^H$) for the HEG. Results of Baardsen ($\Delta E_{CCD}^B$).	Results are presented for $14$ electrons. Mixing parameter $\alpha=0.8$ for Miller's results, and $\alpha=0.3$ for Hansen's and our results. All energies are presented in Hartree units.} \label{tab:CCDcompar}
 		\begin{tabular}{rrllll}
-			$r_s$ & States & $\Delta E_{CCD}$  & $\Delta E_{CCD}$ & $\Delta E_{CCD}$ & $\Delta E_{CCD}$\\
+			$r_s$ & States & $\Delta E_{CCD}$ \cite{millerAntumMechanicalStudies} & $\Delta E_{CCD}$ \cite{HansenCoupledclusterstudies} & $\Delta E_{CCD}$ \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}  & $\Delta E_{CCD}$\\
 			\hline
 			\hline
-			1.0 & 54 & -0.3178228436889338 & -0.317822843688933   &  		 & -0.3178230699319597	\\
-			1.0 & 66 & -0.3926965898061968 & -0.3926965898061966  &  		 & -0.3926968074770883	\\
-			1.0 & 114 & -0.4479105961757175 & -0.4479105961757175 & -0.447909& -0.4479109389185168  \\
-			1.0 & 162 & -0.4805572589306421 & -0.4805572589306416 &  		 & -0.4805570782443644  \\
-			1.0 & 186 & -0.4855229317521320 & -0.4855229317521318 & -0.485523& -0.4855227418241643  \\
-			1.0 & 246 & -0.4929245740023971 & -0.4929245740023975 &  		 & -0.4929243692209997 	\\ 
-			1.0 & 294 & -0.4984909094066806 & -0.4984909094066818 &  		 & -0.4984906939593081  \\
-			1.0 & 342 & -0.5019526761547777 & -0.5019526761547779 &  		 & -0.5019524529049423 \\
-			1.0 & 358 & -0.5025196736076414 & -0.502519673607641  & -0.502523& -0.5025194488388951 \\ \hline
-			0.5 & 114 & -0.5120153541478306 & -0.5120153541478306 & -0.512015& -0.5120152296730576 \\
-			0.5 & 186 &	-0.5114620616957333	&			    	  & -0.553329& -0.553329520936618  \\
-			0.5 & 342 & -0.5729645498903680 & -0.572964549890367  &  		 & -0.572964399507113  \\ 
-			0.5 & 358 &	-0.5297417436322546	&		    		  & -0.573678& -0.5736804143578934 \\ \hline	
-			2.0 & 114 & -0.3577968843144996 & -0.3577968843144996 & -0.357798& -0.3577955282575221 \\
-			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &  		 & -0.4014117905655018 \\
+			1.0 & 54 & -0.3178228436889338 & -0.317822843688933   &           & -0.3178230699319593  \\
+			1.0 & 66 & -0.3926965898061968 & -0.3926965898061966  &           & -0.3926968074770886  \\
+			1.0 & 114 & -0.4479105961757175 & -0.4479105961757175 & -0.447909 & -0.4479109389185165  \\
+			1.0 & 162 & -0.4805572589306421 & -0.4805572589306416 &           & -0.4805570782443642  \\
+			1.0 & 186 & -0.4855229317521320 & -0.4855229317521318 & -0.485523 & -0.4855227418241649  \\
+			1.0 & 246 & -0.4929245740023971 & -0.4929245740023975 &           & -0.4929243692209991  \\
+			1.0 & 294 & -0.4984909094066806 & -0.4984909094066818 &           & -0.4984906939593084  \\
+			1.0 & 342 & -0.5019526761547777 & -0.5019526761547779 &           & -0.5019524529049425  \\
+			1.0 & 358 & -0.5025196736076414 & -0.502519673607641  & -0.502523 & -0.5025194488388953  \\ \hline
+			0.5 & 114 & -0.5120153541478306 & -0.5120153541478306 & -0.512015 & -0.5120152296730573  \\
+			0.5 & 186 & -0.5114620616957333 &                     & -0.553329 & -0.553329520936615   \\
+			0.5 & 342 & -0.5729645498903680 & -0.572964549890367  &           & -0.572964399507112   \\
+			0.5 & 358 & -0.5297417436322546 &                     & -0.573678 & -0.5736804143578936  \\ \hline    
+			2.0 & 114 & -0.3577968843144996 & -0.3577968843144996 & -0.357798 & -0.3577955282575226  \\
+			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &           & -0.4014117905655014  \\
 		\end{tabular}
 	\end{table}
 	
 \end{landscape}
-
 
 \printbibliography 
 

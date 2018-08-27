@@ -1558,8 +1558,13 @@ Here we need to mention sign of excip to be killed or spawned. Killing process d
 \item sign of $H_{n0}$.
 \item possible sign change if the from reordering of the creation and annihilation operators. This comes from the fact that we store determinants in an ordered way, so that any excited determinant $\ket{D_{ij}^{ab}}$ should satisfy the following rule $a<b$ and $i<j$. If it is not the case we reorder operators and should change the sign of excip is the number of permutation needed for the reordering is odd.
 \end{itemize} 
-For the spawning from other determinants we should consider some additional possible sources of sign change 
-
+For the spawning from other determinants we should consider some additional possible sources of sign change:
+\begin{itemize}
+	\item sign of $H_{nm}$.
+	\item possible sign change if the from reordering of the creation and annihilation operators when collapsing selected clusters to a single determinant.
+	\item possible sign change due to action on reference, both for the determinants in "bra" and "ket" parts.
+	\item sing of cluster amplitude.
+\end{itemize} 
 
 \subsection{Results}
 \subsubsection{The Hartree-Fock results}
@@ -1595,6 +1600,7 @@ For the spawning from other determinants we should consider some additional poss
 \end{table}
 
 \subsubsection{The CCD results}
+
 \begin{table}[h!]
 	\begin{center}
 		\begin{tabular}{|c c| c c| c c| c c|}
@@ -1627,6 +1633,24 @@ For the spawning from other determinants we should consider some additional poss
 \end{table}
 
 \subsubsection{The CCQMC results}
+The CCQMC is based on getting the proper population dynamics for the excips. At the same time the sign structure of the excips should be correct. 
+
+
+
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.8\linewidth]{thomEG}
+	\caption{Ne cc-pVQZ CCSDTQ calculations starting with different initial
+		particle numbers at the reference and different timesteps. (a): With a carefully
+		chosen low timestep and initial population, a plateau is visible. An increased
+		timestep and initial population overshoot the plateau but have a shoulder.
+		The lower panel shows a maximum of the particle ratio at the position of
+		the shoulder and plateau. (b): "Shoulder plots" allow shoulder height to be
+		read off easily and calculations compared. Reproduced from \cite{spencerDevelopmentsStochasticCoupled2016}, with the permission of AIP Publishing. }
+	\label{fig:thomEG}
+\end{figure}
 
 
 \begin{figure}[ht!]

@@ -30,8 +30,8 @@
 \usetikzlibrary{shapes,arrows}
 \usepackage{tcolorbox}
 \author{Anna Gribkovskaya}
-\title{\uppercase{Semi-stochastic Coupled Cluster Doubles for Quantum Dots}}
-\date{May 2018}
+\title{\uppercase{Stochastic Approach to Many-Body problems}}
+\date{August 2018}
 \usepackage{pdfpages}
 \usepackage{mathrsfs}
 \usepackage{simpler-wick}
@@ -483,10 +483,6 @@ The two-body matrix elements are computed using the algorithm presented in the a
 			\hline
 			1            & $(0,0)$                                                       & $\hbar\omega$  & 2          & 2   \\
 			\hline
-			
-			
-			
-			
 		\end{tabular}
 	\end{center}
 \end{table}
@@ -1129,7 +1125,7 @@ Death probability is:
 p_{\text{death}} = \frac{|\delta \tau (H_{mm} - S)A|}{p_{\text{select}}p_{sel}p_{\text{clust}}}.
 \end{equation}
 
-\part{Implementation}
+\part{Implementation and Results}
 In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. 
 This part has the following structure:\\
 \begin{itemize}
@@ -1667,7 +1663,57 @@ For the spawning from other determinants we should consider some additional poss
 	\end{center}
 \end{table}
 
-\subsubsection{The CCD results for QD}
+\subsubsection{The CCD results}
+As we have already mentioned the HEG is a very convenient system to study various many-body methods. In particular we have found many other researches who have implemented the CCD approximation for such system. That allow us to test our solution against results obtained in many other works on the topic. In particular we have compared our results with some other students from our department, namely with Miller \cite{millerAntumMechanicalStudies}, Hansen \cite{hansenCoupledClusterStudies} and \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}. Table $\ref{tab:CCDcompar}$ present the comparison of the results. As one can see we manage to reproduce their results up to a chosen \textbf{tolerance} for CCD (in this case $10^{-6}$).
+
+
+\begin{landscape}
+	\begin{table}[h]
+		\centering
+
+		\begin{tabular}{rrllll}
+			$r_s$ & States & $\Delta E_{CCD}^{Miller}$ &$\Delta E_{CCD}^{Hansen}$  &$\Delta E_{CCD}^{Baardsen}$ & $\Delta E_{CCD}$\\
+			\hline
+			\hline
+			1.0 & 54 & -0.3178228436889338 & -0.317822843688933   &           & -0.3178230699319593  \\
+			1.0 & 66 & -0.3926965898061968 & -0.3926965898061966  &           & -0.3926968074770886  \\
+			1.0 & 114 & -0.4479105961757175 & -0.4479105961757175 & -0.447909 & -0.4479109389185165  \\
+			1.0 & 162 & -0.4805572589306421 & -0.4805572589306416 &           & -0.4805570782443642  \\
+			1.0 & 186 & -0.4855229317521320 & -0.4855229317521318 & -0.485523 & -0.4855227418241649  \\
+			1.0 & 246 & -0.4929245740023971 & -0.4929245740023975 &           & -0.4929243692209991  \\
+			1.0 & 294 & -0.4984909094066806 & -0.4984909094066818 &           & -0.4984906939593084  \\
+			1.0 & 342 & -0.5019526761547777 & -0.5019526761547779 &           & -0.5019524529049425  \\
+			1.0 & 358 & -0.5025196736076414 & -0.502519673607641  & -0.502523 & -0.5025194488388953  \\ \hline
+			0.5 & 114 & -0.5120153541478306 & -0.5120153541478306 & -0.512015 & -0.5120152296730573  \\
+			0.5 & 186 & -0.5114620616957333 &                     & -0.553329 & -0.553329520936615   \\
+			0.5 & 342 & -0.5729645498903680 & -0.572964549890367  &           & -0.572964399507112   \\
+			0.5 & 358 & -0.5297417436322546 &                     & -0.573678 & -0.5736804143578936  \\ \hline    
+			2.0 & 114 & -0.3577968843144996 & -0.3577968843144996 & -0.357798 & -0.3577955282575226  \\
+			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &           & -0.4014117905655014  \\
+		\end{tabular}
+				\captionsetup{width=1.1\textwidth}
+				\caption{Our results for ground state energy in Hartree units for 14 electrons obtained by CCD solver $\Delta E_{CCD}$, presented with results from Miller \cite{millerAntumMechanicalStudies}, results from Hansen \cite{hansenCoupledClusterStudies} and results from Baardsen \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}. 
+				} \label{tab:CCDcompar}
+	\end{table}
+\end{landscape}
+
+
+\begin{table}[h]
+	\centering
+	\captionsetup{width=.8\textwidth}
+	\caption{CCD iteration comparison with solver from \cite{Hjorth-Jensenadvancedcoursecomputational2017} for the HEG. Here, $N_e=2$, $N_s=66$, $r_s=1.0$, and there is no mixing. }
+	\begin{tabular}{rlll}
+		n & $\Delta E_{CCD}$     & $\Delta E_{CCD}$ \cite{Hjorth-Jensenadvancedcoursecomputational2017} \\
+		MBPT2 & -0.02080623248720259 & -0.0208062324872026  \\
+		0 & -0.01833394188507821 & -0.0183339418850782  \\
+		1 & -0.01864313296809337 & -0.01864313296809333 \\
+		2 & -0.01860449158525421 & -0.01860449158525414 \\
+		3 & -0.01860932269795203 & -0.01860932269795206 \\
+		4 & -0.01860871870720909 & -0.01860871870720907 \\
+	\end{tabular}
+	\label{tab:unittest}
+\end{table}
+
 
 \begin{table}[h!]
 	\begin{center}
@@ -1701,22 +1747,6 @@ For the spawning from other determinants we should consider some additional poss
 \end{table}
 
 
-\subsubsection{The CCD results for HEG}
-\begin{table}[h]
-	\centering
-	\captionsetup{width=.8\textwidth}
-	\caption{CCD iteration comparison with solver from \cite{Hjorth-Jensenadvancedcoursecomputational2017} for the HEG. Here, $N_e=2$, $N_s=66$, $r_s=1.0$, and there is no mixing. }
-	\begin{tabular}{rlll}
-		n & $\Delta E_{CCD}$     & $\Delta E_{CCD}$ \cite{Hjorth-Jensenadvancedcoursecomputational2017} \\
-		MBPT2 & -0.02080623248720259 & -0.0208062324872026  \\
-		0 & -0.01833394188507821 & -0.0183339418850782  \\
-		1 & -0.01864313296809337 & -0.01864313296809333 \\
-		2 & -0.01860449158525421 & -0.01860449158525414 \\
-		3 & -0.01860932269795203 & -0.01860932269795206 \\
-		4 & -0.01860871870720909 & -0.01860871870720907 \\
-	\end{tabular}
-	\label{tab:unittest}
-\end{table}
 
 
 \subsubsection{The CCQMC results}
@@ -1769,9 +1799,13 @@ The CCQMC is based on getting the proper population dynamics for the excips. At 
 	\end{figure}
 	
 \end{landscape}
-
+\clearpage
 
 \part{Possible improvements and further research}
+
+
+
+
 
 \section{Smart Storage of Coulomb matrix elements}
 Coulomb matrix elements are required for all methods described in this thesis. In case of Hartree Fock method they can be just computed on the fly, using the formulas presented in Appendix $\ref{app:2}$ . However, after we made a transformation to the Hartree Fock basis, we need they to be stored and assessed in a most quickly and efficient way possible. \\
@@ -1781,6 +1815,7 @@ One more solution is to map each non-zero value with a unique address. This meth
 The method is described in details here \cite{leikangerFullConfigurationInteraction}.
 
 \clearpage
+\newpage
 **\appendix
 \chapter{Matrix Elements of Hamiltonian}\label{app:1}
 It is convenient to introduce formulas for different matrix elements of Hamiltonian. \\
@@ -1998,35 +2033,6 @@ Lets compute some particular probabilities:\\
 
 
 
-\begin{landscape}
-	
-	\begin{table}[h]
-		\centering
-		\captionsetup{width=.8\textwidth}
-		\caption{CCD results comparison between our block CCD solver ($\Delta E_{CCD}^M$), Millers's results, Hansen's CCD results ($\Delta E_{CCD}^H$) for the HEG. Results of Baardsen ($\Delta E_{CCD}^B$).	Results are presented for $14$ electrons. Mixing parameter $\alpha=0.8$ for Miller's results, and $\alpha=0.3$ for Hansen's and our results. All energies are presented in Hartree units.} \label{tab:CCDcompar}
-		\begin{tabular}{rrllll}
-			$r_s$ & States & $\Delta E_{CCD}$ \cite{millerAntumMechanicalStudies} & $\Delta E_{CCD}$ \cite{HansenCoupledclusterstudies} & $\Delta E_{CCD}$ \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}  & $\Delta E_{CCD}$\\
-			\hline
-			\hline
-			1.0 & 54 & -0.3178228436889338 & -0.317822843688933   &           & -0.3178230699319593  \\
-			1.0 & 66 & -0.3926965898061968 & -0.3926965898061966  &           & -0.3926968074770886  \\
-			1.0 & 114 & -0.4479105961757175 & -0.4479105961757175 & -0.447909 & -0.4479109389185165  \\
-			1.0 & 162 & -0.4805572589306421 & -0.4805572589306416 &           & -0.4805570782443642  \\
-			1.0 & 186 & -0.4855229317521320 & -0.4855229317521318 & -0.485523 & -0.4855227418241649  \\
-			1.0 & 246 & -0.4929245740023971 & -0.4929245740023975 &           & -0.4929243692209991  \\
-			1.0 & 294 & -0.4984909094066806 & -0.4984909094066818 &           & -0.4984906939593084  \\
-			1.0 & 342 & -0.5019526761547777 & -0.5019526761547779 &           & -0.5019524529049425  \\
-			1.0 & 358 & -0.5025196736076414 & -0.502519673607641  & -0.502523 & -0.5025194488388953  \\ \hline
-			0.5 & 114 & -0.5120153541478306 & -0.5120153541478306 & -0.512015 & -0.5120152296730573  \\
-			0.5 & 186 & -0.5114620616957333 &                     & -0.553329 & -0.553329520936615   \\
-			0.5 & 342 & -0.5729645498903680 & -0.572964549890367  &           & -0.572964399507112   \\
-			0.5 & 358 & -0.5297417436322546 &                     & -0.573678 & -0.5736804143578936  \\ \hline    
-			2.0 & 114 & -0.3577968843144996 & -0.3577968843144996 & -0.357798 & -0.3577955282575226  \\
-			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &           & -0.4014117905655014  \\
-		\end{tabular}
-	\end{table}
-	
-\end{landscape}
 
 \printbibliography 
 

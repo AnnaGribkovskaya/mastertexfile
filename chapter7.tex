@@ -1,0 +1,548 @@
+\part{Implementation and Results}
+In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. \\
+This part has the following structure:\\
+\begin{itemize}
+\item Chapter $\ref{ch:impl}$ is devote to implementation details.
+\begin{itemize}
+\item Section $\ref{sec:impl1}$ present a general structure of the code and description of all classes used.
+\item Section $\ref{sec:HFimpl}$ present algorithm for Hartree-Fock implementation.
+\item Section $\ref{sec:CCDimpl}$ present algorithm for deterministic CCD implementation.
+\item In Section $\ref{sec:CCQMCimpl}$ the CCQMC method implementation is described.
+\end{itemize}
+\item In Chapter $\ref{sec:Results}$ we present results and discussion of what have been done so far.
+
+\end{itemize}
+\chapter{Implementation}\label{ch:impl}
+\section{General structure of the code}\label{sec:impl1}
+Code has the following classes:
+\begin{enumerate}
+\item  \textit{generalspclass} 
+	\begin{itemize}
+	\item \textit{qdotspbasis} - only for QD
+	\item \textit{qdotHFbasis} - only for QD
+	\item \textit{electronGasSPBasis} - only for HEG
+	\end{itemize}
+\item \textit{CoulombFunctions}	
+\item \textit{symblock}
+\item \textit{ccd}
+\item \textit{qstate}
+\item \textit{channel}
+\item \textit{channelindexpair}
+\item \textit{channelset}
+
+\begin{itemize}
+	\item \textit{qdotchannelset} - only for QD
+	\item \textit{electrongaschannelset}- only for HEG
+\end{itemize}
+\end{enumerate}
+\textbf{Program for QD:}
+The base class \textit{generalspclass} has two derived classes \textit{qdotspbasis} and \textit{qdotHFbasis}. This base class generate objects for the solvers and allow us to switch between different bases and systems of interest. The \textit{qdotspbasis} provides TBME, single particle energies for QD in the HO basis as well as other important quantities such as number of electrons, number of shells, number of states etc. The \textit{qdotHFbasis} provides all these quantities in the Hartree-Fock basis. \\
+\textbf{Program for HEG:}
+The base class \textit{generalspclass} has derived class \textit{electronGasSPBasis}. It provide all needed information for regarding the system.
+
+\section{Implementation of Hartree-Fock solver for QD}\label{sec:HFimpl}
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=5.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=20em, text centered, rounded corners, minimum height=5em]
+\tikzstyle{small block} = [rectangle, draw, fill=blue!20, 
+text width=7em, text centered, rounded corners, minimum height=5em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+minimum height=2em]
+\begin{figure}
+	\centering
+\begin{tikzpicture}[node distance = 3cm, auto]
+% Place nodes
+\node [block] (init) {Compute One-Body and Two-Body matrix elements};
+%\node [cloud, left of=init] (expert) {expert};
+%\node [cloud, right of=init] (system) {system};
+\node [block, below of=init] (identify) {Initialize the coefficient matrix and the density matrix};
+\node [block, below of=identify] (initialize) {Compute Hartree-Fock matrix};
+\node [block, below of=initialize] (evaluate) {Dizgonalize the Hartree-Fock matrix};  
+\node [decision, below of=evaluate] (decide) {Convergence test passed?};
+\node [small block, left of=decide, node distance=6cm] (update) {Update the coeficient matrix and Compute new HF matrix};
+\node [block, below of=decide, node distance=3cm] (stop) {Compute HF Energy and Store the coeficient matrix};
+% Draw edges
+\path [line] (init) -- (identify);
+\path [line] (identify) -- (initialize);
+\path [line] (initialize) -- (evaluate);
+\path [line] (evaluate) -- (decide);
+\path [line] (decide) -- node [near start] {no} (update);
+\path [line] (update) |- (evaluate);
+\path [line] (decide) -- node {yes}(stop);
+%\path [line,dashed] (expert) -- (init);
+%\path [line,dashed] (system) -- (init);
+%\path [line,dashed] (system) |- (evaluate);
+\end{tikzpicture}
+\caption{Flow chart for Hartree-Fock algorithm}\label{fig::FHflowchart}
+\end{figure}
+
+Fig. $\ref{fig::FHflowchart}$ present the illustration for the HF algorithm. Here is a bit more detailed description of the algorithm:
+\begin{tcolorbox}
+	\begin{itemize}
+		\item Calculate the one-body $\braket{\alpha|\hat{h}|\beta}$ and two-body $\braket{\alpha\beta|\hat{v}|\gamma\delta}$ matrix elements.  \\
+		\item Begin iteration procedure:
+		\begin{enumerate}
+			\item Start with a guess for coefficient matrix. Usually an identity matrix $C^{(0)}_{i\alpha}$,  and density matrix $\rho^{(0)}_{\gamma\delta}$. For $\alpha, \gamma, \delta \in N_{\text{st}}$ and $i \in N_{p}$ ($N_{\text{st}}$ - number of states and $N_{p}$ - number of particles). 
+			\item The Hartree-Fock matrix on first iteration is computed as 
+			 \[ \hat{h}^{\text{HF}}_{\alpha \beta}(0) = \epsilon_\alpha \delta_{\alpha\beta} + \sum_{\gamma\delta}^{N_{\text{st}}} \rho^{(0)}_{\gamma\delta} \braket{\alpha\beta|\hat{v}|\gamma\delta}  \] 
+			 \item Diagonalize the Hartree-Fock matrix. Compute  $C^{(1)}_{i\alpha}$,   $\rho^{(1)}_{\gamma\delta}$ and $\epsilon_i^{HF}$
+			 \item For every iteration check the convergence:
+			 \[\frac{\sum_{i}^{N_p} |\epsilon_i^{(n)}- \epsilon_i^{(n-1)}|}{N_{st}} \leq \textbf{tolerance},\]
+			 where \textbf{tolerance} usialy a small number ($\approx 10^{-6}$). If convergence test fail compute new $\hat{h}^{\text{HF}}_{\alpha \beta}$ matrix and repeat the procedure.			 	
+		\end{enumerate} 
+		\item After the convergence test is passed, compute the HF energy and store the last version of coefficient matrix. 
+	\end{itemize}
+\end{tcolorbox}
+
+\subsection{Code structure for HF}\label{sec:code_for_HF}
+The Hartree-Fock algorithm uses the following methods:
+\begin{itemize}
+\item \textit{CalculateSPenergies} to compute the single-particle energies,
+\item \textit{fillTwoBodyElements} to compute the Coulomb integrals,
+\item \textit{computeHFmatrix} to set up the Hartree-Fock matrix,
+\item \textit{computeHartreeFockEnergyDifference} method used to test the convergence.
+\item \textit{computeHartreeFockEnergy} to compute the ground state energy itself.
+\end{itemize}
+The code for algorithm is presented on Fig. $\ref{f:applyHF}$.
+ 
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+void qdotHFbasis::applyHartreeFockMethod(){
+	int NumberOfStates = m_shells.size();
+	arma::mat C(NumberOfStates, NumberOfStates);
+	C.eye();
+	setCoefficientMatrix(C);
+	double difference = 10; 
+	double epsilon = 10e-8;
+	eigval_previous.zeros(NumberOfStates);
+	while (epsilon < difference && i < 200){
+		arma::mat x_DensityMatrix = computeDensityMatrix();
+		computeHFmatrix(x_DensityMatrix);
+		arma::eig_sym(eigval, eigvec, m_HF);
+		setCoefficientMatrix(eigvec);
+		difference = computeHartreeFockEnergyDifference();
+		eigval_previous = eigval;
+	}
+}
+\end{lstlisting}
+\caption{Implementation of Hartree-Fock algorithm} \label{f:applyHF}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{lstlisting}[language=C++]
+void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
+	int NumberOfStates = m_shells.size();
+	m_HF.zeros(NumberOfStates,NumberOfStates);
+	double FockElement = 0;
+	
+	for(int i = 0; i < NumberOfStates; i++) {
+		for(int j = 0; j < NumberOfStates; j++) {
+			for(int k = 0; k < NumberOfStates; k++) {
+				for(int l = 0; l < NumberOfStates; l++) {
+					FockElement += DensityMatrix(k,l)*TBME(i,k,j,l);
+					if (FockElement !=0.0){
+					}
+				}
+			}
+			if (i == j) {
+				m_HF(i, i) += m_HOEnergies.at(i);
+			}
+			m_HF(i, j) += FockElement;
+			FockElement = 0.0;
+		}
+	}
+}
+\end{lstlisting}
+\caption{Compute HF matrix}
+\end{figure}
+\section{Implementation for CCD}\label{sec:CCDimpl}
+The CCD algorithm is same both for QD and HEG. The equations for CCD amplitudes should be written in in iterative manner and then computed and updated before the convergence is reached.\\
+
+In the box below the main steps for CCD algorithm are presented: 
+\begin{tcolorbox}
+	\begin{itemize}
+		\item Compute the MBPT2 Energy
+		\item Set up Initial Amplitudes
+		\item Begin iteration procedure:
+		\begin{enumerate} 
+			\item Calculate New Amplitudes.
+			\item Compute the Correlation Energy.
+			\item Compute Energy Difference $=|E_{Corr}^{(n-1)} - E_{Corr}^{(n)}|$.
+			\item If Energy Difference $ > \textbf{tolerance}$:\\
+			 Update Energy and Amplitudes.
+			\item Repeat iterations until Energy Difference become less then \textbf{tolerance}.
+		\end{enumerate} 
+		\item After the convergence test is passed, compute and store the CCD correlation energy.
+	\end{itemize}
+\end{tcolorbox}
+The algorithm described above imply the convergence can be reached after a finite number of iterations. However this is not always the case. For some set of parameters one may obtain divergent solutions or at least solutions that require a huge number of iterations. One of the solutions to such problem might be to use some parameter, known as "mixing parameter" to update the amplitudes in the following way:
+\begin{equation}\label{eq:mizampl}
+t^{n} = at^(n) + (1-a)t^{(n-1)},
+\end{equation}
+here a $\in (0,1]$ in "mixing parameter", $t^{n-1}$ - amplitudes on the previous iteration and $t^{n}$- amplitudes on the current iteration.\\
+
+\subsubsection{Channels for CCD}
+The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$.\\
+\textbf{For the QD:}\\
+Such transition is prohibited if it does not preserve quantum numbers for spin and angular momentum. The preserved quantum numbers are the following:
+\begin{align}
+m_r + m_s = m_p + m_q,\\
+s_r + s_s = s_p + s_q.
+\end{align}
+\textbf{For the HEG:}\\
+Such transition is prohibited if it does not preserve quantum numbers for spin and wave number. The preserved quantities are the following:
+\begin{align}
+\textbf{k}_r + \textbf{k}_s = \textbf{k}_p + \textbf{k}_q,\\
+s_r + s_s = s_p + s_q.
+\end{align}
+Here is no principal difference between these two besides the mentioned above. Further in the text we are going to use single particle states, not a conserved quantities, so the theoretical description is the same for both systems.
+If this conditions is not met we have $\braket{ab||cd} = 0$.\\
+For amplitude equation presented in ($\ref{eq:CCD_ampl}$) we need matrix elements of the following form:
+\begin{align}\label{eq:TBME_channels}
+\braket{ab||ij}&,\\
+\braket{kl||ij}&,\\
+\braket{ab||cd}&,\\
+\braket{kb||cj}&,\\
+\braket{kl||cd}&.\\
+\end{align}
+As we have already mentioned indexes $a,b,c,d,...$ correspond to states which are not occupied in the reference determinant and are called particle states, while  indexes $i,j,k,l,...$ correspond to states which are occupied in the reference determinant and are called hole states. Taking into account the fact that we can possible make only some combinations of two states, namely hole-hole, particle-particle, particle-hole and hole-particle pairs we only are able to set up some  specific types of interaction matrices:
+\begin{align}
+V_{pppp},V_{ppph}, V_{pphh}, V_{phhh},V_{hhpp},V_{hhhp},V_{hppp},V_{hhhh}.
+\end{align}
+All together there are eight matrices. Splitting the TBME matrix into parts is not the only thing here, the main idea is to right each block into a "channel" to satisfy the conservation of quantum numbers is the goal. Let's consider how this cam by done.\\
+We start with creating a vectors for combination of two states. On Fig. $\ref{f:vectors_for_channels}$ and $\ref{f:vectors_for_channelsHEG}$ one may see how this is implemented in C++ for QD and HEG respectively. The code is almost the same, except for the number of quantities to be preserved in the system. We mapping two states into one state which is a sum of the two:
+\begin{align}
+\ket{ab} &\rightarrow \ket{A}, \\
+\ket{ij} &\rightarrow \ket{I}, \\
+\ket{ai} &\rightarrow \ket{AI}, \\
+\ket{ia} &\rightarrow \ket{IA}. \\
+\end{align}
+All new states have quantum numbers which are just sums of the original ones. For example, $\ket{A}$ has quantum numbers $m_A = m_a+m_b$ and  $s_A = s_a+s_b$. We loop over all possible sum's for spin and angular momentum, which is just $\{-2,0,2\}$ for spin and $\{-2(R-1), \dots 0, \dots , 2(R-1)\}$. Here $R$ is shell number. After doing so we have vectors with pairs of states which satisfy the conservation laws. This allow us to store only non-zero matrix elements.\\
+
+\begin{figure}
+\begin{lstlisting}[language=C++]
+void qdotchannelset::setUpChannels(generalSPclass * qsystem){
+qsys = qsystem;
+int Mlmax = 2*(qsys->getShellsStochastic()-1);
+int Smax = 2;
+for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
+	for(int S = -Smax; S <= Smax; S = S + 2){
+		ChannelVariety.emplace_back(channel());
+		for(int i = 0; i < qsys->getFermiLevel(); i++){
+			for(int j = 0; j < qsys->getFermiLevel(); j++){
+				qstate *QuantumState = qsys->sumState(i,j);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && i != j){
+					ChannelVariety.back().m_HoleHoleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_HoleHoleVec.back().set(i, j);
+				} delete QuantumState;
+			}
+		}
+		for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
+			for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
+				qstate *QuantumState = qsys->sumState(a,b);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && a != b){
+					ChannelVariety.back().m_ParticleParticleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_ParticleParticleVec.back().set(a, b);
+				} delete QuantumState;
+			}
+		}
+		for(int c = qsys->getFermiLevel(); c < qsys->getStatesStochastic(); c++){
+			for(int k = 0; k < qsys->getFermiLevel(); k++){
+				qstate *QuantumState = qsys->sumState(c,k);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && c != k){
+					ChannelVariety.back().m_ParticleHoleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_ParticleHoleVec.back().set(c, k);
+				} delete QuantumState;
+			}
+		}
+		for(int l = 0; l < qsys->getFermiLevel(); l++){			
+			for(int d = qsys->getFermiLevel(); d < qsys->getStatesStochastic(); d++){
+				qstate *QuantumState = qsys->sumState(l,d);
+				if(Ml == QuantumState->m() && S == QuantumState->s() && l != d){
+					ChannelVariety.back().m_HoleParticleVec.emplace_back(channelindexpair());
+					ChannelVariety.back().m_HoleParticleVec.back().set(l, d);
+				} delete QuantumState;
+			}
+		}
+	}
+}
+}
+
+\end{lstlisting}
+\caption{Setting up channels for QD} \label{f:vectors_for_channels}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{lstlisting}[language=C++]
+void electrongaschannelset::setUpChannels(generalSPclass * qsystem){
+qsys = qsystem;
+int Nmax = qsys->getShellsStochastic() - 1;
+int Smax = 2;
+for(int Nx = -Nmax; Nx <= Nmax; Nx++){
+	for(int Ny = -Nmax; Ny <= Nmax; Ny++){
+		for(int Nz = -Nmax; Nz <= Nmax; Nz++){
+			for(int S = -Smax; S <= Smax; S = S + 2){
+			
+				ChannelVariety.emplace_back(channel());
+				for(int i = 0; i < qsys->getFermiLevel(); i++){
+					for(int j = 0; j < qsys->getFermiLevel(); j++){
+						if(Nx == qsys->sumState(i,j).nx() && Ny == qsys->sumState(i,j).ny() && Nz == qsys->sumState(i,j).nz() && S == qsys->sumState(i,j).s() && i != j){
+						ChannelVariety.back().m_HoleHoleVec.emplace_back(channelindexpair());
+						ChannelVariety.back().m_HoleHoleVec.back().set(i, j);
+						}
+					}
+				}
+				for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
+					for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
+						if(Nx == qsys->sumState(a,b).nx() && Ny == qsys->sumState(a,b).ny() && Nz == qsys->sumState(a,b).nz() && S == qsys->sumState(a,b).s() && a != b){
+						ChannelVariety.back().m_ParticleParticleVec.emplace_back(channelindexpair());
+						ChannelVariety.back().m_ParticleParticleVec.back().set(a, b);
+						}
+					}
+				}
+			}
+		}
+	}
+\end{lstlisting}
+\caption{Setting up channels for HEG.} \label{f:vectors_for_channelsHEG}
+\end{figure}
+
+
+Having such vectors we may build up all needed matrices. Let's consider how this is done on Fig.  $\ref{f:MatV_for_channels}$. For every matrix we need ($V_{pppp}, V_{pphh},V_{hhpp}, V_{hhhh}$) we pick two vectors with the indexes corresponding to needed combination of states and store the matrix element into one of blocks. This is done for all channels that have been created when we set up the vectors. We do not do this for matrices like $V_{phhh}$ due to the reasons that will be discussed below in this section.\\
+
+
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+void ccd::setUpInterractionMatrixBlocks(){
+	for(channel onechannel : ChannelVariety){
+		m_ppppVBlock.emplace_back(symblock(onechannel.m_ParticleParticleVec.size(), onechannel.m_ParticleParticleVec.size()));
+		for(unsigned int ab = 0; ab < onechannel.m_ParticleParticleVec.size(); ab++){
+			channelindexpair AB = onechannel.m_ParticleParticleVec.at(ab);
+			for(unsigned int cd = 0; cd < onechannel.m_ParticleParticleVec.size(); cd++){
+				channelindexpair CD = onechannel.m_ParticleParticleVec.at(cd);
+				m_ppppVBlock.back().setElement((int)ab, (int)cd, qsys->TBME(AB.first(), AB.second(), CD.first(), CD.second())) ;
+			}
+		}		
+		m_hhhhVBlock.emplace_back(symblock(onechannel.m_HoleHoleVec.size(), onechannel.m_HoleHoleVec.size()));
+		for(unsigned int kl = 0; kl < onechannel.m_HoleHoleVec.size(); kl++){
+			channelindexpair KL = onechannel.m_HoleHoleVec.at(kl);
+			for(unsigned int ij = 0; ij < onechannel.m_HoleHoleVec.size(); ij++){
+				channelindexpair IJ = onechannel.m_HoleHoleVec.at(ij);
+				m_hhhhVBlock.back().setElement((int)kl,(int)ij, qsys->TBME(KL.first(), KL.second(), IJ.first(), IJ.second()));
+			}
+		}
+			
+		m_hhppVBlock.emplace_back(symblock(onechannel.m_HoleHoleVec.size(), onechannel.m_ParticleParticleVec.size()));
+		for(unsigned int kl = 0; kl < onechannel.m_HoleHoleVec.size(); kl++){
+			channelindexpair KL = onechannel.m_HoleHoleVec.at(kl);
+			for(unsigned int cd = 0; cd < onechannel.m_ParticleParticleVec.size(); cd++){
+				channelindexpair CD = onechannel.m_ParticleParticleVec.at(cd);
+				m_hhppVBlock.back().setElement((int)kl,(int)cd, qsys->TBME(KL.first(), KL.second(), CD.first(), CD.second())) ;
+			}
+		}				
+		m_pphhVBlock.emplace_back(symblock(onechannel.m_ParticleParticleVec.size(), onechannel.m_HoleHoleVec.size()));
+		for(unsigned int kl = 0; kl < onechannel.m_HoleHoleVec.size(); kl++){
+			channelindexpair KL = onechannel.m_HoleHoleVec.at(kl);
+			for(unsigned int cd = 0; cd < onechannel.m_ParticleParticleVec.size(); cd++){
+				channelindexpair CD = onechannel.m_ParticleParticleVec.at(cd);
+				m_pphhVBlock.back().setElement((int)cd,(int)kl, qsys->TBME(CD.first(), CD.second(), KL.first(), KL.second())) ;
+			}
+		}
+	}
+}
+\end{lstlisting}
+\caption{Setting up interaction matrix} \label{f:MatV_for_channels}
+\end{figure}
+
+Mapping two states into a single one has even more advantages, we now may use the matrix-matrix multiplications to compute the correlation energy and amplitudes. Here is a brief explanation  of how it works. Let's take for example the second leaner term \footnote{The name linear is used to denote that we have only one amplitude to multiply with interaction matrix element. Terms with two amplitudes are considered quadratic.} in ($\ref{eq:CCD_ampl}$):
+
+\begin{equation}
+\sum_{cd}\braket{ab|v|cd}t_{cd}^{ij} \rightarrow V_{ab}^{cd} \times T_{cd}^{ij} \rightarrow V_{A}^{C} \times T_{C}^{I} \rightarrow (VT)_{A}^{I},
+\end{equation}
+which is just an ordinary matrix-matrix multiplication.\\
+However not all terms in  ($\ref{eq:CCD_ampl}$) can be tackled as easy as this one. For example, the third leaner term:
+\begin{align}
+\sum_{kc}\braket{kb|v|cj}t_{ik}^{ac} \rightarrow V_{kb}^{cj} \times T_{ik}^{ac},
+\end{align}
+cannot be straightforward implemented as matrix-matrix multiplication. In order to do this we need to perform a following transformation:
+\begin{align}
+\sum_{kc}\braket{kb|v|cj}t_{ik}^{ac} \rightarrow \sum_{kc}\braket{kc|\tilde{v}|jb}\tilde{t}_{ai}^{kc} \rightarrow \tilde{V}_{kc}^{jb}\times \tilde{T}_{ai}^{kc} \rightarrow \tilde{V}\times\tilde{T}.
+\end{align}
+It is important to take into account all preserved quantities while we make such permutation of indexes. The new product should obey the same conservation laws as the original one. For the term under consideration that means the following transformation:
+\begin{equation}\label{eq:L3transform}
+k+b=c+j=a+c=i+k \Rightarrow k-c=j -b=a-i=k-c.
+\end{equation}
+Such transformation require a new block interaction matrix. In order to set it up we need to set up the vectors with indexes that correspond the transformation described in ($\ref{eq:L3transform}$). As one can see we transformed "hole plus particle" indexes into "hole minus particle". On Fig. $\ref{f:vectors_for_channelsHminusP}$ we first set up the vectors with index pairs corresponding to such states. After this is done we can set up the corresponding interaction matrix itself the same way as we did it before. 
+
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+for(int l = 0; l < qsys->getFermiLevel(); l++){
+	for(int d = qsys->getFermiLevel(); d < qsys->getStatesStochastic(); d++){
+		qstate QuantumState = qsys->substractState(l,d);
+		if(Ml == QuantumState.m() && S == QuantumState.s() && l != d){
+			ChannelVariety.back().m_HoleMinusParticleVec.emplace_back(channelindexpair());
+			ChannelVariety.back().m_HoleMinusParticleVec.back().set(l, d);
+		} //delete QuantumState;
+	}
+}
+
+for(int c = qsys->getFermiLevel(); c < qsys->getStatesStochastic(); c++){
+         	for(int k = 0; k < qsys->getFermiLevel(); k++){
+         		qstate QuantumState = qsys->substractState(c,k);
+         		if(Ml == QuantumState.m() && S == QuantumState.s() && c != k){
+         			ChannelVariety.back().m_ParticleMinusHoleVec.emplace_back(channelindexpair());
+         			ChannelVariety.back().m_ParticleMinusHoleVec.back().set(c, k);
+         		} //delete QuantumState;
+         	}
+}
+\end{lstlisting}
+\caption{Setting up channels for aligned clusters.} \label{f:vectors_for_channelsHminusP}
+\end{figure}
+
+Other terms in the amplitude equitation can be considered in a similar manner. For the first quadratic term does not require any transformation and can be expressed as a product of three matrices:
+\begin{equation}
+\sum_{klcd}\braket{kl|v|cd}t_{ij}^{cd} t_{kl}^{ab} \rightarrow \tilde{V}_{kl}^{cd} \times \tilde{T}_{ij}^{kl} \times \tilde{T}_{kl}^{ab }. 
+\end{equation}
+Other terms are a bit more complicated, but are based on the same technique:
+\begin{align}
+\sum_{klcd}\braket{kl||cd}t_{ac}^{ik} t_{bd}^{jl}   &\rightarrow  \tilde{T}_{ai}^{ck}\times\tilde{V}_{ck}^{ld}\times\tilde{T}_{ld}^{dj} \label{eq:Q2} \\ 
+\sum_{klcd}\braket{kl||cd}t_{ik}^{dc}t_{lj}^{ab} &\rightarrow     \tilde{T}_{l}^{abj}\times \tilde{V}_{kcd}^{l} \times  \tilde{T}_{i}^{kcd}, \label{eq:Q3} \\ 
+\sum_{klcd}\braket{kl||cd}t_{lk}^{ac}t_{ij}^{db} &\rightarrow \tilde{T}_{klc}^{a} \times  \tilde{V}_{d}^{klc}\times \tilde{T}_{bij}^{d}. \label{eq:Q4}
+\end{align}
+Transformation for ($\ref{eq:Q2}$) is trivial, but ($\ref{eq:Q3}$) and ($\ref{eq:Q4}$) need some comments. For the two last quadratic terms in ($\ref{eq:CCD_ampl}$) we need to map three states into a single one. In order to do this we need to set up new vectors and interaction matrix blocks. On Fig. $\ref{f:vectors_for_Q4}$ we present a method to store indexes needed for such transformation - three indexes are stored into one "hole plus hole minus particle" state and one into a single "particle" state. Transformation is made in a similar manner as it has been made in  ($\ref{eq:L3transform}$) for leaner term, the only difference is that now we need to change the number of indexes not only their positions. However all quantum numbers should be preserved according to the same rules as before.\\
+After this transformation we use matrix multiplication for each term and compute amplitudes on the next iteration. 
+
+\begin{figure}
+	\begin{lstlisting}[language=C++]
+for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
+   	for(int S = -Smax; S <= Smax; S++){
+   		ChannelVariety2.emplace_back(channel());
+   		for(int a = 0; a < qsys->getStatesStochastic(); a++){
+   			qstate  OneQS = qsys->oneState(a);
+   			if(Ml == OneQS.m() && S == OneQS.s()){
+   				for(int i = 0; i < qsys->getFermiLevel(); i++){
+   					for(int j = 0; j < qsys->getFermiLevel(); j++){
+  						for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
+					qstate QuantumState = qsys->sumSubstractState(i,j,b);
+					if( QuantumState.m() == OneQS.m()
+					&& QuantumState.s()  == OneQS.s()){
+					ChannelVariety2.back().m_HolePlusHoleMinusParticleVec.emplace_back(channelindexpair());
+					ChannelVariety2.back().m_HolePlusHoleMinusParticleVec.back().setThree(i, j, b);
+					ChannelVariety2.back().m_ParticleVec.emplace_back(channelindexpair());
+					ChannelVariety2.back().m_ParticleVec.back().setOne(a);
+  							}
+   						}
+   					}
+   				}
+   			}
+   		}
+   	}
+}
+\end{lstlisting}
+\caption{Setting up channels for rotated clusters.} \label{f:vectors_for_Q4}
+\end{figure}
+
+\section{CCQMC implementation} \label{sec:CCQMCimpl}
+In Chapter on Monte Carlo $\ref{ch:MCalgo}$ we have discussed many different Monte Carlo methods. The section $\ref{sec:CCQMC}$ is devoted to CCQMC algorithm. In this section we present some details how the alrgorithm has been implemented in the C++. Our program aims to simulate equation ($\ref{eq:CCiter}$). This is done by \textit{applyCCQMC} method of the \textit{ccqmc} class. The main idea of the method is to move from the iterative scheme to the numerical sampling of the expectation value of the Hamiltonian. In order to do so we need first to sample the wave function and then sample action of the Hamiltonian. This sampling procedure is presented on Fig. $\ref{figccqmcWF}$. Sampling of the wave function can be described as several independent sampling processes inside one Monte Carlo iteration. This comes from the fact that we are dealing with cluster of different sizes while doing so. As soon as we only implement the method for the HEG we do not have single excitations and would only deal with doubles. The cluster sizes we have to sample can be limited to cluster size one, two and three. All can be sampled independently and then combined on the annihilation step. However such limitation also means we are not going to have triples in the simulation, as soon as we only limit ourselves to doubles and the combined clusters can only produce the quadrupole excitations, which we do not store anyway as we want to compare our CCQMC with the deterministic solver for CCD. \\
+
+
+Before starting the simulation there are no excips in the space of excited determinants, only those on reference. In the FCIQMC or DMC it is common to begin with just a single walker on the $\ket{D_0}$, however this is not the case for CCQMC, we have to start with a number of walkers, usually in range form 100 to 1000. After the simulation begins the population of excitor space start to grow. \\ 
+
+A single iteration after some time is then goes af follows:
+\begin{itemize}
+\item Function \textit{sampleReference} select clusters of size zero, which is the reference determinant, functions \textit{sampleClusterSizeOne} and \textit{sampleClusterSizeTwo} select clusters of size one, which is a double excitation of the reference and cluster of size two respectively. 
+\item All exitors that have been spawned or killed are then stored in the \textit{TemporaryStorage} vector and the corresponding excips are stored in vector \textit{TemporaryStoragePopulation}.
+\item In the end of one MC iteration this two vectors are used to update \textit{StorageCumulativeDeterminants} vector and \textit{StorageCumulativePopulation}. These two contain the total number of excips and excitors after the time $n \delta\tau$, here $n$ is number of iterations done so far. 
+\item After this all temporary vectors are cleared and the number of excips in the excitor space is updated. This value is used on next iteration to calculate the number of sampling attempts. There are many different schemes of sampling, in this simulation we used the following: $N_{attempts}(\tau)= N_0(\tau-1)+N_{ex}(\tau-1)$, here $N_{attempts}(\tau)$ is number of sampling attempts on current step, $N_0(\tau-1)$ is reference population on the previous step and $_{ex}(\tau-1)$ is excitor space population on previous step.
+\end{itemize}
+In the box below we present a short description of what is done here:
+\begin{tcolorbox}
+	\begin{itemize}
+		\item Set up parameters: $\delta\tau$, maximum number of iterations, $N_0$.
+		\item Sample Cluster Size Zero $N_0$ times before the iterations start to create initial population in excitor space.
+		\begin{enumerate} 
+			\item Sample Cluster Size Zero $N_0$ times.
+			\item Sample Cluster Size Zero $\frac{2}{3}N_{ex}$ times.
+			\item Sample Cluster Size Zero $\frac{1}{3}N_{ex}$ times.
+			\item Add population of excips on current iteration to the cumulative population.
+			\item Update $\tau$ as $\tau+ \delta\tau$.
+		\end{enumerate} 
+	\item End the simulation if maximum number of iterations have been reached.
+	\end{itemize}
+\end{tcolorbox}
+
+Here we need to mention sign of excip to be killed or spawned. Killing process does not cause any difficulties because we just create excip with the opposite sing. However the spawning process is rather complicated. First we consider the excips spawned from reference. In order to determine the sign we need to take into account the following:
+\begin{itemize}
+\item sign of $H_{n0}$.
+\item possible sign change if the from reordering of the creation and annihilation operators. This comes from the fact that we store determinants in an ordered way, so that any excited determinant $\ket{D_{ij}^{ab}}$ should satisfy the following rule $a<b$ and $i<j$. If it is not the case we reorder operators and should change the sign of excip is the number of permutation needed for the reordering is odd.
+\end{itemize} 
+For the spawning from other determinants we should consider some additional possible sources of sign change:
+\begin{itemize}
+	\item sign of $H_{nm}$.
+	\item possible sign change if the from reordering of the creation and annihilation operators when collapsing selected clusters to a single determinant.
+	\item possible sign change due to action on reference, both for the determinants in "bra" and "ket" parts.
+	\item sing of cluster amplitude.
+	\item possible sign change after acting with randomly chosen excitation on reference (sign of excitor itself).
+\end{itemize} 
+
+\begin{figure}[!h]
+	\begin{center}
+		\begin{tikzpicture}[node distance=2cm]
+		\node(SelectCluster)[roundrect]{Select cluster size  $p_{size}(s)=\frac{1}{2^{s+1}}$};% of one particle in one dimension};
+		\node(ConstructCluster)[roundrect, below of=SelectCluster, yshift=-0.5cm]{Select excitations according to rules from tab. \ref{tab:cpluster}};
+		\node(ProductCluster)[roundrect, below of=SelectCluster, yshift=-0.5cm]{ Compute product of excitors : $\hat{a}_{i}^{a}\hat{a}_{jk}^{bc} \rightarrow \hat{a}_{ijk}^{abc}$};
+		\node(KetSign)[roundrect, below of=ProductCluster, yshift=-0.5cm]{Get sign of product: $\ket{D_0} \rightarrow \pm \ket{D_n}$};
+		\node(SelectBra)[roundrect, below of=KetSign, yshift=-0.5cm]{Select single or double excitation of $\ket{D_n} = \ket{D_{ijk}^{abc}} \rightarrow \hat{a}_{ik}^{ca}$};
+		\node(BraSign)[roundrect, below of=SelectBra, yshift=-0.5cm]{Determine sign of action $\hat{a}_{ik}^{ca}\ket{D_0} \rightarrow \pm \ket{D_m} $ };
+		\node(Offdiagonal)[roundrect, below left of=BraSign, yshift=-0.5cm, xshift=-1.5cm ]{Determine $P_1 \propto \bra{D_m}\hat{H} \ket{D_n}$};
+		\node(Diagonal)[roundrect, below right of=BraSign, yshift=-0.5cm,xshift=1.5cm]{Determine $P_2 \propto \bra{D_n}\hat{H} \ket{D_n}-S$};
+		\node(CreateExcip)[roundrect, below of=Offdiagonal, yshift=-0.5cm]{Create excip($\pm$) at $\bra{D_m}$ with probability $P_1$};
+		\node(KillExcip)[roundrect, below of=Diagonal, yshift=-0.5cm]{Kill excip($\pm$) at $\ket{D_n}$ with probability $P_2$ by creating an opposite-signed excip};
+		\node(StoreExcip)[roundrect, below of=KillExcip, yshift=-0.5cm, xshift=-3cm]{Store excips and control population};
+		\node(TuneS)[roundrect, below of=StoreExcip, yshift=-0.5cm]{Update shift $S$ };
+		\draw [arrow] (SelectCluster) -- (ConstructCluster);
+		\draw [arrow] (ConstructCluster) -- (ProductCluster);
+		\draw [arrow] (ProductCluster) -- (KetSign);
+		\draw [arrow] (KetSign) -- (SelectBra);
+		\draw [arrow] (SelectBra) -- (BraSign);	
+		\draw [arrow] (BraSign) -- (Offdiagonal);
+		\draw [arrow] (BraSign) -- (Diagonal);
+		\draw [arrow] (Offdiagonal) -- (CreateExcip);
+		\draw [arrow] (Diagonal) -- (KillExcip);
+		\draw [arrow] (KillExcip) -- (StoreExcip);
+		\draw [arrow] (CreateExcip) -- (StoreExcip);
+		\draw [arrow] (StoreExcip) -- (TuneS);
+		\draw [arrow,rectangle connector=-8cm] (TuneS) to node[descr] [anchor=north] {New Sample} (SelectCluster);
+		%	\draw [arrow] (Check E) -- node [anchor=east]{Yes} (Finish);
+		%\background{Setup system}{Set T2}{Calc CCDT}{Calc D10}{Wave-function}
+		%\background{Setup system}{Set T2}{Calc CCDT}{Calc D10}{Wave-function}
+		\begin{pgfonlayer}{background}
+		% Compute a few helper coordinates
+		\path (SelectCluster.west |- SelectCluster.north)+(-0.5,0.5) node (a) {};
+		\path (ConstructCluster.south -| ConstructCluster.east)+(+0.5,-0.5) node (b) {};
+		\path[fill=blue!10,rounded corners, draw=black!50, dashed]
+		(a) rectangle (b);
+		\path (a.west |- a.north)+(-0.5,0.2) node (atext) {Sampling $\ket{\Psi_{CC}}$};
+		\end{pgfonlayer}
+		\begin{pgfonlayer}{background}
+		% Compute a few helper coordinates
+		\path (SelectBra.west |- SelectBra.north)+(-0.5,0.5) node (a) {};
+		\path (SelectBra.south -| SelectBra.east)+(+0.5,-0.5) node (b) {};
+		\path[fill=green!10,rounded corners, draw=black!50, dashed]
+		(a) rectangle (b);
+		\path (a.west |- a.north)+(-0.5,0.2) node (atext) {Sample $\hat{H}$};
+		\end{pgfonlayer}
+		\end{tikzpicture}
+	\end{center}
+	\caption{Flow chart for CCQMC sampling. } \label{figccqmcWF}
+\end{figure}
+
+
+

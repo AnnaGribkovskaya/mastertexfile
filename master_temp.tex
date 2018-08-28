@@ -121,15 +121,11 @@
 
 %\chapter{}
 \chapter*{Introduction}
-\textbf{PEREPISAT'!!!!!!!!!!!!!!!!!!!!!!!!!!!}
 
+\section*{Motivation}
+The Quantum Monte Carlo methods have been known for decades now, since in 1950  Forsythe and Leibler have presented the method for matrix inversion by stochastic approach \cite{forsytheMatrixVersionMonte1950}. However it was first applied to the physical problem in the 1962 by Kalos to compute the ground state for three- and four-body nuclei \cite{kalosMonteCarloCalculations1962}. Nowadays the Monte Carlo methods are widely used in computational physics and chemistry.\\
+In this thesis we focus on an \textit{ab initio} algorithm to compute the ground state properties of a quantum system known as  Coupled Cluster Quantum Monte Carlo (CCQMC) 
 
-This thesis is devoted to study of Quantum Dots (QDs). The detailed mathematical description of QDs is provided below, but in the most general way one may say that QDs are man-made devices that are small enough to posses quantum properties, such as energy shell structure, tunneling effect and etc. Most commonly such devices are fabricated using semiconductors and their size vary from few nanometers to hundreds of nanometers (one nanometer or nm is equal to $1\times 10^{-9} m$). In literature one may find name "artificial atoms" when referring to such  semiconductor nanostructures. This name reflect the fact that QDs and atoms share many similar properties, however this is not completely legit name, though QD are larger then atoms. For atoms size is usually measured in picometres  (one picometre or pm is equal to $1\times 10^{-12} m$).  Normal size of an atom vary form 53 pm for hydrogen atom (this quantity is also known as Bohr radius), to  273 pm for cesium (which is considered to be one of the largest atoms). As one can mention even the small QDs correspond 10 atoms in diameter. Apart from this QDs are very similar to the atoms. The name Quantum Dot reflect the fact that we have a structure that is small enough to have quantum properties and also that this structure is spatially localized. The properties of QDs lie between those of individual discrete atoms or molecules and bulk semiconductors. This fact make such particles matter of great interest both for science and industry. 
-
-Below in chapter (!!!!!!!) one can find a brief history of QDs and also  some of their applications.  \\
-The aim of this thesis is to study QD numerically. 
-
-\textbf{	SHOULD ADD MORE LATELY!!! And do not forget reference to chapters afterwards!!}
 	
 \part{Theory}
 \chapter{Quantum mechanics}
@@ -1188,10 +1184,10 @@ p_{\text{death}} = \frac{|\delta \tau (H_{mm} - S)A|}{p_{\text{select}}p_{sel}p_
 \subsection{Population Control}
 Population control is needed to sustain a stable simulation. If not done properly we would just have excips dying or rapidly growing. There are many ways the population control can be done. For example we can update the "shift" $E$ in the following way:
 \begin{equation}
-E=\braket{E_0} + \alpha\frac{N_W^{(0)}}{N_w},
+E=\braket{E_0} + \alpha\frac{N_w^{(0)}}{N_w},
 \end{equation}
-here $\braket{E_0}$ lowest eigenvalue at time $\tau$, $\alpha$ is small damping parameter, $N_W^{(0)}$ the population one want to reach and $N_w$ total number of random walker at time $\tau$.\\
-However this method introduce bias into the simulation. Another mathod to carry out population control is to update the shift as:
+here $\braket{E_0}$ lowest eigenvalue at time $\tau$, $\alpha$ is small damping parameter, $N_w^{(0)}$ the population one want to reach and $N_w=\sum_{i}|N_i|$ total number of random walker at time $\tau$.\\
+However this method introduce bias into the simulation. Another method to carry out population control is to update the shift as:
 \begin{equation}
 E(\tau)=E(\tau+A\delta\tau) - \frac{\gamma}{A\delta\tau}ln\bigg( \frac{N_{ex}(\tau)}{N_{ex}(\tau+A\delta\tau)}  \bigg),
 \end{equation}
@@ -1205,13 +1201,20 @@ E_{proj}=\frac{\braket{D_0|\hat{H}|\Psi_{CC}}}{\braket{D_0|\Psi_{CC}}}
 
 
 \part{Implementation and Results}
-In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. 
+In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. \\
 This part has the following structure:\\
 \begin{itemize}
+\item Chapter $\ref{ch:impl}$ is devote to implementation details.
+\begin{itemize}
 \item Section $\ref{sec:impl1}$ present a general structure of the code and description of all classes used.
-\item Section (REF) 
+\item Section $\ref{sec:HFimpl}$ present algorithm for Hartree-Fock implementation.
+\item Section $\ref{sec:CCDimpl}$ present algorithm for deterministic CCD implementation.
+\item In Section $\ref{sec:CCQMCimpl}$ the CCQMC method implementation is described.
 \end{itemize}
+\item In Chapter $\ref{sec:Results}$ we present results and discussion of what have been done so far.
 
+\end{itemize}
+\chapter{Implementation}\label{ch:impl}
 \section{General structure of the code}\label{sec:impl1}
 Code has the following classes:
 \begin{enumerate}
@@ -1239,7 +1242,7 @@ The base class \textit{generalspclass} has two derived classes \textit{qdotspbas
 \textbf{Program for HEG:}
 The base class \textit{generalspclass} has derived class \textit{electronGasSPBasis}. It provide all needed information for regarding the system.
 
-\section{Implementation of Hartree-Fock solver for QD}
+\section{Implementation of Hartree-Fock solver for QD}\label{sec:HFimpl}
 % Define block styles
 \tikzstyle{decision} = [diamond, draw, fill=blue!20, 
 text width=5.5em, text badly centered, node distance=3cm, inner sep=0pt]
@@ -1300,7 +1303,7 @@ Fig. $\ref{fig::FHflowchart}$ present the illustration for the HF algorithm. Her
 The Hartree-Fock algorithm uses the following methods:
 \begin{itemize}
 \item \textit{CalculateSPenergies} to compute the single-particle energies,
-\item \textit{fillTwoBodyElements} to compute the Coloumb integrals,
+\item \textit{fillTwoBodyElements} to compute the Coulomb integrals,
 \item \textit{computeHFmatrix} to set up the Hartree-Fock matrix,
 \item \textit{computeHartreeFockEnergyDifference} method used to test the convergence.
 \item \textit{computeHartreeFockEnergy} to compute the ground state energy itself.
@@ -1359,7 +1362,7 @@ void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
 \end{lstlisting}
 \caption{Compute HF matrix}
 \end{figure}
-\subsection{Algorithm for CCD}
+\section{Implementation for CCD}\label{sec:CCDimpl}
 The CCD algorithm is same both for QD and HEG. The equations for CCD amplitudes should be written in in iterative manner and then computed and updated before the convergence is reached.\\
 
 In the box below the main steps for CCD algorithm are presented: 
@@ -1615,7 +1618,7 @@ Other terms are a bit more complicated, but are based on the same technique:
 \sum_{klcd}\braket{kl||cd}t_{ik}^{dc}t_{lj}^{ab} &\rightarrow     \tilde{T}_{l}^{abj}\times \tilde{V}_{kcd}^{l} \times  \tilde{T}_{i}^{kcd}, \label{eq:Q3} \\ 
 \sum_{klcd}\braket{kl||cd}t_{lk}^{ac}t_{ij}^{db} &\rightarrow \tilde{T}_{klc}^{a} \times  \tilde{V}_{d}^{klc}\times \tilde{T}_{bij}^{d}. \label{eq:Q4}
 \end{align}
-Transformation for ($\ref{eq:Q2}$) is trivial, but ($\ref{eq:Q3}$) and ($\ref{eq:Q4}$) need some comments. For the two last quadratic terms in ($\ref{eq:CCD_ampl}$) we need to map three states into a single one. In order to do this we need to set up new vectors and ineraction matrix blocks. On Fig. $\ref{f:vectors_for_Q4}$ we present a method to store indexec needed for such transformation - three indexes are stored into one "hole plus hole minus particle" state and one into a single "particle" state. Thansformation is made in a similar manner as it has been made in  ($\ref{eq:L3transform}$) for leaner term, the only difference is that now we need to change the number of indexes not only thier positions. However all quantum numbers should be preserved according to the same rules as before.\\
+Transformation for ($\ref{eq:Q2}$) is trivial, but ($\ref{eq:Q3}$) and ($\ref{eq:Q4}$) need some comments. For the two last quadratic terms in ($\ref{eq:CCD_ampl}$) we need to map three states into a single one. In order to do this we need to set up new vectors and interaction matrix blocks. On Fig. $\ref{f:vectors_for_Q4}$ we present a method to store indexes needed for such transformation - three indexes are stored into one "hole plus hole minus particle" state and one into a single "particle" state. Transformation is made in a similar manner as it has been made in  ($\ref{eq:L3transform}$) for leaner term, the only difference is that now we need to change the number of indexes not only their positions. However all quantum numbers should be preserved according to the same rules as before.\\
 After this transformation we use matrix multiplication for each term and compute amplitudes on the next iteration. 
 
 \begin{figure}
@@ -1648,9 +1651,12 @@ for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
 \caption{Setting up channels for rotated clusters.} \label{f:vectors_for_Q4}
 \end{figure}
 
-\section{CCQMC implementation}
-In Chapter on Monte Carlo $\ref{ch:MCalgo}$ we have discussed many different Monte Carlo methods. The section $\ref{sec:CCQMC}$ is devoted to CCQMC algorithm. The main idea of the method is to move from the iterative scheme to the numerical sampling of the expectation value of the Hamiltonian. In order to do so we need first to sample the wave function and then sample action of the Hamiltonian. Sampling of the wave function can be described as several independent sampling processes inside one Monte Carlo iteration. This comes from the fact that we are dealing with cluster of different sizes while doing so. As soon as we only implement the method for the HEG we do not have single excitations and would only deal with doubles. The cluster sizes we have to sample can be limited to cluster size one, two and three. All can be sampled independently and then combined on the annihilation step. However such limitation also means we are not going to have triples in the simulation, as soon as we only limit oveselfs to doubles and the combined clusters can only produce the quadrupole excitations, which we do not store anyway as we want to compare our CCQMC with the deterministic solver for CCD. \\
+\section{CCQMC implementation} \label{sec:CCQMCimpl}
+In Chapter on Monte Carlo $\ref{ch:MCalgo}$ we have discussed many different Monte Carlo methods. The section $\ref{sec:CCQMC}$ is devoted to CCQMC algorithm. In this section we present some details how the alrgorithm has been implemented in the C++. Our program aims to simulate equation ($\ref{eq:CCiter}$). This is done by \textit{applyCCQMC} method of the \textit{ccqmc} class. The main idea of the method is to move from the iterative scheme to the numerical sampling of the expectation value of the Hamiltonian. In order to do so we need first to sample the wave function and then sample action of the Hamiltonian. This sampling procedure is presented on Fig. $\ref{figccqmcWF}$. Sampling of the wave function can be described as several independent sampling processes inside one Monte Carlo iteration. This comes from the fact that we are dealing with cluster of different sizes while doing so. As soon as we only implement the method for the HEG we do not have single excitations and would only deal with doubles. The cluster sizes we have to sample can be limited to cluster size one, two and three. All can be sampled independently and then combined on the annihilation step. However such limitation also means we are not going to have triples in the simulation, as soon as we only limit ourselves to doubles and the combined clusters can only produce the quadrupole excitations, which we do not store anyway as we want to compare our CCQMC with the deterministic solver for CCD. \\
+
+
 Before starting the simulation there are no excips in the space of excited determinants, only those on reference. In the FCIQMC or DMC it is common to begin with just a single walker on the $\ket{D_0}$, however this is not the case for CCQMC, we have to start with a number of walkers, usually in range form 100 to 1000. After the simulation begins the population of excitor space start to grow. \\ 
+
 A single iteration after some time is then goes af follows:
 \begin{itemize}
 \item Function \textit{sampleReference} select clusters of size zero, which is the reference determinant, functions \textit{sampleClusterSizeOne} and \textit{sampleClusterSizeTwo} select clusters of size one, which is a double excitation of the reference and cluster of size two respectively. 
@@ -1658,6 +1664,22 @@ A single iteration after some time is then goes af follows:
 \item In the end of one MC iteration this two vectors are used to update \textit{StorageCumulativeDeterminants} vector and \textit{StorageCumulativePopulation}. These two contain the total number of excips and excitors after the time $n \delta\tau$, here $n$ is number of iterations done so far. 
 \item After this all temporary vectors are cleared and the number of excips in the excitor space is updated. This value is used on next iteration to calculate the number of sampling attempts. There are many different schemes of sampling, in this simulation we used the following: $N_{attempts}(\tau)= N_0(\tau-1)+N_{ex}(\tau-1)$, here $N_{attempts}(\tau)$ is number of sampling attempts on current step, $N_0(\tau-1)$ is reference population on the previous step and $_{ex}(\tau-1)$ is excitor space population on previous step.
 \end{itemize}
+In the box below we present a short description of what is done here:
+\begin{tcolorbox}
+	\begin{itemize}
+		\item Set up parameters: $\delta\tau$, maximum number of iterations, $N_0$.
+		\item Sample Cluster Size Zero $N_0$ times before the iterations start to create initial population in excitor space.
+		\begin{enumerate} 
+			\item Sample Cluster Size Zero $N_0$ times.
+			\item Sample Cluster Size One $\frac{2}{3}N_{ex}$ times.
+			\item Sample Cluster Size Two $\frac{1}{3}N_{ex}$ times.
+			\item Add population of excips on current iteration to the cumulative population.
+			\item Update $\tau$ as $\tau+ \delta\tau$.
+		\end{enumerate} 
+	\item End the simulation if maximum number of iterations have been reached.
+	\end{itemize}
+\end{tcolorbox}
+
 Here we need to mention sign of excip to be killed or spawned. Killing process does not cause any difficulties because we just create excip with the opposite sing. However the spawning process is rather complicated. First we consider the excips spawned from reference. In order to determine the sign we need to take into account the following:
 \begin{itemize}
 \item sign of $H_{n0}$.
@@ -1669,6 +1691,7 @@ For the spawning from other determinants we should consider some additional poss
 	\item possible sign change if the from reordering of the creation and annihilation operators when collapsing selected clusters to a single determinant.
 	\item possible sign change due to action on reference, both for the determinants in "bra" and "ket" parts.
 	\item sing of cluster amplitude.
+	\item possible sign change after acting with randomly chosen excitation on reference (sign of excitor itself).
 \end{itemize} 
 
 \begin{figure}[!h]
@@ -1720,46 +1743,15 @@ For the spawning from other determinants we should consider some additional poss
 		\end{pgfonlayer}
 		\end{tikzpicture}
 	\end{center}
-	\caption{CCQMC sampling work-flow. } \label{figccqmcWF}
+	\caption{Flow chart for CCQMC sampling. } \label{figccqmcWF}
 \end{figure}
 
 
 
 
-\chapter{Results and discussion}
-\subsubsection{The Hartree-Fock results}
-\begin{table}[h!]
-	\begin{center}
-		\begin{tabular}{|c c| c c| c c| c c|}
-			%\cline{1-12}
-			%         & \multicolumn{1}{c}{N=2} & \multicolumn{5}{c}{N=6}  \\
-			%\cline{1-12}
-			\hline
-			\multirow{2}{*}{} & 
-			\multicolumn{1}{c}{N=2} \vline& 
-			\multicolumn{2}{c}{N=6} \vline&
-			\multicolumn{2}{c}{N=12} \vline&
-			\multicolumn{2}{c}{N=20} \vline\\
-			\hline
-			$R$  & $E_{HF}$ & $R$ & $E_{HF}$ & $R$  & $E_{HF}$ &$R$ &  $E_{HF}$  \\
-			\hline
-			$  3 $   & $3.16269$  &$ 3 $  & $21.593198$  &$  3 $   & $73.765549$   &$ 3$  & $-          $   \\
-			$  4 $   & $3.16269$  &$ 4 $  & $20.766919$  &$  4 $   & $70.673849$   &$ 4$  & $177.963297 $   \\
-			$  5 $   & $3.16192$  &$ 5 $  & $20.748402$  &$  5 $   & $67.569930$   &$ 5$  & $168.792442 $   \\
-			$  6 $   & $3.16192$  &$ 6 $  & $20.720257$  &$  6 $   & $67.296869$   &$ 6$  & $161.339721 $   \\
-			$  7 $   & $3.16191$  &$ 7 $  & $20.720132$  &$  7 $   & $66.934745$   &$ 7$  & $159.958722 $   \\
-			$  8 $   & $3.16191$  &$ 8 $  & $20.719248$  &$  8 $   & $66.923094$   &$ 8$  & $158.400172 $   \\
-			$  9 $   & $3.161909$ &$ 9 $  & $20.719248$  &$  9 $   & $66.912244$   &$ 9$  & $158.226013 $   \\
-			$  10$   & $3.161909$ &$ 10$  & $20.719217$  &$  10$   & $66.912035$   &$ 10$ & $158.226030 $   \\
-			$  11$   & $3.161909$ &$ 11$  & $20.719216$  &$  11$   & $66.911365$   &$ 11$ & $158.010277 $   \\
-			$  12$   & $3.161909$ &$ 12$  & $20.719216$  &$  12$   & $66.911364$   &$ 12$ & $158.004953 $   \\
-			\hline                                                                                    
-		\end{tabular}
-		\caption{ Ground-state energies for QD measured in a.u. obtained numerically for different number of shells (R) and electrons (N).  Oscillator strength $\omega=1$.}   \label{tab:resultsHF}
-	\end{center}
-\end{table}
+\chapter{Results and discussion} \label{sec:Results}
 
-\subsubsection{The CCD results}
+\section{The CCD results}
 As we have already mentioned the HEG is a very convenient system to study various many-body methods. In particular we have found many other researches who have implemented the CCD approximation for such system. That allow us to test our solution against results obtained in many other works on the topic. In particular we have compared our results with some other students from our department, namely with Miller \cite{millerAntumMechanicalStudies}, Hansen \cite{hansenCoupledClusterStudies} and \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}. Table $\ref{tab:CCDcompar}$ present the comparison of the results. As one can see we manage to reproduce their results up to a chosen \textbf{tolerance} for CCD (in this case $10^{-6}$).
 
 
@@ -1837,14 +1829,47 @@ Another test is to compare our results with those from solver presented in \cite
 			\hline                                                                                    
 		\end{tabular}
 		\caption{Coupled Cluster Doubles correlation energy for QD for two electrons and different values of $\omega$ in atomic units. }   \label{tab:resultsCCD}
+	\end{center}	
+\end{table}
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{|c c| c c| c c| c c|}
+			%\cline{1-12}
+			%         & \multicolumn{1}{c}{N=2} & \multicolumn{5}{c}{N=6}  \\
+			%\cline{1-12}
+			\hline
+			\multirow{2}{*}{} & 
+			\multicolumn{1}{c}{N=2} \vline& 
+			\multicolumn{2}{c}{N=6} \vline&
+			\multicolumn{2}{c}{N=12} \vline&
+			\multicolumn{2}{c}{N=20} \vline\\
+			\hline
+			$R$  & $E_{HF}$ & $R$ & $E_{HF}$ & $R$  & $E_{HF}$ &$R$ &  $E_{HF}$  \\
+			\hline
+			$  3 $   & $3.16269$  &$ 3 $  & $21.593198$  &$  3 $   & $73.765549$   &$ 3$  & $-          $   \\
+			$  4 $   & $3.16269$  &$ 4 $  & $20.766919$  &$  4 $   & $70.673849$   &$ 4$  & $177.963297 $   \\
+			$  5 $   & $3.16192$  &$ 5 $  & $20.748402$  &$  5 $   & $67.569930$   &$ 5$  & $168.792442 $   \\
+			$  6 $   & $3.16192$  &$ 6 $  & $20.720257$  &$  6 $   & $67.296869$   &$ 6$  & $161.339721 $   \\
+			$  7 $   & $3.16191$  &$ 7 $  & $20.720132$  &$  7 $   & $66.934745$   &$ 7$  & $159.958722 $   \\
+			$  8 $   & $3.16191$  &$ 8 $  & $20.719248$  &$  8 $   & $66.923094$   &$ 8$  & $158.400172 $   \\
+			$  9 $   & $3.161909$ &$ 9 $  & $20.719248$  &$  9 $   & $66.912244$   &$ 9$  & $158.226013 $   \\
+			$  10$   & $3.161909$ &$ 10$  & $20.719217$  &$  10$   & $66.912035$   &$ 10$ & $158.226030 $   \\
+			$  11$   & $3.161909$ &$ 11$  & $20.719216$  &$  11$   & $66.911365$   &$ 11$ & $158.010277 $   \\
+			$  12$   & $3.161909$ &$ 12$  & $20.719216$  &$  12$   & $66.911364$   &$ 12$ & $158.004953 $   \\
+			\hline                                                                                    
+		\end{tabular}
+		\caption{ Ground-state energies for QD measured in a.u. obtained numerically for different number of shells (R) and electrons (N).  Oscillator strength $\omega=1$.}   \label{tab:resultsHF}
 	\end{center}
 \end{table}
 
+The results for QD is present in tables $\ref{tab:resultsHF}$ and  $\ref{tab:resultsCCD}$ and have been tested against the results obtained by Lohne in his master thesis for CCSD \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUM}. For the Hartree-Fock we obtain exactly the same results within the given precision ($10^{-6}$). The CCSD results for QD is slightly better then those for CCD. Unfortunately our program for QD is rather slow and we just tested it for the very simple case of two electrons. In the next Chapter we will discuss how it can be improved in order to get a significant speed up.  
 
 
 
-\subsubsection{The CCQMC results}
-The CCQMC is based on getting the proper population dynamics for the excips. At the same time the sign structure of the excips should be correct. 
+\section{The CCQMC results}
+The validity of CCQMC results is based on getting the proper population dynamics for the excips. However one sholud not only get a proper population dynamics for the excips, but also the sign structure of the excips should be correct. \\
+For the HEG we do not have singles and only study doubles. While for the deterministic coupled cluster approach this is an advantage it might not be so for the CCQMC, because it impose limits on our ability to spawn excips in the system. Let's consider how this is done for our simulation. We only have three different cluster sizes in our simulation: cluster size one, two and three. The cluster size one is the cluster with zero excitors and there is only one such cluster, which is reference determinant. As soon as we can spawn only double or single excitation from the selected cluster this leave us with only doubles being spawned from reference. In the beginning of simulation, before we start population control, the death also prohibited for the reference, so it's population never decrease at this point. For the cluster size one we are not able to spawn any excips, because we do not consider quadruples and do not have singles at the same time, so the only possibility here is death for the excips spawned before. After we start population control the probability for excips to die changes, but it still no other outcomes possible on this step. For the cluster size three both spawning and death could be possible is we include quadruples. However we do not have them from previous steps, so death on this step never occurs and the only possible outcome here is to spawn a doubly excited excip. This happens due to the only existing excitors are doubles and that means we can only create a composite cluster combining two doubles and getting a quadrupole excitation. The absence of singles leave us with much less possibilities to spawn and/or kill excips and this introduce some difficulties in analyzing the population dynamics of the simulation.\\
+In order to obtain a valid results from the simulation one first have to reach a so-called "plateau". As it have been presented in the article by Thom and Spencer \cite{spencerDevelopmentsStochasticCoupled2016} one can adjust simulation parameters in a way that plateau become easy to spot on a plot. Fig. $\ref{fig:thomEG}$ present the results they have obtained for the neon atom for CCQDSTQ approximation. Despite the fact that we do not take into account higher excitation it could be a valid test if we could reproduce the same behavior in our simulation. The obvious difficulty here is the fact that we have to be vary careful choosing the parameters for the simulation and the fact that we are very limited in our ability to tune them all at the same time. One of the solutions here might be to fix some of them for a while and investigate the behavior of the system. We decide to fix population on reference determinant and run the simulation. The population dynamics should be close to those obtained by Thom and Spencer. Fig. $\ref{fig:nx2k}$ present the population dynamics we got for 14 electrons and 54 states. As one can see from the plot the plateau is reached for the critical number of excips being between $10^3$ and $10^4$, which is a result we expected to get for the $r_s=0.5$. We also run the simulation for 162 basis functions and observe a growth in number of excips - it become closer to $10^4$. From such population dynamics one may assume that we got a proper sign structure. However this results are obtained for fixed normalization and it might introduce some bias in the simulation. 
 
 
 
@@ -1866,20 +1891,27 @@ The CCQMC is based on getting the proper population dynamics for the excips. At 
 
 \begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.8\linewidth]{Nex20000}
-	\caption{14 electrons rs 0.5 with tunning S etc tau 0.0005 20000 iters}
-	\label{fig:nx20k}
+	\includegraphics[width=0.8\linewidth]{Nex2000new}
+	\caption{The population dynamics of excips for $N_e=14$, 54 basis functions. $r_s=0.5$, $\delta \tau=0.0005$.}
+	\label{fig:nx2k}
 \end{figure}
 
 
 
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.8\linewidth]{Nex20000}
+	\caption{The population dynamics of excips for $N_e=14$, 54 basis functions, $r_s=0.5$, $\delta \tau=0.0005$ with the population control. enabled after $5\cdot 10^3$ iterations. Damping parameter  $\gamma = 0.05$ and $A=5$.}
+	\label{fig:nx20k}
+\end{figure}
 
 
 \begin{landscape}
 	\begin{figure}[ht!]
 		\centering
 		\includegraphics[width=0.8\linewidth]{platFind}
-		\caption{14 electrons rs 0.5 without tunning S etc }
+		\caption{Population dynamics, $N_e=14$, $r_s=0.5$, no population control.}
 		\label{fig:platFind}
 	\end{figure}
 \end{landscape}
@@ -1888,25 +1920,29 @@ The CCQMC is based on getting the proper population dynamics for the excips. At 
 	\begin{figure}[ht!]
 		\centering
 		\includegraphics[width=0.8\linewidth]{platFindStune}
-		\caption{14 electrons rs 0.5 with tunning S etc }
+		\caption{Population dynamics, $N_e=14$, $r_s=0.5$, $\delta \tau=0.0001$, 54 basis functions  with population control. Damping parameter $\gamma = 0.05$. }
 		\label{fig:platFindStune}
 	\end{figure}
 	
 \end{landscape}
+
+
+
 \clearpage
 
-\part{Possible improvements and further research}
+\part{Conclusion further research}
+\chapter{Conclusion}
+
+In this thesis we have studied many-body problems for the electron gas and quantum dots. Various methods have been used:  Hartree-Fock,  coupled cluster for doubles and also very recently presented in literature stochastic coupled cluster method. 
 
 
+\chapter{Further research}
+In this master thesis we have implemented deterministic CCD method for HEG and QD. The results from these two agree with what have been done so far by other researchers. It is possible to improve our solvers implementing so-called intermediates for the amplitudes. This technique is described in \cite{hjorth-jensenAdvancedCourseComputational2017}.  For the QD it is possible to use smart storage of matrix elements as it has been done here \cite{leikangerFullConfigurationInteraction}. Moreover the CCSD algorithm can be implemented based on already developed code for CCD. \\
+The CCQMC solver is now available only for the HEG, so it is natural to extend it to the QD as well. This might be even a better option as soon as for QD we are able to create single excitations and the population dynamics can be much better and easier to analyse.\\
+It is also a possibility to extend the CCQMC for Triples and Quadruples. However before doing some improvements should be done to speed up the program. The very straightforward improvement is to apply parallelization of the code using MPI. \\
+In this thesis we only focus on unlinked coupled cluster equations, however there it is possible to perform simulation for linked coupled cluster Monte Carlo, as it has been done here \cite{franklinLinkedCoupledCluster2016}.
 
 
-
-\section{Smart Storage of Coulomb matrix elements}
-Coulomb matrix elements are required for all methods described in this thesis. In case of Hartree Fock method they can be just computed on the fly, using the formulas presented in Appendix $\ref{app:2}$ . However, after we made a transformation to the Hartree Fock basis, we need they to be stored and assessed in a most quickly and efficient way possible. \\
-One solution is to store them as four-dimensional array, mapping the unique set of indexes $pqrs$ to a certain value. This method is inefficient, because due to symmetry requirements such array will contain a lot of zeros.\\
-Another solution is to store only non-zero values in one array and associated set of indexes  in the other. This improvement will save a lot of memory, but require a costly search through the vector of indexes, to find a position of needed combination $pqrs$.\\
-One more solution is to map each non-zero value with a unique address. This method combine advantages of the two described above and allow us to save both memory and avoid search.\\
-The method is described in details here \cite{leikangerFullConfigurationInteraction}.
 
 \clearpage
 \newpage
@@ -2122,9 +2158,6 @@ Lets compute some particular probabilities:\\
 		\item $p_{death} = 1$ as we do not count triples.
 	\end{itemize}
 \end{enumerate}
-
-
-
 
 
 

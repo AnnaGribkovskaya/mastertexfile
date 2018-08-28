@@ -27,6 +27,59 @@
 }
 
 \usepackage{tikz}
+\include {ccdiag}
+\usetikzlibrary{calc,matrix}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetikzlibrary{shapes,arrows}	
+\usetikzlibrary{arrows,decorations.markings}
+\definecolor{decisionColor}{HTML}{DEE1B2}
+\definecolor{nodeColor}{HTML}{EBFAFF}
+\tikzstyle{roundrect}=[rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=nodeColor, text width=5cm] 
+\tikzstyle{roundrectSmall}=[rectangle, rounded corners, minimum width=2cm, minimum height=2cm, text centered, draw=black, fill=nodeColor, text width=3cm] 
+\tikzstyle{decision} = [diamond, minimum width=3.7cm, minimum height=3.2cm, text centered, draw=black, fill=decisionColor, scale=1, text width=2.05cm]
+\tikzstyle{arrow} = [decoration={markings,mark=at position 1 with
+	{\arrow[scale=1.5,>=stealth]{>}}},postaction={decorate}]
+%https://tex.stackexchange.com/questions/50780/arrows-at-right-angles-on-a-tikzpicture-matrix
+\tikzset{
+	desicion/.style={
+		diamond,
+		draw,
+		text width=3em,
+		text badly centered,
+		inner sep=0pt
+	},
+	block/.style={
+		rectangle,
+		draw,
+		text width=10em,
+		text centered,
+		rounded corners
+	},
+	cloud/.style={
+		draw,
+		ellipse,
+		minimum height=2em
+	},
+	descr/.style={
+		fill=white,
+		inner sep=2.5pt
+	},
+	connector/.style={
+		-latex
+	},
+	rectangle connector/.style={
+		connector,
+		to path={(\tikztostart) -- ++(#1,0pt) \tikztonodes |- (\tikztotarget) },
+		pos=0.5
+	},
+	rectangle connector/.default=-2cm,
+	straight connector/.style={
+		connector,
+		to path=--(\tikztotarget) \tikztonodes
+	}
+}
 \usetikzlibrary{shapes,arrows}
 \usepackage{tcolorbox}
 \author{Anna Gribkovskaya}
@@ -42,13 +95,15 @@
 \newcommand{\bmat}[2]{\begin{bmatrix}[#1] #2 \end{bmatrix}} 
 \usepackage[backend=bibtex]{biblatex}
 \addbibresource{master.bib} 
-
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}
 
 
 \begin{document}
 
 \begin{titlepage}
-\maketitle
+..\maketitle
 \end{titlepage}
 \begin{abstract}
 	This is an abstract text.
@@ -67,7 +122,11 @@
 %\chapter{}
 \chapter*{Introduction}
 \textbf{PEREPISAT'!!!!!!!!!!!!!!!!!!!!!!!!!!!}
-This thesis is devoted to study of Quantum Dots (QDs). The detailed mathematical description of QDs is provided below, but in the most general way one may say that QDs are man-made devices that are small enough to posses quantum properties, such as energy shell structure, tunneling effect and etc. Most commonly such devices are fabricated using semiconductors and their size vary from few nanometers to hundreds of nanometers (one nanometer or nm is equal to $1\times 10^{-9} m$). In literature one may find name "artificial atoms" when referring to such  semiconductor nanostructures. This name reflect the fact that QDs and atoms share many similar properties, however this is not completely legit name, though QD are larger then atoms. For atoms size is usually measured in picometres  (one picometre or pm is equal to $1\times 10^{-12} m$).  Normal size of an atom vary form 53 pm for hydrogen atom (this quantity is also known as Bohr radius), to  273 pm for cesium (which is considered to be one of the largest atoms). As one can mention even the small QDs correspond 10 atoms in diameter. Apart from this QDs are very similar to the atoms. The name Quantum Dot reflect the fact that we have a structure that is small enough to have quantum properties and also that this structure is spatially localized. The properties of QDs lie between those of individual discrete atoms or molecules and bulk semiconductors. This fact make such particles matter of great interest both for science and industry. Below in chapter (!!!!!!!) one can find a brief history of QDs and also  some of their applications.  \\
+
+
+This thesis is devoted to study of Quantum Dots (QDs). The detailed mathematical description of QDs is provided below, but in the most general way one may say that QDs are man-made devices that are small enough to posses quantum properties, such as energy shell structure, tunneling effect and etc. Most commonly such devices are fabricated using semiconductors and their size vary from few nanometers to hundreds of nanometers (one nanometer or nm is equal to $1\times 10^{-9} m$). In literature one may find name "artificial atoms" when referring to such  semiconductor nanostructures. This name reflect the fact that QDs and atoms share many similar properties, however this is not completely legit name, though QD are larger then atoms. For atoms size is usually measured in picometres  (one picometre or pm is equal to $1\times 10^{-12} m$).  Normal size of an atom vary form 53 pm for hydrogen atom (this quantity is also known as Bohr radius), to  273 pm for cesium (which is considered to be one of the largest atoms). As one can mention even the small QDs correspond 10 atoms in diameter. Apart from this QDs are very similar to the atoms. The name Quantum Dot reflect the fact that we have a structure that is small enough to have quantum properties and also that this structure is spatially localized. The properties of QDs lie between those of individual discrete atoms or molecules and bulk semiconductors. This fact make such particles matter of great interest both for science and industry. 
+
+Below in chapter (!!!!!!!) one can find a brief history of QDs and also  some of their applications.  \\
 The aim of this thesis is to study QD numerically. 
 
 \textbf{	SHOULD ADD MORE LATELY!!! And do not forget reference to chapters afterwards!!}
@@ -409,40 +468,31 @@ One may say that the normal-ordered form of the operator is obtained by subtract
 
 
 \section{Particle-Hole representation}
-In this section we are presenting formalism that is used in many articles and text books on the topic.\\
 
 \begin{defn}Fermi vacuum.\\
-	Let $\ket{\Phi_0}$ be n-electron reference determinant constructed using true vacuum $\ket{-}$ and given by:
+	Let $\ket{\Phi_0}$ be n-electron reference determinant constructed from the true vacuum $\ket{-}$. It can be written as a string of creation operators acting on a true vacuum:
 	\[ \ket{\Phi_0} = c^\dagger_i c^\dagger_j ..\ket{-}. \]
 	Such reference determinant is often called a "Fermi vacuum".
 \end{defn}
-
-Slater Determinant discussed above is composed using so-called \textit{occupied orbitals}. However they are chosen from a set of single-particle functions that contains also some extra functions. This additional functions are called \textit{virtual orbitals}. There is a convention regarding how to label this occupied and virtual orbitals. It may seen a bit odd, but for occupied orbitals we use name "hole states" and for virtual orbitals we use "particle states". Hole states are labeled with letters \textit{i,j,k} and particle states are labeled with letters \textit{a,b,c}.\\
-
-
-
-%Any system of many particles can by described as a reference determinant.
-
+The state $\ket{\Phi_0}$ is composed by \textit{occupied orbitals}. However they are chosen from a set of single-particle functions that contains also other functions. This additional functions are called \textit{virtual orbitals}. There is a convention regarding labeling this occupied and virtual orbitals. For occupied orbitals we use name "hole states" and for virtual orbitals we use "particle states". Hole states are labeled with letters \textit{i,j,k} and particle states are labeled with letters \textit{a,b,c}.\\
 
 \chapter{Quantum Dot}
 
-
 \section{Introduction to Quantum Dots}
-In this part we provide a theoretical description of 2-dimensional quantum dots. However it's worth talking about what are quantum dots and why are they so interesting before deriving equations. \textit{QDs are sometimes called artificial atoms, due to the fact that they as real atoms has electrons confined inside.} The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
-Today we have many types of QDs, with a large field of application. \textit{It is a growing research area.} History of quantum dots traces back to 1980, when they were first discovered in glass crystals \cite{ekimovaiQuantumSizeEffect1981}. However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. \cite{murraySynthesisCharacterizationNearly1993} managed to make a colloidal QD. \\
-This chapter has a following structure: in the first part a mathematical description of the system under consideration is given starting with all the assumptions and approximation have been made.\\
-PRODUCTION. The synthesis of QDs require very high precision and can be accomplished by means of lithographically pattern structures for etching (REF!), selective erea epitaxy (REF), growth on vicinal substructures (REF), colloidal QD solutions (REF) etc.\\  
-USAGE. QDs have many applications. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications \cite{zhuQuantumDots2013}. 
+
+The mathematical description of quantum dots (QD) is presented below, but in the most general sense one may say that QDs are man-made devices that are small enough to posses quantum properties, such as energy shell structure, tunneling effect and etc. Most commonly such devices are fabricated using semiconductors and their size vary from few nanometers to hundreds of nanometers (one nanometer or nm is equal to $1\times 10^{-9} m$). In literature one may find name "artificial atoms" when referring to such  semiconductor nanostructures. This name reflect the fact that QDs and atoms share many similar properties, however this is not completely legit name, though QD are larger then atoms. For atoms size is usually measured in picometres  (one picometre or pm is equal to $1\times 10^{-12} m$).  Normal size of an atom vary form 53 pm for hydrogen atom (this quantity is also known as Bohr radius), to  273 pm for cesium (which is considered to be one of the largest atoms). As one can mention even the small QDs correspond 10 atoms in diameter. Apart from this QDs are very similar to the atoms. The name Quantum Dot reflect the fact that we have a structure that is small enough to have quantum properties and also that this structure is spatially localized. The properties of QDs lie between those of individual discrete atoms or molecules and bulk semiconductors. This fact make such particles matter of great interest both for science and industry.\\
+In this part we provide a theoretical description of two-dimensional quantum dots. However it's worth consider first what are quantum dots and why are they so interesting. In literature QDs are sometimes called artificial atoms. This comes from the fact that QD share many of their properties with real atoms despite being artificially created. The most commonly QDs are composed by using elements from periodic table of groups II-VI, III-V and IV-VI. For example, GaAs, InAs, ZnS, CdSe and etc.\\
+Today we have many types of QDs, with a large field of application. It is a growing research area. History of quantum dots traces back to 1980, when they were first discovered in glass crystals \cite{ekimovaiQuantumSizeEffect1981}. However this discovery doesn't result in immediate blow up of the research on the topic. It took quite a time before Murray et al. \cite{murraySynthesisCharacterizationNearly1993} managed to make a colloidal QD. Since then the interest to QDs is constantly growing. Today QDs have a large field of applications from medicine to quantum computing. QDs are used in lasers, for solid state lighting, for solar cells and also for biological and medical applications \cite{zhuQuantumDots2013}.  \\
 
 \subsection{Mathematical description of Quantum Dots}\label{sec:math_qd}
 Before presenting equations for quantum dots we should make some basic assumptions. The main approximation considers the form of Hamiltonian of the system.\\
-\begin{enumerate}
+\begin{itemize}
 	\item Electrons are confined by Harmonic Oscillator potential $V(r)_{HO}=\frac{m\omega^2 r^2}{2}$.
 	\item Electrons interact via two-body Coulomb potential  $V(r_{ij})=\frac{1}{r_{ij}}$.
 	\item The Hamiltonian is considered to be two-dimensional.
 	\item The HO potential is spherically symmetric, giving in parabolic quantum dot.
 	\item External magnetic field is not present.
-\end{enumerate}
+\end{itemize}
 
 Mathematical description of Quantum Dots has been provided in many other master thesis, for example in \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUM}, so we are not aiming to derive all the equations and present a detailed description here. We have already presented the electronic Hamiltonian of in Section ($\ref{sec:operator in 2q}$). Fro QD the one-body operator corresponds to kinetic energy and external potential and a two-body operator corresponds to Coulomb interaction between two particles:
 \begin{align}
@@ -460,7 +510,7 @@ The single particle energy can be presented as :
 \epsilon(i)= 1+|m_i|+ 2n_i,
 \end{eqnarray}
 the single particle energy is measured in units $\hbar\omega$. On Fig. $\ref{tab:c}$ the shell structure of QD is presented.
-The two-body matrix elements are computed using the algorithm presented in the article \cite{EnergySpectraFewelectron}.
+The two-body matrix elements are computed using the algorithm presented in the article \cite{EnergySpectraFewelectron}. The details for this calculations are provided in Appendix $\ref{app:2}$.
 
 \begin{table}[h!]
 	\caption{Quantum numbers for the single-particle basis using a harmonic oscillator in two dimensions.} 
@@ -486,13 +536,6 @@ The two-body matrix elements are computed using the algorithm presented in the a
 		\end{tabular}
 	\end{center}
 \end{table}
-
-
-
-
-
-
-
 
 \chapter{The Hatree-Fock theory}\label{ch:HF}
 Here we present a brief overview of the Hatree-Fock (HF) theory. It is  well-known and defined way to study systems of large number of particles. Hartree-Fock method is the simplest and nevertheless rather efficient methods. Initially introduced by Hartree and then improved by Fock it is one of the most popular \textit{ab initio} methods in quantum chemistry.  It is  easy to implement, but has some disadvantages, for example it fail to provide high accuracy. However, more precise methods are often build on the HF results. This makes HF theory a good starting point for anyone who want to tackle a many-body problem. Methods that are using HF as an input are usually referred to as post-Hartree-Fock. Among them are Configuration Interaction (CI) and Coupled Cluster (CC). \\
@@ -719,13 +762,13 @@ The most important idea of CC method is exponential expansion of wave function.
 Where $\hat{T}$ is cluster operator:
 
 \begin{align} \label{eq:T}
-\hat{T}= \hat{T_1}+ \hat{T_2}+ \hat{T_3}...\hat{T_n},  \\
-\hat{T_1}= \sum_{i,a} t_i^a c_a^\dagger c_i, \label{eq:T1}\\
-\hat{T_2}= \frac{1}{4} \sum_{i,j,a,b} t_{i,j}^{a,b} c_a^\dagger a_b^\dagger c_j c_i,\\
-\hat{T_n}= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
+\hat{T}   &= \hat{T_1}+ \hat{T_2}+ \hat{T_3}...\hat{T_n},  \\
+\hat{T_1} &= \sum_{i,a} t_i^a c_a^\dagger c_i, \label{eq:T1}\\
+\hat{T_2} &= \frac{1}{4} \sum_{i,j,a,b} t_{i,j}^{a,b} c_a^\dagger a_b^\dagger c_j c_i,\\
+\hat{T_n} &= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
 \end{align}
 here values $t_i^a $ and $t_{i,j}^{a,b}$ are called cluster amplitudes. \\
-After introducing the exponential ansatz we need a recipe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation () and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
+After introducing the exponential ansatz we need a recipe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation ($\ref{eq:Ham in 2q}$) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
 \begin{equation}
 	\hat{H}e^{\hat{T}}\ket{\Phi_0}=Ee^{\hat{T}}\ket{\Phi_0}.
 \end{equation}
@@ -750,7 +793,6 @@ The amplitude expressions can be computed using the same projection technique, o
 \subsection{Hausdorff Expansion} \label{sec:Hausdorf}
 Expressions for energy and amplitudes in the section above are not useful for practical computations. In order to obtain equations that can be efficiently implemented in computer programs we are going to use so called similarly transformed Hamiltonian. It is a well known procedure in quantum mechanics. 
 
-ADD TEXT ABOUT SIMILARITY TRANSFORMATIONS\\
 For energy equation we get:
 \begin{equation}\label{eq:energy_cc1}
 \bra{\Phi_0} e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = E. 
@@ -889,6 +931,7 @@ The one-body term does not contribute because it is not possible to construct fu
   \wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c1  c_p^\dagger \c2 c_q^\dagger \c4 c_s \c3 c_r \}  }+\wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c2  c_p^\dagger \c1 c_q^\dagger \c4 c_s \c3 c_r \}  }  \bigg) =\braket{ab||ij}
 \end{eqnarray}
 Contribution from other terms are obtained in the similar manner, one just need to kepp in mind that for terms with cluster operator, like $\braket{\Phi_{ij}^{ab}|(\hat{F}_\text{N}\hat{T}_2)_c|\Phi_0}$ and $\braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N}\hat{T}_2)_c|\Phi_0}$ the Connected Cluster Theorem $\ref{theo:connected}$ must be satisfied.\\
+We are not providing the derivation any further, because it has been done already in many other articles, for example in an article by Crawford and Schaefer  \cite{crawfordIntroductionCoupledCluster2007}, and master theses, for example in M. Lohne thesis \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUMa}.
 The final expression for the amplitudes in case of CCD approximation is the following:
 \begin{eqnarray}\label{eq:CCD_ampl}
 0 =\braket{ab||ij} + \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} ) +\frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd} 
@@ -896,8 +939,27 @@ The final expression for the amplitudes in case of CCD approximation is the foll
  \frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab}  + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac} + 
   P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac} t_{lj}^{db} \nonumber & + \\
  \frac{1}{4} \sum_{klcd}\braket{kl||cd}t_{ij}^{cd} t_{kl}^{ab}  
-- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{dc}t_{lj}^{ab}- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{lk}^{ac}t_{ij}^{db}&  
+- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{dc}t_{lj}^{ab}- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{lk}^{ac}t_{ij}^{db}.&  
 \end{eqnarray}
+
+The only thing left now is to re-write the equation ($\ref{eq:CCD_ampl}$) in an iterative way. This can be done as follows:
+\begin{align} \label{eq:ccditer}
+   \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} )\rightarrow \nonumber \\
+   \rightarrow f_{bb}t_{ij}^{ab} - f_{aa}t_{ij}^{ba}
+  	- f_{jj}t_{ij}^{ab} + f_{ii}t_{ji}^{ab} = - \epsilon_{ij}^{ab} t_{ij}^{ab},
+\end{align} 	
+ here $ \epsilon_{ij}^{ab} = \epsilon_i + \epsilon_j - \epsilon_a
+ - \epsilon_b $.
+   \begin{align}
+& \epsilon_{ij}^{ab} t_{ij}^{ab(n)} = \braket{ab||ij}  +\frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd(n-1)}
+   +	\frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab(n-1)} 
+   + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac(n-1)}  \nonumber \\
+&  +	P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac}(n-1) t_{lj}^{db(n-1)}   + 
+  	\frac{1}{4} \sum_{klcd}\braket{kl||cd}t_{ij}^{cd(n-1)} t_{kl}^{ab(n-1)}  \\
+&  	- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{dc(n-1)}t_{lj}^{ab(n-1)}- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{lk}^{ac(n-1)}t_{ij}^{db(n-1)}, \nonumber
+\end{align}
+here $n$ is number of iteration. 
+
 
 
 \chapter{Monte Carlo Methods in Quantum Physics}\label{ch:MCalgo}
@@ -905,7 +967,7 @@ Quantum Monte Carlo(QMC) methods are widely used nowadays for systems with large
 These methods are flexible and at the same time accurate for many-body systems. There are two most common types of QMC, firs is variational Monte Carlo method (VMC) and projector Monte Carlo method (PMC). For PMC methods differ by a form of projector, e.i. exponential or linear. The most common choice is an exponential one also sometimes called as imaginary time propagator.\\
 The essence of VMC method is to choose a trial wave function, depending on some parameters and then for this particular trial wave function to find expectation values of operators and optimize the parameters.\\
 At the same time PMC methods also use trial wave functions. In general PMC is a stochastic application of power method to compute expectation values for eigenstate corresponding to largest absolute eigenvalue.The main advantage of the PMC methods compared to the common matrix diagonalization algorithms, for example iterative and deterministic Lanczos algorithm, is that for stochastic method we do not need to store the whole vector, but just some randomly sampled elements of the vector \cite{umrigarObservationsVariationalProjector2015}. \\
-In this thesis we are implementing a coupled cluster Monte Carlo (CCMC) method which has much in common with one of the PMC methods a diffusion Monte Carlo (DMC) method. In order to simplify the explanation we start with some quick recap on what is DMC.\\
+In this thesis we are implementing a Coupled Cluster Quantum Monte Carlo (CCQMC) method which has much in common with one of the PMC methods a diffusion Monte Carlo (DMC) method. Below we present an overview of some of this methods.
 
 \section{Variational Monte Carlo} \label{sec:VMC}
 The expectation value of energy is expressed as following:
@@ -955,7 +1017,7 @@ The CI wave function is represented by the following expansion:
  \begin{equation}\label{eq:fciqmcWF}
 \ket{\Psi_{\text{CI}}}= C_0\ket{D_0} + \sum_{ai} C_i^a \ket{D_i^a} + \sum_{i<j,a<b}C_{ij}^{ab}\ket{D_{ij}^{ab}} + \dots,
  \end{equation}
-here $\ket{D_0}$\footnote{we use $\ket{D_0}$ for $\ket{\Psi_0}$, $\ket{D_i^a}$ for $\ket{\Psi_i^a}$ and so on to distinguish between deterministic and stochastic methods} is HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are exited determinants.\\
+here $\ket{D_0}$\footnote{we use $\ket{D_0}$ for $\ket{\Psi_0}$, $\ket{D_i^a}$ for $\ket{\Psi_i^a}$ and so on to distinguish between deterministic and stochastic methods.} is HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are exited determinants.\\
 In order to determine coefficients $C$ we need to solve a set of projection equations. 
 \begin{align}
 \braket{D_0|\hat{H}-E|\Psi_{\text{CI}}}=0\\
@@ -997,7 +1059,7 @@ Let's write it in a more detailed way using a cluster operator equation:
 \ket{\Psi_{\text{CC}}}=N_0\ket{D_0} + \sum_{\textbf{I}} \ket{D_0} t_\textbf{I} \hat{c_\textbf{I}} + \frac{1}{2N_0}
  \sum_{\textbf{IJ}} \ket{D_0} t_\textbf{I} t_\textbf{J}\hat{c_\textbf{I}} \hat{c_\textbf{J}}\ket{D_0} + ...,
 \end{align}
-where indexes \textbf{I,J} are generic indexes for an excitation.\footnote{Indexing is different from the deterministic CC theory, because we are using notations by Thom and Spenser from \cite{spencerDevelopmentsStochasticCoupled2016}. In this notation each cluster has just one generic index, regardless of level of the excitation for example, $ \hat{c_a}^\dagger \hat{c_i}$ is just written as $\hat{c_\textbf{I}}$.} We use this kind of notations to make equations more alike those for FCIQMC.\\ 
+where indexes \textbf{I,J} are generic indexes for an excitation.\footnote{Indexing is different from the deterministic CC theory, because we are using notations by Thom and Spencer from \cite{spencerDevelopmentsStochasticCoupled2016}. In this notation each cluster has just one generic index, regardless of level of the excitation for example, $ \hat{c_a}^\dagger \hat{c_i}$ is just written as $\hat{c_\textbf{I}}$.} We use this kind of notations to make equations more alike those for FCIQMC.\\ 
 After this we can present the CC equations:
 \begin{align}\label{eq:CCQMC1}
 &\braket{D_0|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
@@ -1005,7 +1067,7 @@ After this we can present the CC equations:
 &\braket{D_{ij}^{ab}|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
 \end{align} 
 and so on.\\
-Let's now consider the following equations:
+However we are not following the traditional practice here and not rewrite ($\ref{eq:CCQMC1}$) to create iterative pattern. We are going to consider the following equation instead: 
 \begin{equation}\label{eq::CCQMCproj}
 \braket{D_0|1-\delta \tau (\hat{H}-E)|\Psi_{CC}}=\braket{D_\textbf{m}|\Psi_{CC}},
 \end{equation}
@@ -1027,12 +1089,12 @@ Now we are ready to rewrite the equation ($\ref{eq:CCQMC1}$) in an iterative way
 \begin{equation}\label{eq:CCiter}
  t_{\{\boldsymbol{m}\}}(\tau) - \delta \tau \langle D_{\boldsymbol{i}}|(\hat{H}-E)|\Psi_{CC}(\tau)\rangle = t_{\boldsymbol{m}}(\tau + \delta \tau).
 \end{equation}
-Second term in the equation above is not easy to evaluate. The solution here is to do it stochastically by sampling this term. In order to do this we should consider two stochastic processes: sampling of the wave function and sampling of the action of Hamiltonian\\
+Second term in the equation above is not easy to evaluate. The solution here is to do it stochastically by sampling this term. In order to do this we should consider two stochastic processes: sampling of the wave function and sampling of the action of Hamiltonian.\\
 \textbf{Sampling of the wave function} is achieved by a random selection of all possible clusters and after this is done collapsing them into an excited determinant.\\
-\textbf{Sampling of the action of Hamiltonian} is done after this. Once we get an excited determinant $D_\textbf{n}$ we select another excited determinant $D_\textbf{m}$ a single or double excitation of this chosen determinant and compute the corresponding $t_\textbf{m}$. However this is not a very efficient algorithm as we have to sample a large number of Monte Carlo cycles. This comes from the fact that many clusters have small amplitudes. A better way is to follow the same discretization procedure as have been done in the FCIQMC method. Here we follow Thom in his article from 2010 \cite{thomStochasticCoupledCluster2010} \\ 
+\textbf{Sampling of the action of Hamiltonian} is done after this. Once we get an excited determinant $D_\textbf{n}$ we select another excited determinant $D_\textbf{m}$ a single or double excitation of this chosen determinant and compute the corresponding $t_\textbf{m}$. However this is not a very efficient algorithm as we have to sample a large number of Monte Carlo cycles. This comes from the fact that many clusters have small amplitudes. A better way is to follow the same discretization procedure as have been done in the FCIQMC method. Here we follow Thom in his article from 2010 \cite{thomStochasticCoupledCluster2010}. \\ 
 We are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding operators are named "excitors" \footnote{Here one should be careful with terminology because it can differ from one article to another. Imaginary particles for stochastic approach to solve the Schr\"{o}dinger equation were first introdused by Andersen article  \cite{andersonRandomWalkSimulation1975} and were called "psips". In this thesis we follow the Thom and Spencer in \cite{spencerDevelopmentsStochasticCoupled2016}  and name operators as "excitors" and particles as "excips". In some articles both particles and operators are addressed to as "excitors".}.
 
-\subsubsection{CCQMC algorithm}
+\subsection{CCQMC algorithm}
 In section $\ref{sec:FCIQMC}$ we have already presented the main steps for the FCIQMC. For the CCQMC method we have a very similar algorithm:
 \begin{enumerate}
 	\item \textbf{Spawning}. After selecting a number of clusters and collapsing them into an excited determinant $D_{\textbf{n}}$ one should pick a connected determinant   $D_{\textbf{m}}$. A new excip is created with the probability proportional to $|\delta \tau H_{\textbf{nm}}|$. 
@@ -1040,17 +1102,15 @@ In section $\ref{sec:FCIQMC}$ we have already presented the main steps for the F
 	\item \textbf{Annihilation}. This part is same as in FCIQMC. Annihilation means that all pairs of walkers with opposite sign are removed, if they belong to the same determinant.
 \end{enumerate}
 
-\section{Normalization}
+\subsection{Normalization}
 Our description uses intermediate normalization as an assumption and it requires a normalization constant to be introduced. 
 \begin{equation}
 \ket{\Psi_{\text{CC}}}=N_0 e^{\frac{\hat{T}}{N_0}} \ket{D_0}.
 \end{equation}
 here $N_0$ is normalization constant.\\
-Such normalization allows to produce fractional populations on excitors, needed for convergence. 
-\section{Sampling probabilities}
-
+Such normalization allows to produce fractional populations on excitors, needed for convergence. Here we say population on reference, implying that $N_0$ are excips as well. However this is not the actual case, because they are not "real" excips of the cluster, just some parameter used for normalization.
+\subsection{Sampling probabilities}
 We have to sample a wave function. In this case a wave function is approximated by the exponential expansion in terms of cluster operator. We will conduct sampling by selecting a particular cluster from the expansion. Here we need to introduce some definitions.\\
-
 
 \begin{defn}Cluster size.\\
  Size of a cluster is defined by number of excips that are used to collapse the wave function. Reference determinant is considered as a cluster of size $0$.
@@ -1125,6 +1185,25 @@ Death probability is:
 p_{\text{death}} = \frac{|\delta \tau (H_{mm} - S)A|}{p_{\text{select}}p_{sel}p_{\text{clust}}}.
 \end{equation}
 
+\subsection{Population Control}
+Population control is needed to sustain a stable simulation. If not done properly we would just have excips dying or rapidly growing. There are many ways the population control can be done. For example we can update the "shift" $E$ in the following way:
+\begin{equation}
+E=\braket{E_0} + \alpha\frac{N_W^{(0)}}{N_w},
+\end{equation}
+here $\braket{E_0}$ lowest eigenvalue at time $\tau$, $\alpha$ is small damping parameter, $N_W^{(0)}$ the population one want to reach and $N_w$ total number of random walker at time $\tau$.\\
+However this method introduce bias into the simulation. Another mathod to carry out population control is to update the shift as:
+\begin{equation}
+E(\tau)=E(\tau+A\delta\tau) - \frac{\gamma}{A\delta\tau}ln\bigg( \frac{N_{ex}(\tau)}{N_{ex}(\tau+A\delta\tau)}  \bigg),
+\end{equation}
+here $\gamma$ is a small damping parameter, $A$ is number of steps when we update the $E$.
+\subsection{Energy Estimation for CCQMC}
+For this method we have two different and independent options to estimate energy. First is to use the shift updated for under the population control as energy estimator.\\
+Second option is to sample a projection energy as:
+\begin{equation}
+E_{proj}=\frac{\braket{D_0|\hat{H}|\Psi_{CC}}}{\braket{D_0|\Psi_{CC}}}
+\end{equation}
+
+
 \part{Implementation and Results}
 In this part we present the implementation of algorithms presented in the thesis. We have implemented the CCD algorithm and also the CCQMC algorithm for two dimensional quantum dots. 
 This part has the following structure:\\
@@ -1138,8 +1217,9 @@ Code has the following classes:
 \begin{enumerate}
 \item  \textit{generalspclass} 
 	\begin{itemize}
-	\item \textit{qdotspbasis}
-	\item \textit{qdotHFbasis}
+	\item \textit{qdotspbasis} - only for QD
+	\item \textit{qdotHFbasis} - only for QD
+	\item \textit{electronGasSPBasis} - only for HEG
 	\end{itemize}
 \item \textit{CoulombFunctions}	
 \item \textit{symblock}
@@ -1148,11 +1228,16 @@ Code has the following classes:
 \item \textit{channel}
 \item \textit{channelindexpair}
 \item \textit{channelset}
+
 \begin{itemize}
-	\item \textit{qdotchannelset}
+	\item \textit{qdotchannelset} - only for QD
+	\item \textit{electrongaschannelset}- only for HEG
 \end{itemize}
 \end{enumerate}
-The base class \textit{generalspclass} has two derived classes \textit{qdotspbasis} and \textit{qdotHFbasis}. This base class generate objects for the solvers and allow us to switch between different bases and systems of interest. The \textit{qdotspbasis} provides TBME, single particle energies for QD in the HO basis as well as other important quantities such as number of electrons, number of shells, number of states etc. The \textit{qdotHFbasis} provides all these quantities in the Hartree-Fock basis. 
+\textbf{Program for QD:}
+The base class \textit{generalspclass} has two derived classes \textit{qdotspbasis} and \textit{qdotHFbasis}. This base class generate objects for the solvers and allow us to switch between different bases and systems of interest. The \textit{qdotspbasis} provides TBME, single particle energies for QD in the HO basis as well as other important quantities such as number of electrons, number of shells, number of states etc. The \textit{qdotHFbasis} provides all these quantities in the Hartree-Fock basis. \\
+\textbf{Program for HEG:}
+The base class \textit{generalspclass} has derived class \textit{electronGasSPBasis}. It provide all needed information for regarding the system.
 
 \section{Implementation of Hartree-Fock solver for QD}
 % Define block styles
@@ -1247,51 +1332,6 @@ void qdotHFbasis::applyHartreeFockMethod(){
 
 
 
-
-
-\begin{figure}
-\begin{lstlisting}[language=C++]
-void qdotHFbasis::fillTwoBodyElements(){
-	int NumberOfStates = m_shells.size();	
-	for(int i = 0; i < NumberOfStates; i++) {
-		qstate quantum_state_alpha = m_shells.at(i);
-		int alpha_n = quantum_state_alpha.n();
-		int alpha_m = quantum_state_alpha.m();
-		int alpha_sm = quantum_state_alpha.s();
-			
-		for(int j = 0; j < NumberOfStates; j++) {
-			qstate quantum_state_beta = m_shells.at(j);
-			int beta_n = quantum_state_beta.n();
-			int beta_m = quantum_state_beta.m();
-			int beta_sm = quantum_state_beta.s();
-			
-			for(int k = 0; k < NumberOfStates; k++) {
-				qstate quantum_state_gama = m_shells.at(k);
-				int gama_n = quantum_state_gama.n();
-				int gama_m = quantum_state_gama.m();
-				int gama_sm = quantum_state_gama.s();
-					
-					for(int l = 0; l < NumberOfStates; l++) {
-						qstate quantum_state_delta = m_shells.at(l);
-						int delta_n = quantum_state_delta.n();
-						int delta_m = quantum_state_delta.m();
-						int delta_sm = quantum_state_delta.s();
-							
-							if (alpha_sm == beta_sm && gama_sm == delta_sm ){
-								m_twoBodyElements[i][k][j][l] = Coulomb_HO(homega, alpha_n, alpha_m, gama_n, gama_m, beta_n, beta_m,  delta_n, delta_m);
-							}
-							if ((alpha_sm == delta_sm && gama_sm == beta_sm )){
-								m_twoBodyElements[i][k][l][j] = Coulomb_HO(homega, alpha_n, alpha_m, gama_n, gama_m, delta_n, delta_m, beta_n, beta_m);
-							}
-						}
-					}
-				}
-			}
-		}
-\end{lstlisting}
-\caption{Fill two-body elements}
-\end{figure}
-
 \begin{figure}
 \begin{lstlisting}[language=C++]
 void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
@@ -1344,6 +1384,7 @@ The algorithm described above imply the convergence can be reached after a finit
 t^{n} = at^(n) + (1-a)t^{(n-1)},
 \end{equation}
 here a $\in (0,1]$ in "mixing parameter", $t^{n-1}$ - amplitudes on the previous iteration and $t^{n}$- amplitudes on the current iteration.\\
+
 \subsubsection{Channels for CCD}
 The straightforward implementation of coupled cluster algorithm is not very efficient. It require both memory and CPU we can't afford using a common modern PC. However one may utilize symmetries in Hamiltonian to reduce both time and memory usage. Let's consider first the two-body matrix elements $\braket{pq||rs}$ which can be considered as a transition probability between states $r,s$ and $p,q$.\\
 \textbf{For the QD:}\\
@@ -1630,6 +1671,61 @@ For the spawning from other determinants we should consider some additional poss
 	\item sing of cluster amplitude.
 \end{itemize} 
 
+\begin{figure}[!h]
+	\begin{center}
+		\begin{tikzpicture}[node distance=2cm]
+		\node(SelectCluster)[roundrect]{Select cluster size  $p_{size}(s)=\frac{1}{2^{s+1}}$};% of one particle in one dimension};
+		\node(ConstructCluster)[roundrect, below of=SelectCluster, yshift=-0.5cm]{Select excitations according to rules from tab. \ref{tab:cpluster}};
+		\node(ProductCluster)[roundrect, below of=SelectCluster, yshift=-0.5cm]{ Compute product of excitors : $\hat{a}_{i}^{a}\hat{a}_{jk}^{bc} \rightarrow \hat{a}_{ijk}^{abc}$};
+		\node(KetSign)[roundrect, below of=ProductCluster, yshift=-0.5cm]{Get sign of product: $\ket{D_0} \rightarrow \pm \ket{D_n}$};
+		\node(SelectBra)[roundrect, below of=KetSign, yshift=-0.5cm]{Select single or double excitation of $\ket{D_n} = \ket{D_{ijk}^{abc}} \rightarrow \hat{a}_{ik}^{ca}$};
+		\node(BraSign)[roundrect, below of=SelectBra, yshift=-0.5cm]{Determine sign of action $\hat{a}_{ik}^{ca}\ket{D_0} \rightarrow \pm \ket{D_m} $ };
+		\node(Offdiagonal)[roundrect, below left of=BraSign, yshift=-0.5cm, xshift=-1.5cm ]{Determine $P_1 \propto \bra{D_m}\hat{H} \ket{D_n}$};
+		\node(Diagonal)[roundrect, below right of=BraSign, yshift=-0.5cm,xshift=1.5cm]{Determine $P_2 \propto \bra{D_n}\hat{H} \ket{D_n}-S$};
+		\node(CreateExcip)[roundrect, below of=Offdiagonal, yshift=-0.5cm]{Create excip($\pm$) at $\bra{D_m}$ with probability $P_1$};
+		\node(KillExcip)[roundrect, below of=Diagonal, yshift=-0.5cm]{Kill excip($\pm$) at $\ket{D_n}$ with probability $P_2$ by creating an opposite-signed excip};
+		\node(StoreExcip)[roundrect, below of=KillExcip, yshift=-0.5cm, xshift=-3cm]{Store excips and control population};
+		\node(TuneS)[roundrect, below of=StoreExcip, yshift=-0.5cm]{Update shift $S$ };
+		\draw [arrow] (SelectCluster) -- (ConstructCluster);
+		\draw [arrow] (ConstructCluster) -- (ProductCluster);
+		\draw [arrow] (ProductCluster) -- (KetSign);
+		\draw [arrow] (KetSign) -- (SelectBra);
+		\draw [arrow] (SelectBra) -- (BraSign);	
+		\draw [arrow] (BraSign) -- (Offdiagonal);
+		\draw [arrow] (BraSign) -- (Diagonal);
+		\draw [arrow] (Offdiagonal) -- (CreateExcip);
+		\draw [arrow] (Diagonal) -- (KillExcip);
+		\draw [arrow] (KillExcip) -- (StoreExcip);
+		\draw [arrow] (CreateExcip) -- (StoreExcip);
+		\draw [arrow] (StoreExcip) -- (TuneS);
+		\draw [arrow,rectangle connector=-8cm] (TuneS) to node[descr] [anchor=north] {New Sample} (SelectCluster);
+		%	\draw [arrow] (Check E) -- node [anchor=east]{Yes} (Finish);
+		%\background{Setup system}{Set T2}{Calc CCDT}{Calc D10}{Wave-function}
+		%\background{Setup system}{Set T2}{Calc CCDT}{Calc D10}{Wave-function}
+		\begin{pgfonlayer}{background}
+		% Compute a few helper coordinates
+		\path (SelectCluster.west |- SelectCluster.north)+(-0.5,0.5) node (a) {};
+		\path (ConstructCluster.south -| ConstructCluster.east)+(+0.5,-0.5) node (b) {};
+		\path[fill=blue!10,rounded corners, draw=black!50, dashed]
+		(a) rectangle (b);
+		\path (a.west |- a.north)+(-0.5,0.2) node (atext) {Sampling $\ket{\Psi_{CC}}$};
+		\end{pgfonlayer}
+		\begin{pgfonlayer}{background}
+		% Compute a few helper coordinates
+		\path (SelectBra.west |- SelectBra.north)+(-0.5,0.5) node (a) {};
+		\path (SelectBra.south -| SelectBra.east)+(+0.5,-0.5) node (b) {};
+		\path[fill=green!10,rounded corners, draw=black!50, dashed]
+		(a) rectangle (b);
+		\path (a.west |- a.north)+(-0.5,0.2) node (atext) {Sample $\hat{H}$};
+		\end{pgfonlayer}
+		\end{tikzpicture}
+	\end{center}
+	\caption{CCQMC sampling work-flow. } \label{figccqmcWF}
+\end{figure}
+
+
+
+
 \chapter{Results and discussion}
 \subsubsection{The Hartree-Fock results}
 \begin{table}[h!]
@@ -1692,19 +1788,17 @@ As we have already mentioned the HEG is a very convenient system to study variou
 			2.0 & 342 & -0.4014136184665558 & -0.4014136184665555 &           & -0.4014117905655014  \\
 		\end{tabular}
 				\captionsetup{width=1.1\textwidth}
-				\caption{Our results for ground state energy in Hartree units for 14 electrons obtained by CCD solver $\Delta E_{CCD}$, presented with results from Miller \cite{millerAntumMechanicalStudies}, results from Hansen \cite{hansenCoupledClusterStudies} and results from Baardsen \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}. 
+				\caption{Our results for correlation energy in Hartree units for 14 electrons obtained by CCD solver $\Delta E_{CCD}$, presented with results from Miller \cite{millerAntumMechanicalStudies}, results from Hansen \cite{hansenCoupledClusterStudies} and results from Baardsen \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}. 
 				} \label{tab:CCDcompar}
 	\end{table}
 \end{landscape}
-
-
+Another test is to compare our results with those from solver presented in \cite{hjorth-jensenAdvancedCourseComputational2017}. Table $\ref{tab:unittest}$ present data for a small number of electrons ($N_e=2$) and relatively small number of states ($N_s$). As one can see from the table the results for the energy are almost the same (up to machine precision).
 \begin{table}[h]
 	\centering
 	\captionsetup{width=.8\textwidth}
-	\caption{CCD iteration comparison with solver from \cite{Hjorth-Jensenadvancedcoursecomputational2017} for the HEG. Here, $N_e=2$, $N_s=66$, $r_s=1.0$, and there is no mixing. }
+	\caption{Our results for correlation energy $\Delta E_{CCD}$  for $N_e=2$, $r_s=1$ and $N_s=66$,   tested against results  $\Delta E_{CCD}^{test}$ from \cite{hjorth-jensenAdvancedCourseComputational2017} CCD solver for the HEG. Mixing parameter is equal one. All values are in Hartree units.}
 	\begin{tabular}{rlll}
-		n & $\Delta E_{CCD}$     & $\Delta E_{CCD}$ \cite{Hjorth-Jensenadvancedcoursecomputational2017} \\
-		MBPT2 & -0.02080623248720259 & -0.0208062324872026  \\
+		n & $\Delta E_{CCD}$     &   $\Delta E_{CCD}^{test}$  \\ \hline
 		0 & -0.01833394188507821 & -0.0183339418850782  \\
 		1 & -0.01864313296809337 & -0.01864313296809333 \\
 		2 & -0.01860449158525421 & -0.01860449158525414 \\

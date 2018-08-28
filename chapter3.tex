@@ -1,8 +1,21 @@
 \chapter{The Hatree-Fock theory}\label{ch:HF}
-Here we present a brief overview of the Hatree-Fock (HF) theory. It is  well-known and defined way to study systems of large number of particles. Hartree-Fock method is the simplest and nevertheless rather efficient methods. Initially introduced by Hartree and then improved by Fock it is one of the most popular \textit{ab initio} methods in quantum chemistry.  It is  easy to implement, but has some disadvantages, for example it fail to provide high accuracy. However, more precise methods are often build on the HF results. This makes HF theory a good starting point for anyone who want to tackle a many-body problem. Methods that are using HF as an input are usually referred to as post-Hartree-Fock. Among them are Configuration Interaction (CI) and Coupled Cluster (CC). \\
-The main idea of HF theory is to approximate unknown wave function with a single Slater Determinant constructed using a single-particle wave functions representing the occupied states in a system under consideration. 
+Here we present a brief overview of the Hatree-Fock (HF) theory. It is
+a well-known and defined way to study systems of large number of
+particles. Hartree-Fock method is the simplest and nevertheless rather
+efficient methods. Initially introduced by Hartree and then improved
+by Fock it is one of the most popular \textit{ab initio} methods in
+quantum chemistry.  It is easy to implement, but has some
+disadvantages, for example it fails to provide high accuracy. However,
+more precise methods are often built on the HF results. This makes HF
+theory a good starting point for anyone who wants to tackle a many-body
+problem. Methods that are using HF as an input are usually referred to
+as post-Hartree-Fock. Among them are Configuration Interaction (CI)
+and Coupled Cluster (CC) theories. \\ The main idea of HF theory is to
+approximate the unknown wave function with a single Slater Determinant
+constructed using a single-particle wave functions representing the
+occupied states in a system under consideration.
 \section{Introduction to HF}
-Here we start with time independent Schr\"{o}dinger equation for the ground state:
+Here we start with the time independent Schr\"{o}dinger equation for the ground state:
 \begin{equation}
 \hat{H}\ket{\Phi_0}=E_0\ket{\Phi_0}
 \end{equation}
@@ -28,45 +41,73 @@ However this expression can be simplified by introducing a new operator $\hat{A}
 \label{antiSymmetryOperator}
 \end{equation}
 here the sum goes over all possible permutations of two particles and $p$  stands for the number of permutations.\\
-We also need to introduce Hartree-Fock wave function, which is given by product of all possible single-particle wave functions
+We also need to introduce the so-called Hartree-Fock wave function, which is given by the product of all possible single-particle wave functions
 \begin{equation}
 \Phi_H(x_1,x_2,\dots,x_N,\alpha,\beta,\dots,\nu) =
 \psi_{\alpha}(x_1)
 \psi_{\beta}(x_2)\dots\psi_{\nu}(x_N).
 \end{equation}
-Using this notations Slater determinant can be rewritten as
+Using these definitions, the  Slater determinant can be rewritten as
 \begin{equation}\label{determ}
 \Phi(x_1,x_2,\dots,x_N,\alpha,\beta,\dots,\nu) = \frac{1}{\sqrt{N!}}\sum_{P} (-)^P\hat{P}\psi_{\alpha}(x_1)
 \psi_{\beta}(x_2)\dots\psi_{\nu}(x_N)=\sqrt{N!}\hat{A}\Phi_H,
 \end{equation}
-Using a Slater determinant and assuming the Hamiltonian is given on form (\ref{eq:finalH}) we may obtain the functional $E[\Phi]$ for the energy. According to the variational principle
+Using a Slater determinant and assuming the Hamiltonian is given on the form of (\ref{eq:finalH}), we obtain the functional $E[\Phi]$ for the energy. According to the variational principle
 \begin{equation}
-E[\Phi] \ge E_0
+E[\Phi] \ge E_0.
 \end{equation}
-here $E_0$ denote the exact ground state energy. 
-There are two main strategies we may use now in order to obtain the ground state energy. In order to find the minimum of the energy functional we may either vary a Slater determinant, or we may expand the single-particle functions in some known basis and then vary the coefficients of expansions. In this project we use the second method. For those who want more detailed insight in the theory presented above in this chapter, please take a look at chapter 15 in \cite{mortenhjorth-jensenCOMPUTATIONALPHYSICS2015}.
+here $E_0$ denotes the exact ground state energy.  There are two main
+strategies we may use now in order to obtain the ground state
+energy. In order to find the minimum of the energy functional we may
+either vary a Slater determinant, or we may expand the single-particle
+functions in some known basis and then vary the coefficients of the
+expansions. In this thesis we use the second method. For those who
+want more detailed insight in the theory presented above in this
+chapter, please take a look at chapter 15 in
+\cite{mortenhjorth-jensenCOMPUTATIONALPHYSICS2015}.
 
 \section{Derivation of a Hartree-Fock equations}
-In order to derive the Hartree-Fock equations we need to chose an orthogonal basis to be used for expansion. As soon as we have H.O. potential that confine particles in the system it's reasonable to choose H.O. functions as a basis functions for the expansion as well. In this case we can be sure the functions are orthogonal by nature. 
+In order to derive the Hartree-Fock equations we need to chose an
+orthogonal basis to be used for the expansion. As soon as we have
+H.O. potential that confine particles in the system it's reasonable to
+choose H.O. functions as a basis functions for the expansion as
+well. In this case we can be sure the functions are orthogonal by
+nature, that is
 \begin{equation}
-\psi_p  = \sum_{\lambda} C_{p\lambda}\phi_{\lambda}. \label{eq:newbasis}
+\psi_p  = \sum_{\lambda} C_{p\lambda}\phi_{\lambda}. \label{eq:newbasis}, 
 \end{equation}
-here $\phi_{\lambda}$ is our new basis functions and $C_{p\lambda}$ represent expansion coefficients. This is a very important property for us, as soon as we will vary the coefficients in order to minimize energy. The sum in (\ref{eq:newbasis}) goes to infinity, however we will use a truncation to a certain value. \\
-Using the definitions we introduce in part \ref{not} we may write the energy functional as
+where $\phi_{\lambda}$ is our new basis functions and $C_{p\lambda}$ represent expansion coefficients. This is a very important property for us, as we will vary the coefficients in order to minimize the energy. The sum in (\ref{eq:newbasis}) goes to infinity, however we will use a truncation to a certain value. \\
+Using these definitions we introduce in part \ref{not} we may write the energy functional as
 \begin{equation}
 E[\Phi] 
 = \sum_{\mu=1}^N \langle \mu | \hat{h}_0 | \mu \rangle +
 \frac{1}{2}\sum_{{\mu}=1}^N\sum_{{\nu}=1}^N \langle \mu\nu|\hat{v}|\mu\nu\rangle_{\mathrm{AS}}.
 \label{FunctionalEPhi}
 \end{equation}
-here $\mu$ and $\nu$ are basis functions we use in Slater determinant $\Phi$ defined in (\ref{determ}). After expansion in a new basis the functional for the energy turns into:
+Here $\mu$ and $\nu$ are basis functions we use in the Slater determinant $\Phi$ defined in (\ref{determ}). After expansion in a new basis the functional for the energy turns into:
 \begin{equation}
 E[\Psi] 
 = \sum_{i=1}^N \sum_{\alpha\beta}^Z C^*_{i\alpha}C_{i\beta}\langle \alpha | h | \beta \rangle +
 \frac{1}{2}\sum_{ij=1}^N\sum_{{\alpha\beta\gamma\delta}}^Z C^*_{i\alpha}C^*_{j\beta}C_{i\gamma}C_{j\delta}\langle \alpha\beta|\hat{v}|\gamma\delta\rangle_{AS}. \label{FunctionalEPhi3}
 \end{equation}
-Here $\Psi$ is a new Slater determinant and $\alpha,\beta,\gamma,\delta$ correspond to new basis functions and $Z$ is energy cut-off representing the total possible number of states in a chosen basis. Coefficients $C$ are expansion coefficients from (\ref{eq:newbasis}). They form a unitary matrix that performs a transformation to a new basis and also preserve orthogonality of the basis functions. This allows us to use the Lagrange multiplier method to find the local minimum of the energy functional. We use orthogonality requirement as a constraint and set up a Lagrange functional, were all multipliers have to be in units of energy as soon as matrix $C$ contains only some numbers. Those energies are often called Hartree-Fock single particle energies. They are different from the single-particle energies corresponding to the basis functions because we chose the basis to be H.O. functions without any perturbations. However as it discussed below this new single-particle energies follow the same degeneracy pattern as a pure H.O. energies for the system (below the Fermi level). 
-After applying the Lagrange multipliers method we obtain the following expression
+Here $\Psi$ is a new Slater determinant and
+$\alpha,\beta,\gamma,\delta$ correspond to new basis functions and $Z$
+is energy cut-off representing the total possible number of states in
+a chosen basis. The coefficients $C$ are expansion coefficients from
+(\ref{eq:newbasis}). They form a unitary matrix that performs a
+transformation to a new basis and also preserve orthogonality of the
+basis functions. This allows us to use the Lagrange multiplier method
+to find the local minimum of the energy functional. We use
+orthogonality requirement as a constraint and set up a Lagrange
+functional, were all multipliers have to be in units of energy as soon
+as matrix $C$ contains only some numbers. Those energies are often
+called Hartree-Fock single particle energies. They are different from
+the single-particle energies corresponding to the basis functions
+because we chose the basis to be H.O. functions without any
+perturbations. However as it discussed below this new single-particle
+energies follow the same degeneracy pattern as a pure H.O. energies
+for the system (below the Fermi level).  After applying the Lagrange
+multipliers method we obtain the following expression
 \begin{equation}
 \sum_{\beta}^Z C_{i\beta}\langle \alpha | h | \beta \rangle+
 \sum_{j=1}^N\sum_{\beta\gamma\delta}^Z C^*_{j\beta}C_{j\delta}C_{i\gamma}\langle \alpha\beta|\hat{v}|\gamma\delta\rangle_{AS}=\epsilon_i^{HF}C_{i\alpha}.

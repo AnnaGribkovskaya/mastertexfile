@@ -1,8 +1,8 @@
 \chapter{Monte Carlo Methods in Quantum Physics}\label{ch:MCalgo}
 Quantum Monte Carlo(QMC) methods are widely used nowadays for systems with large number of particles. In main distinction of these simulation techniques is in their stochastic nature, which is not the case for other simulation methods, such as molecular dynamics. For more on the topic please refer to \cite{hammondMonteCarloMethods1994} and \cite{kalosMonteCarloMethods2008}. \\
-These methods are flexible and at the same time accurate for many-body systems. There are two most common types of QMC, firs is variational Monte Carlo method (VMC) and projector Monte Carlo method (PMC). For PMC methods differ by a form of projector, e.i. exponential or linear. The most common choice is an exponential one also sometimes called as imaginary time propagator.\\
-The essence of VMC method is to choose a trial wave function, depending on some parameters and then for this particular trial wave function to find expectation values of operators and optimize the parameters.\\
-At the same time PMC methods also use trial wave functions. In general PMC is a stochastic application of power method to compute expectation values for eigenstate corresponding to largest absolute eigenvalue.The main advantage of the PMC methods compared to the common matrix diagonalization algorithms, for example iterative and deterministic Lanczos algorithm, is that for stochastic method we do not need to store the whole vector, but just some randomly sampled elements of the vector \cite{umrigarObservationsVariationalProjector2015}. \\
+These methods are flexible and at the same time accurate for many-body systems. There are two common types of QMC, the first is the variational Monte Carlo method (VMC) and the second one is the so-called projector Monte Carlo method (PMC). The PMC methods differ by a form of projector, e.i. exponential or linear. The most common choice is an exponential one also sometimes called as imaginary time propagator.\\
+The essence of the VMC method is to choose a trial wave function, depending on some parameters and then for this particular trial wave function to find expectation values of operators and optimize the parameters.\\
+At the same time the PMC methods also use trial wave functions. In general PMC is a stochastic application of the power method to compute expectation values for eigenstate corresponding to the largest absolute eigenvalue. The main advantage of the PMC methods compared to the common matrix diagonalization algorithms, for example iterative and deterministic Lanczos algorithm, is that for the stochastic methods we do not need to store the whole vector, but just some randomly sampled elements of the vector \cite{umrigarObservationsVariationalProjector2015}. \\
 In this thesis we are implementing a Coupled Cluster Quantum Monte Carlo (CCQMC) method which has much in common with one of the PMC methods a diffusion Monte Carlo (DMC) method. Below we present an overview of some of this methods.
 
 \section{Variational Monte Carlo} \label{sec:VMC}
@@ -24,13 +24,13 @@ The main steps of VMC method are the following:
 
 
 
-\section{Diffusion Monte Carlo} \label{sec:DMC}
+\section{Diffusion Monte Carlo (DMC)} \label{sec:DMC}
 The DMC method employ the imaginary time propagator:
 \begin{equation}
 \hat{P(\tau)}=e^{\tau(E_T\hat{1}- \hat{H})},
 \end{equation}
 here $\tau= it$ is imaginary time.\\
-This method is called  diffusion one can do a mapping between a classical diffusion equation and an imaginary-time Schr\"{o}dinger equation. Let's consider the following form of  Schr\"{o}dinger equation:
+This method is called  diffusion and one can do a mapping between a classical diffusion equation and an imaginary-time Schr\"{o}dinger equation. Let's consider the following form of  the Schr\"{o}dinger equation:
 \begin{equation}\label{eq:imaginary_schrod}
 		\frac{\partial }{ \partial \tau}\ket{\Psi(\textbf{x},\tau)} = \frac{1}{2} \nabla^2 \ket{\Psi(\textbf{x},\tau)} + (E_T - V(\textbf{x}) \ket{\Psi(\textbf{x},\tau)},
 \end{equation}
@@ -39,22 +39,22 @@ This equation is very similar to a classical equation:
 \begin{equation}\label{eq:diffusion}
 \frac{\partial C }{ \partial t} = D \frac{\partial^2 C }{ \partial t^2} - kC,
 \end{equation}
-here $D$ is diffusion constant, $C$ is concentration of particles and $k$ proportionality coefficient describing source or sink of particles. First part on the right hand side of this equation describe a classical diffusion process and the second part is just a first order rate equation. The meaning of $k$ is the following - particles can be destroyed or created proportional to $k$.\\
-If we compare two equations together ($\ref{eq:imaginary_schrod}$) and ($\ref{eq:diffusion}$) they are not really alike, due to imaginary time and a wave function. However similarities between this two allow us to use some techniques normally used for classical simulations to imaginary-time Schr\"{o}dinger equation. Monte Carlo methods are capable to simulate both diffusion and rate, so one can just build up a method that combine this two processes into one. \\
-In this thesis we do not aim to dig into the DMC method and derive any equations. The main idea of the DMC is to represent the wave function as a population of random walkers. The trial wave function obtained for the VMC can be used as input for DMC method to improve the result. The DMC is one of the most accurate methods for the many body problems so far.\\
+where $D$ is diffusion constant, $C$ is the concentration of particles and $k$ is the proportionality coefficient describing a source or a sink of particles. The first part on the right hand side of this equation describes a classical diffusion process and the second part is just a first order rate equation. The meaning of $k$ is the following - particles can be destroyed or created proportional to $k$.\\
+If we compare the two equations  ($\ref{eq:imaginary_schrod}$) and ($\ref{eq:diffusion}$) they are not really alike due to imaginary time and a wave function. However, the  similarities between these two allow us to use some techniques normally used for classical simulations to imaginary-time Schr\"{o}dinger equation. Monte Carlo methods are capable to simulate both diffusion and rate, so one can just build up a method that combines these two processes into one. \\
+In this thesis we do not aim to dig into the DMC method and derive any equations. The main idea of the DMC is to represent the wave function as a population of random walkers. The trial wave function obtained for the VMC method can be used as input for DMC method to improve the result. The DMC is one of the most accurate methods for the many body problems so far.\\
 
 
 
 \section{Stochastic Coupled Cluster Theory}
-In chapter $\ref{ch:coupled_cluster}$ we have introduced a coupled cluster method. However, the main problem with exact coupled cluster computations is with system size. Scaling starts with the sixth order of $N$ (here $N$ represents system size) that makes even small systems very costly in computations. Coupled Cluster Monte Carlo (CCMC) is a new method which has been first described by Alex Thom in \cite{thomStochasticCoupledCluster2010}. The method has been developed similarly to Full Configuration Interaction Quantum Monte Carlo (FCIQMC) of Alavi \textit{et al.} in \cite{boothFermionMonteCarlo2009}, \cite{clelandCommunicationsSurvivalFittest2010} and \cite{boothApproachingChemicalAccuracy2010}.\\
-In order to explain how we get to CCMC algorithm we first present a brief description of FCIQMC. \\
+In chapter $\ref{ch:coupled_cluster}$ we have introduced a coupled cluster method. However, the main problem with the coupled cluster computations is with system size. Scaling starts with the sixth order of $N$ (here $N$ represents system size) that makes even small systems very costly in computations. Coupled Cluster Monte Carlo (CCMC) is a new method which has been first described by Alex Thom in \cite{thomStochasticCoupledCluster2010}. The method has been developed similarly to Full Configuration Interaction Quantum Monte Carlo (FCIQMC) of Alavi \textit{et al.} in \cite{boothFermionMonteCarlo2009}, \cite{clelandCommunicationsSurvivalFittest2010} and \cite{boothApproachingChemicalAccuracy2010}.\\
+In order to explain how we get to CCMC algorithm we first present a brief description of the FCIQMC method. \\
 \subsection{Full Configuration Interaction Quantum Monte Carlo} \label{sec:FCIQMC}
 The CI wave function is represented by the following expansion:
  \begin{equation}\label{eq:fciqmcWF}
 \ket{\Psi_{\text{CI}}}= C_0\ket{D_0} + \sum_{ai} C_i^a \ket{D_i^a} + \sum_{i<j,a<b}C_{ij}^{ab}\ket{D_{ij}^{ab}} + \dots,
  \end{equation}
-here $\ket{D_0}$\footnote{we use $\ket{D_0}$ for $\ket{\Psi_0}$, $\ket{D_i^a}$ for $\ket{\Psi_i^a}$ and so on to distinguish between deterministic and stochastic methods.} is HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are exited determinants.\\
-In order to determine coefficients $C$ we need to solve a set of projection equations. 
+here $\ket{D_0}$\footnote{we use $\ket{D_0}$ for $\ket{\Psi_0}$, $\ket{D_i^a}$ for $\ket{\Psi_i^a}$ and so on to distinguish between deterministic and stochastic methods.} is a HF determinant, $\ket{D_i^a}$ and $\ket{D_{ij}^{ab}}$ are excited determinants.\\
+In order to determine the coefficients $C$ we need to solve a set of projection equations 
 \begin{align}
 \braket{D_0|\hat{H}-E|\Psi_{\text{CI}}}=0\\
 \braket{D_i^a|\hat{H}-E|\Psi_{\text{CI}}}=0\\
@@ -66,19 +66,19 @@ Instead of performing this process iteratively we now need to re-express equatio
 \begin{equation}\label{eq:projector} 
 \hat{P}=1-\tau(\hat{H}-E).
 \end{equation}
-It projects CI wave function to itself. Using this approach we will get a new set of equations, formulated as:
+It projects the configuration interaction (CI)  wave function to itself. Using this approach we will get a new set of equations, formulated as:
 \begin{equation}\label{eq:CIprojected}
 C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} = C_{\textbf{I}},
 \end{equation}
-here $\textbf{I}, \textbf{J}$ are some generic indexes and $\textbf{J}\rightarrow \textbf{I}$ means that this two indexes are connected (corresponding matrix element of Hamiltonian is different from zero).
+here $\textbf{I}, \textbf{J}$ are some generic indeces and $\textbf{J}\rightarrow \textbf{I}$ means that these two indeces are connected (the corresponding matrix element of Hamiltonian is different from zero).
 As in DMC we may study two processes independently, namely:
 \begin{align}
 C_{\textbf{I}} - \tau \braket{D_{\textbf{I}}|\hat{H}-E|D_{\textbf{I}}}C_{\textbf{I}} \rightarrow C_{\textbf{I}}\\\label{eq:FCIQMC_coef1}
 C_{\textbf{I}} - \tau \sum_{\textbf{J}\rightarrow \textbf{I},\textbf{J}\neq \textbf{I} }  \braket{D_{\textbf{I}}|\hat{H}|D_{\textbf{J}}}C_{\textbf{J}} \rightarrow C_{\textbf{I}}\\ \label{eq:FCIQMC_coef2}
 \end{align}
-After this we need to discretize the coefficients. To simulate this stochastically we should create a population of walkers in the SD space. Each walker has a sign and belong to any determinant. Number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).In order to run the simulation we need to consider three processes:\\
+After this we need to discretize the coefficients. To simulate this stochastically we should create a population of walkers in the SD space. Each walker has a sign and belongs to any determinant. The number of walkers on each specific determinant, e.i. $D_{\textbf{I}}$ is proportional to coefficient $C_{\textbf{I}}$. The population dynamics in this case should obey equations ($\ref{eq:FCIQMC_coef1}$) and ($\ref{eq:FCIQMC_coef2}$).In order to run the simulation we need to consider three processes:\\
 \begin{enumerate}
-	\item \textbf{Spawning}. Aa soon as walker can be positioned on any determinant, we consider random walker at determinant $D_{\textbf{J}}$.After this we randomly pick up a connected determinant  $D_{\textbf{I}}$ (assuming $|H_{\textbf{IJ}}|\neq 0$). The probability to spawn a walker from $\textbf{J} \rightarrow \textbf{I} $ is proportional to $\tau |H_{\textbf{IJ}}| $ and sign $- sgn(H_{\textbf{IJ}})$. The spawning process is corresponding to equation ($\ref{eq:FCIQMC_coef2}$) and can be formulated as $ - \tau H_{\textbf{IJ}} C_{\textbf{J}} + C_{\textbf{I}} \rightarrow  C_{\textbf{I}} $.
+	\item \textbf{Spawning}. Aa soon as a walker can be positioned on any determinant, we consider a random walker at determinant $D_{\textbf{J}}$.After this we randomly pick up a connected determinant  $D_{\textbf{I}}$ (assuming $|H_{\textbf{IJ}}|\neq 0$). The probability to spawn a walker from $\textbf{J} \rightarrow \textbf{I} $ is proportional to $\tau |H_{\textbf{IJ}}| $ and sign $- sgn(H_{\textbf{IJ}})$. The spawning process corresponding to equation ($\ref{eq:FCIQMC_coef2}$) and can be formulated as $ - \tau H_{\textbf{IJ}} C_{\textbf{J}} + C_{\textbf{I}} \rightarrow  C_{\textbf{I}} $.
 	\item \textbf{Birth/Death}. Here we simulate creation or destruction of the already existing walker at some determinant, for example $D_{\textbf{I}}$ . This process corresponds to the  equation ($\ref{eq:FCIQMC_coef1}$) and the probability is now proportional to $- \tau (H_{\textbf{II}} - E) $ and sign distinguish between either walker is created or destroyed. Negative sign corresponds to death and positive sign corresponds to birth.
 	\item \textbf{Annihilation}. All pairs of walkers with opposite sign are removed, if they belong to the same determinant.
 \end{enumerate}
@@ -95,7 +95,7 @@ Let's write it in a more detailed way using a cluster operator equation:
 \ket{\Psi_{\text{CC}}}=N_0\ket{D_0} + \sum_{\textbf{I}} \ket{D_0} t_\textbf{I} \hat{c_\textbf{I}} + \frac{1}{2N_0}
  \sum_{\textbf{IJ}} \ket{D_0} t_\textbf{I} t_\textbf{J}\hat{c_\textbf{I}} \hat{c_\textbf{J}}\ket{D_0} + ...,
 \end{align}
-where indexes \textbf{I,J} are generic indexes for an excitation.\footnote{Indexing is different from the deterministic CC theory, because we are using notations by Thom and Spencer from \cite{spencerDevelopmentsStochasticCoupled2016}. In this notation each cluster has just one generic index, regardless of level of the excitation for example, $ \hat{c_a}^\dagger \hat{c_i}$ is just written as $\hat{c_\textbf{I}}$.} We use this kind of notations to make equations more alike those for FCIQMC.\\ 
+where the indeces \textbf{I,J} are generic indeces for an excitation.\footnote{Indexing is different from the deterministic CC theory, because we are using the same notationemploye by Thom and Spencer from \cite{spencerDevelopmentsStochasticCoupled2016}. In this notation each cluster has just one generic index, regardless of level of the excitation for example, $ \hat{c_a}^\dagger \hat{c_i}$ is just written as $\hat{c_\textbf{I}}$.} We use this kind of notations to make equations more alike those for FCIQMC.\\ 
 After this we can present the CC equations:
 \begin{align}\label{eq:CCQMC1}
 &\braket{D_0|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
@@ -103,7 +103,7 @@ After this we can present the CC equations:
 &\braket{D_{ij}^{ab}|\hat{H}-E|\Psi_{\text{CC}}}=0,\\
 \end{align} 
 and so on.\\
-However we are not following the traditional practice here and not rewrite ($\ref{eq:CCQMC1}$) to create iterative pattern. We are going to consider the following equation instead: 
+However we are not following the traditional practice here and do not rewrite ($\ref{eq:CCQMC1}$) to create iterative pattern. We are going to consider the following equation instead: 
 \begin{equation}\label{eq::CCQMCproj}
 \braket{D_0|1-\delta \tau (\hat{H}-E)|\Psi_{CC}}=\braket{D_\textbf{m}|\Psi_{CC}},
 \end{equation}
@@ -125,7 +125,7 @@ Now we are ready to rewrite the equation ($\ref{eq:CCQMC1}$) in an iterative way
 \begin{equation}\label{eq:CCiter}
  t_{\{\boldsymbol{m}\}}(\tau) - \delta \tau \langle D_{\boldsymbol{i}}|(\hat{H}-E)|\Psi_{CC}(\tau)\rangle = t_{\boldsymbol{m}}(\tau + \delta \tau).
 \end{equation}
-Second term in the equation above is not easy to evaluate. The solution here is to do it stochastically by sampling this term. In order to do this we should consider two stochastic processes: sampling of the wave function and sampling of the action of Hamiltonian.\\
+The second term in the equation above is not easy to evaluate. The solution here is to do it stochastically by sampling this term. In order to do this we should consider two stochastic processes: sampling of the wave function and sampling of the action of Hamiltonian.\\
 \textbf{Sampling of the wave function} is achieved by a random selection of all possible clusters and after this is done collapsing them into an excited determinant.\\
 \textbf{Sampling of the action of Hamiltonian} is done after this. Once we get an excited determinant $D_\textbf{n}$ we select another excited determinant $D_\textbf{m}$ a single or double excitation of this chosen determinant and compute the corresponding $t_\textbf{m}$. However this is not a very efficient algorithm as we have to sample a large number of Monte Carlo cycles. This comes from the fact that many clusters have small amplitudes. A better way is to follow the same discretization procedure as have been done in the FCIQMC method. Here we follow Thom in his article from 2010 \cite{thomStochasticCoupledCluster2010}. \\ 
 We are aiming to create a population of walkers in order to discretize the amplitudes. In case of CCQMC walkers are called "excips" and the corresponding operators are named "excitors" \footnote{Here one should be careful with terminology because it can differ from one article to another. Imaginary particles for stochastic approach to solve the Schr\"{o}dinger equation were first introdused by Andersen article  \cite{andersonRandomWalkSimulation1975} and were called "psips". In this thesis we follow the Thom and Spencer in \cite{spencerDevelopmentsStochasticCoupled2016}  and name operators as "excitors" and particles as "excips". In some articles both particles and operators are addressed to as "excitors".}.
@@ -139,17 +139,17 @@ In section $\ref{sec:FCIQMC}$ we have already presented the main steps for the F
 \end{enumerate}
 
 \subsection{Normalization}
-Our description uses intermediate normalization as an assumption and it requires a normalization constant to be introduced. 
+Our description uses intermediate normalization as an assumption and it requires a normalization constant to be introduced,
 \begin{equation}
 \ket{\Psi_{\text{CC}}}=N_0 e^{\frac{\hat{T}}{N_0}} \ket{D_0}.
 \end{equation}
-here $N_0$ is normalization constant.\\
-Such normalization allows to produce fractional populations on excitors, needed for convergence. Here we say population on reference, implying that $N_0$ are excips as well. However this is not the actual case, because they are not "real" excips of the cluster, just some parameter used for normalization.
+Here $N_0$ is the normalization constant.\\
+Such normalization allows us to produce fractional populations on excitors. This is needed for convergence. Here we say population on reference, implying that $N_0$ are excips as well. However this is not the actual case, because they are not "real" excips of the cluster, just some parametser used for normalization.
 \subsection{Sampling probabilities}
-We have to sample a wave function. In this case a wave function is approximated by the exponential expansion in terms of cluster operator. We will conduct sampling by selecting a particular cluster from the expansion. Here we need to introduce some definitions.\\
+We have to sample a wave function. In this case a wave function is approximated by the exponential expansion in terms of the cluster operator. We will conduct sampling by selecting a particular cluster from the expansion. Here we need to introduce some definitions.\\
 
 \begin{defn}Cluster size.\\
- Size of a cluster is defined by number of excips that are used to collapse the wave function. Reference determinant is considered as a cluster of size $0$.
+ The size of a cluster is defined by the number of excips that are used to collapse the wave function. The reference determinant is considered as a cluster of size $0$.
 \end{defn}
 The probability to choose a cluster of certain size is given by
 
@@ -164,34 +164,34 @@ After we have selected a cluster of size $s$, we need another probability - a pr
 p_{\text{clust}} (e|s)= s! \prod_{i=1}^s \frac{|N_i|}{N_{ex}}.
 \end{equation}
 
-here $|N_i|$ is a population on excitor $i$, module here is needed because population of each excitor is stored with sing and can in some cases be negative.\\
+here $|N_i|$ is a population on excitor $i$.
 
 \subsubsection{Generation probabilities}
-We need to compute and asses the generation probability for any excited determinant in order to compute the spawning probability. Here we present the generation probability to obtain a double excitation for HEG, meaning we have two exicted determinants $\ket{\Phi_{m}}$ and $\ket{\Phi_n}$ connected through a double excitation such as $ \ket{\Phi_{m}}=a^\dagger_r a^\dagger_s a_q a_p \ket{\Phi_n}.$ 
+We need to compute and assess the generation probability for any excited determinant in order to compute the spawning probability. Here we present the generation probability to obtain a double excitation for the HEG, meaning we have two exicted determinants $\ket{\Phi_{m}}$ and $\ket{\Phi_n}$ connected through a double excitation such as $ \ket{\Phi_{m}}=a^\dagger_r a^\dagger_s a_q a_p \ket{\Phi_n}.$ 
 the value we need to compute is the following:
 \begin{equation}
 p_{excit}(n,m) = p_{excit}(r,s|p,q)p_{excit}(p,q),
 \end{equation}
 here $p_{excit}(p,q)$ is a probability to pick two occupied orbitals and $p_{excit}(r,s|p,q)$ is a probability to pick up two excited orbitals, after we have already chosen the occupied ones. \\
-For the system with number of electrons equal $N_e$ the probability to pick up two of them is given by:
+For the system with number of electrons equal to $N_e$ the probability to pick up two of them is given by:
 \begin{equation}
 p_{excit}(p,q)= \binom{N}{2}^{-1}= \frac{2}{N_e(N_e-1)}.
 \end{equation}
-The conditional probability need a bit more care:
+The conditional probability needs a bit more care:
 \begin{align}
 p_{excit}(r,s|p,q) = p_{excit}(r|s,p,q)p_{excit}(s|p,q) + p_{excit}(s|r,p,q)p_{excit}(r|p,q).
 \end{align}
-For HEG the values $p_{excit}(r|s,p,q)$ and $p_{excit}(s|r,p,q)$ are equal to one, because there is only one possibility to pick up the second excited orbital if all the other orbitals are already known. The formula is then simplifies to:
+For the HEG the values $p_{excit}(r|s,p,q)$ and $p_{excit}(s|r,p,q)$ are equal to one, because there is only one possibility to pick up the second excited orbital if all the other orbitals are already known. The formula then simplifies to:
 \begin{align}
 p_{excit}(r,s|p,q) = p_{excit}(s|p,q) + p_{excit}(r|p,q).
 \end{align}
-This values only depend on the number of electrons and the size of the basis set, that is why we are able to compute them before running the algorithm:
+These values depend only on the number of electrons and the size of the basis set, that is why we are able to compute them before running the algorithm:
 
 \begin{equation}
 p_{excit}(s|p,q) = \frac{1}{N_{virt}},
 \end{equation}
 
-here $N_{virt}$ is a number of all possible combinations of virtual states that can be chosen for a known pair of occupied states. In case of excitation from reference this value is always the same for a given pair (p,q). If we spawn from already excited determinants (not from reference) we should check if the sates already existing in the parent determinant are not counted in the  $N_{virt}$. If it is the case we should subtract them to avoid double counting. This should be done on the fly, as soon as it is too costly to recalculate such value for all possible excited determinants.\\
+here $N_{virt}$ is a number of all possible combinations of virtual states that can be chosen for a known pair of occupied states. In case of excitations from the reference state this value is always the same for a given pair $(p,q)$. If we spawn from already excited determinants (not from reference) we should check if the states already existing in the parent determinant are not counted in the  $N_{virt}$. If it is the case we should subtract them to avoid double counting. This should be done on the fly, as soon as it is too costly to recalculate such value for all possible excited determinants.\\
 For the single excitation $ \ket{\Phi_{m}}=a^\dagger_r a_p \ket{\Phi_n}.$  the probability is given by:
 \begin{equation}
 p_{excit}(r,p) = p_{excit}(r|p)p_{excit}(p),
@@ -201,14 +201,14 @@ here $p_{excit}(p)$ is a probability to select one occupied orbital and is given
 p_{excit}(p)=\frac{1}{N_e}.
 \end{equation}
 The $ p_{excit}(r|p)$ is a probability to select the virtual one after this. 
-However for the HEG we do not need the single excitations, so we haven't implement this.
+However for the HEG we do not need the single excitations, so we haven't implemented this.
 
 \subsubsection{Spawn and death probabilities}
 Combining these probabilities together we get:
 \begin{equation}
 p_{select}(e)= \frac{s!\prod_{i=1}^{s} |N_i|}{2^{s+1}N_{ex}}.
 \end{equation}
-It is also important that we use sample same number of excips at each time step:
+It is also important that we sample the same number of excips at each time step:
 \begin{equation}
 p_{sel}= N_0+N_{ex}.
 \end{equation}
@@ -226,15 +226,15 @@ Population control is needed to sustain a stable simulation. If not done properl
 \begin{equation}
 E=\braket{E_0} + \alpha\frac{N_W^{(0)}}{N_w},
 \end{equation}
-here $\braket{E_0}$ lowest eigenvalue at time $\tau$, $\alpha$ is small damping parameter, $N_W^{(0)}$ the population one want to reach and $N_w$ total number of random walker at time $\tau$.\\
-However this method introduce bias into the simulation. Another mathod to carry out population control is to update the shift as:
+where $\braket{E_0}$ is the lowest eigenvalue at time $\tau$, $\alpha$ is a small damping parameter, $N_W^{(0)}$ the population one want to reach and $N_w$ total number of random walker at time $\tau$.\\
+However this method introduces a bias into the simulation. Another method to carry out population control is to update the shift as:
 \begin{equation}
 E(\tau)=E(\tau+A\delta\tau) - \frac{\gamma}{A\delta\tau}ln\bigg( \frac{N_{ex}(\tau)}{N_{ex}(\tau+A\delta\tau)}  \bigg),
 \end{equation}
-here $\gamma$ is a small damping parameter, $A$ is number of steps when we update the $E$.
+where $\gamma$ is a small damping parameter and $A$ is number of steps when we update the $E$.
 \subsection{Energy Estimation for CCQMC}
-For this method we have two different and independent options to estimate energy. First is to use the shift updated for under the population control as energy estimator.\\
-Second option is to sample a projection energy as:
+For this method we have two different and independent options to estimate the energy. First is to use the shift updated for under the population control as energy estimator.\\
+The second option is to sample a projection of the energy as:
 \begin{equation}
 E_{proj}=\frac{\braket{D_0|\hat{H}|\Psi_{CC}}}{\braket{D_0|\Psi_{CC}}}
 \end{equation}

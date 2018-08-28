@@ -1,7 +1,18 @@
 \chapter{Results and discussion} \label{sec:Results}
 
 \section{The CCD results}
-As we have already mentioned the HEG is a very convenient system to study various many-body methods. In particular we have found many other researches who have implemented the CCD approximation for such system. That allow us to test our solution against results obtained in many other works on the topic. In particular we have compared our results with some other students from our department, namely with Miller \cite{millerAntumMechanicalStudies}, Hansen \cite{hansenCoupledClusterStudies} and \cite{gustavbaardsenCoupledclusterTheoryInfinite2014}. Table $\ref{tab:CCDcompar}$ present the comparison of the results. As one can see we manage to reproduce their results up to a chosen \textbf{tolerance} for CCD (in this case $10^{-6}$). 
+As we have already mentioned the HEG is a very convenient system to
+study various many-body methods. In particular we have found many
+other researchers who have implemented the CCD approximation for this
+system. That allows us to test our solution against results obtained
+in many other works on the topic. In particular we have compared our
+results with some other students from our department, namely with
+Miller \cite{millerAntumMechanicalStudies}, Hansen
+\cite{hansenCoupledClusterStudies} and
+\cite{gustavbaardsenCoupledclusterTheoryInfinite2014}. Table
+$\ref{tab:CCDcompar}$ presents the comparison of the results. As one
+can see we manage to reproduce their results up to a chosen
+\textbf{tolerance} for CCD (in this case $10^{-6}$).
 
 
 \begin{landscape}
@@ -33,7 +44,7 @@ As we have already mentioned the HEG is a very convenient system to study variou
 				} \label{tab:CCDcompar}
 	\end{table}
 \end{landscape}
-Another test is to compare our results with those from solver presented in \cite{hjorth-jensenAdvancedCourseComputational2017}. Table $\ref{tab:unittest}$ present data for a small number of electrons ($N_e=2$) and relatively small number of states ($N_s$). As one can see from the table the results for the energy are almost the same (up to machine precision).
+Another test is to compare our results with those from the solver presented in \cite{hjorth-jensenAdvancedCourseComputational2017}. Table $\ref{tab:unittest}$ presents data for a small number of electrons ($N_e=2$) and relatively small number of states ($N_s$). As one can see from the table the results for the energy are almost the same (up to machine precision).
 \begin{table}[h]
 	\centering
 
@@ -46,12 +57,28 @@ Another test is to compare our results with those from solver presented in \cite
 		4 & -0.01860871870720909 & -0.01860871870720907 \\
 	\end{tabular}
 		\captionsetup{width=1\textwidth}
-		\caption{Our results for correlation energy $\Delta E_{CCD}$  for $N_e=2$, $r_s=1$ and $N_s=66$,   tested against results  $\Delta E_{CCD}^{test}$ from \cite{hjorth-jensenAdvancedCourseComputational2017} CCD solver for the HEG. Mixing parameter is equal one. All values are in Hartree units.}
+		\caption{Our results for correlation energy $\Delta E_{CCD}$  for $N_e=2$, $r_s=1$ and $N_s=66$,   tested against results  $\Delta E_{CCD}^{test}$ from \cite{hjorth-jensenAdvancedCourseComputational2017} CCD solver for the HEG. The mixing parameter is equal one. All values are in Hartree units.}
 	\label{tab:unittest}
 \end{table}
 \subsubsection{Complete basis set and Thermodynamical limit}
-In thermodynamical limit the number of particles should approaches infinity. However this is not the case for a real-life computations. And even for the finite number of particles it is hard to perform computations for large numbers, because even best many-body methods usually rapidly scale with size. A solution here is to perform computations for some different number of particles and then use extrapolation technique in order to obtain the limit.\\
-In complete basis set limit (CBS) the number of single-particle wave functions should approach infinity. However this is also cannot be achieved for real-life computations. Normally we have to limit our basis to a certain number of basis functions. On Fig. $\ref{fig:CBS}$ one can see how the extrapolation technique is applied to obtain get the correlation energy in the CBS limit for HEG. Here we have used a so-called single-point extrapolation presented by Shepherd et al. in \cite{shepherdInvestigationFullConfiguration2012}. We have obtained value $-0.5142$ for the correlation energy, while Shepherd got $-0.5325(4)$. The result for CCQMC obtained by Thom is $-0.5155(3)$ \cite{spencerDevelopmentsStochasticCoupled2016}.
+In thermodynamical limit the number of particles should approach
+infinity. However this is not the case for a real-life
+computation. And even for the finite number of particles it is hard
+to perform computations for large numbers, because even the best many-body
+methods scale exponetially with size. A solution here is to perform
+computations for some different number of particles and then use
+extrapolation technique in order to obtain the limit.\\ In a complete
+basis set limit (CBS) the number of single-particle wave functions
+should approach infinity. However this is also cannot be achieved for
+real-life computations. Normally we have to limit our basis to a
+certain number of basis functions. On Fig. $\ref{fig:CBS}$ one can see
+how the extrapolation technique is applied to get the
+correlation energy in the CBS limit for the HEG. Here we have used a
+so-called single-point extrapolation presented by Shepherd et al. in
+\cite{shepherdInvestigationFullConfiguration2012}. We have obtained
+the value $-0.5142$ for the correlation energy, while Shepherd got
+$-0.5325(4)$. The result for CCQMC obtained by Thom is $-0.5155(3)$
+\cite{spencerDevelopmentsStochasticCoupled2016}.
 
 \begin{figure}[ht!]
 	\centering
@@ -70,8 +97,21 @@ In complete basis set limit (CBS) the number of single-particle wave functions s
 
 
 \subsubsection{Results for quantum dot}
-We do not obtain a lot of results for QD as soon as our main system was HEG. However CCD solver we have developed for the HEG can be also used to compute ground state properties for QD. The results for QD is present in tables $\ref{tab:resultsHF}$ and  $\ref{tab:resultsCCD}$ and have been tested against the results obtained by Lohne in his master thesis for CCSD \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUM}. For the Hartree-Fock we obtain exactly the same results within the given precision ($10^{-6}$). 
-The exact energy in case of  2 electrons and oscillator potential $\omega=1$ has been obtained analytically by Taut \cite{tautTwoElectronsExternal1993a}. It is equal exactly 3 a.u. We do not obtain this value, however the correlation energy for CCD brings us closer to this result. Unfortunately our program for QD is rather slow and we just tested it for the very simple case of two electrons. In the next Chapter we will discuss how it can be improved in order to get a significant speed up.  
+We do not obtain a lot of results for QD since  our main focus has been the 
+HEG. However, the  CCD solver we have developed for the HEG can also be
+used to compute ground state properties for QD. The results for QD is
+presented in tables $\ref{tab:resultsHF}$ and $\ref{tab:resultsCCD}$ and
+have been tested against the results obtained by Lohne in his master
+thesis for CCSD \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUM}. For the
+Hartree-Fock part we obtain exactly the same results within the given
+precision ($10^{-6}$).  The exact energy in case of 2 electrons and
+oscillator potential $\omega=1$ has been obtained analytically by Taut
+\cite{tautTwoElectronsExternal1993a}. It equals 3 a.u. (atomic units). We do
+not obtain this value, however the correlation energy for CCD brings
+us closer to this result. Unfortunately our program for QD is rather
+slow and we just tested it for the very simple case of two
+electrons. In the next Chapter we will discuss how it can be improved
+in order to get a significant speed up.
 
 \begin{table}[h!]
 	\begin{center}
@@ -136,11 +176,81 @@ The exact energy in case of  2 electrons and oscillator potential $\omega=1$ has
 
 
 \section{The CCQMC results}
-CCQMC is a population dynamics algorithm. That require for it to reproduce a certain behavior for the population of walkers, or in our case excips. That means that the validity of our CCQMC results is based on getting the proper population dynamics for the excips. On the other hand for this particular algorithm the sing structure of excips should be correct. \\
-For the HEG we do not have single excitations and have to deal only with doubles. When we perform the computation for the deterministic CCD this was a huge advantage. However, it might not be so for the CCQMC, because it impose limits on our ability to spawn excips in the system. \\
-Let's consider how this is done for our simulation. We only have three different cluster sizes in our simulation: cluster size one, two and three. The cluster size one is the cluster with zero excitors and there is only one such cluster, which is reference determinant. As soon as we can spawn only double or single excitation from the selected cluster this leave us with only doubles being spawned from reference. In the beginning of simulation, before we start population control, the death also prohibited for the reference, so it's population never decrease at this point. For the cluster size one we are not able to spawn any excips, because we do not consider quadruples and do not have singles at the same time, so the only possibility here is death for the excips spawned before. After we start population control the probability for excips to die changes, but it still no other outcomes possible on this step. For the cluster size three both spawning and death could be possible is we include quadruples. However we do not have them from previous steps, so death on this step never occurs and the only possible outcome here is to spawn a doubly excited excip. This happens due to the only existing excitors are doubles and that means we can only create a composite cluster combining two doubles and getting a quadrupole excitation. The absence of singles leave us with much less possibilities to spawn and/or kill excips and this introduce some difficulties in analyzing the population dynamics of the simulation.\\
-In order to obtain a valid results from the simulation one first have to reach a so-called "plateau". As it have been presented in the article by Thom and Spencer \cite{spencerDevelopmentsStochasticCoupled2016} one can adjust simulation parameters in a way that plateau become easy to spot on a plot. Fig. $\ref{fig:thomEG}$ present the results they have obtained for the neon atom for CCQDSTQ approximation. Despite the fact that we do not take into account higher excitation it could be a valid test if we could reproduce the same behavior in our simulation. The obvious difficulty here is the fact that we have to be vary careful choosing the parameters for the simulation and the fact that we are very limited in our ability to tune them all at the same time. One of the solutions here might be to fix some of them for a while and investigate the behavior of the system. We decide to fix population on reference determinant and run the simulation. The population dynamics should be close to those obtained by Thom and Spencer. Fig. $\ref{fig:nx2k}$ present the population dynamics we got for 14 electrons and 54 states. As one can see from the plot the plateau is reached for the critical number of excips being between $10^3$ and $10^4$, which is a result we expected to get for the $r_s=0.5$. On Fig. $\ref{fig:CCDvsCCDT}$ the difference between CCSD and CCSDT for electron gas decreases for smaller $r_s$. We also run the simulation for 162 basis functions and observe a growth in number of excips - it become closer to $10^4$. From such population dynamics one may assume that we got a proper sign structure. However this results are obtained for fixed normalization and it might introduce some bias in the simulation. \\
-On Fig. $\ref{fig:platFind}$ and Fig. $\ref{fig:platFindStune}$ one can see the distribution for Death and Spawn processes for different excips signs. We have already tested the behavior of excips population, but how can we test the sign structure? As soon as our excips represent the amplitudes of the deterministic CCD one can simply compare the signs of excips with the sign of the corresponding amplitude. However the main idea of the method is to use it for a large basis sets and number of particles, when the deterministic method can't be used for large basis sets and large systems. Instead we can claim that for the stable simulation the number of excips spawned or killed with different sings should remain approximately the same and fluctuate around some value. Which is exactly what we see from the Fig. $\ref{fig:platFind}$ and Fig. $\ref{fig:platFindStune}$. The only thing we want to mention here is that we have also checked the signs of excips against the signed of deterministic amplitudes and they agree, except for some poorly populated excitors.\\
+The CCQMC is a population dynamics algorithm. That require for it to
+reproduce a certain behavior for the population of walkers, or in our
+case excips. That means that the validity of our CCQMC results is
+based on getting the proper population dynamics for the excips. On the
+other hand for this particular algorithm the structure of excips
+should be correct. \\ For the HEG we do not have single excitations
+and have to deal only with doubles. When we perform the computation
+for the deterministic CCD this was a huge advantage. However, it might
+not be so for the CCQMC, because it imposes limits on our ability to
+spawn excips in the system. \\ Let's consider how this is done for our
+simulation. We only have three different cluster sizes in our
+simulation: cluster size one, two and three. The cluster size one is
+the cluster with zero excitors and there is only one such cluster,
+which is the reference determinant. As soon as we can spawn only double or
+single excitations from the selected cluster this leaves us with only
+doubles being spawned from reference. In the beginning of the simulation,
+before we start population control, the death of random walkers also prohibited for the
+reference, so it's population never decrease at this point. For the
+cluster size one we are not able to spawn any excips, because we do
+not consider quadruples and do not have singles at the same time, so
+the only possibility here is death for the excips spawned
+before. After we start population control the probability for excips
+to die changes, but it is still no other outcomes possible on this
+step. For the cluster size three both spawning and death could be
+possible if we include quadruples. However we do not have them from
+previous steps, so death on this step never occurs and the only
+possible outcome here is to spawn a doubly excited excip. This happens
+due to the only existing excitors are doubles and that means we can
+only create a composite cluster combining two doubles and getting a
+quadrupole excitation. The absence of singles leave us with much less
+possibilities to spawn and/or kill excips and this introduce some
+difficulties in analyzing the population dynamics of the
+simulation.\\ In order to obtain a valid results from the simulation
+one first have to reach a so-called "plateau". As it have been
+presented in the article by Thom and Spencer
+\cite{spencerDevelopmentsStochasticCoupled2016} one can adjust
+the simulation parameters in a way that the plateau become easy to spot on a
+plot. Figure $\ref{fig:thomEG}$ presents the results they have obtained
+for the neon atom for the CCQDSTQ approximation. Despite the fact that we
+do not take into account higher excitations it could be a valid test if
+we could reproduce the same behavior in our simulation. The obvious
+difficulty here is the fact that we have to be very careful in choosing
+the parameters for the simulation and the fact that we are very
+limited in our ability to tune them all at the same time. One of the
+solutions here might be to fix some of them for a while and
+investigate the behavior of the system. We decide to fix the population on
+the reference determinant and run the simulation. The population dynamics
+should be close to those obtained by Thom and
+Spencer. Figure $\ref{fig:nx2k}$ presents the population dynamics we got
+for 14 electrons and 54 states. As one can see from the plot the
+plateau is reached for the critical number of excips being between
+$10^3$ and $10^4$, which is a result we expected to get for 
+$r_s=0.5$. In Fig. $\ref{fig:CCDvsCCDT}$ the difference between CCSD
+and CCSDT for electron gas decreases for smaller $r_s$. We also run
+the simulation for 162 basis functions and observe a growth in number
+of excips - it become closer to $10^4$. From such population dynamics
+one may assume that we got a proper sign structure. However these
+results are obtained for fixed normalization and it might introduce
+some bias in the simulation. \\ In figures $\ref{fig:platFind}$ and
+$\ref{fig:platFindStune}$ one can see the distribution for Death
+and Spawn processes for different excips signs. We have already tested
+the behavior of excips population, but how can we test the sign
+structure? As soon as our excips represent the amplitudes of the
+deterministic CCD one can simply compare the signs of excips with the
+sign of the corresponding amplitude. However the main idea of the
+method is to use it for a large basis sets and number of particles,
+when the deterministic method can't be used for large basis sets and
+large systems. Instead we can claim that for the stable simulation the
+number of excips spawned or killed with different sings should remain
+approximately the same and fluctuate around some value. Which is
+exactly what we see from the Fig. $\ref{fig:platFind}$ and
+Fig. $\ref{fig:platFindStune}$. The only thing we want to mention here
+is that we have also checked the signs of excips against the signed of
+deterministic amplitudes and they agree, except for some poorly
+populated excitors.\\
 
 
 \begin{figure}[ht!]

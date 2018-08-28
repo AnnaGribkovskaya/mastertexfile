@@ -1,0 +1,216 @@
+\chapter{Coupled Cluster method} \label{ch:coupled_cluster}
+Coupled cluster (CC) method for quantum chemistry was first introduced by J. Cizek in the late 1960s \cite{cizekCorrelationProblemsAtomic}. A few years later he publish a new article on the topic in collaboration with and J. Paldus \cite{cizekCorrelationProblemAtomic1966}. CC is an \textit{ab initio} numerical method widely used for approximate solution of electronic Schr\"{o}dinger equation because it is both reliable and computationally affordable. This section is based on a very detailed and comprehensive overview of the method provided by Crawford and Schaefer in \cite{crawfordIntroductionCoupledCluster2007}. Coupled cluster method is based on the same basic concepts that are underlying many other many-body methods, such as many-body perturbation theory and full configuration interaction. The main critical difference is use of "exponential ansatz" of the wave function which is discussed below.\\
+In this chapter we discuss some critical ideas for the CC, such as cluster expansion of the wave function , exponential ansatz, Campbell-Baker-Hausdorff (BCH) expansion, second quantization and particle-hole formalism, normal-ordering and correlation operator in application for CC method. Some of this ideas we have already mention in previous chapter and some are completely new. The CC method can be described in two different ways using algebraic and diagrammatic formalisms. Both are correct and provide same results, but diagrammatic one is a way faster. However, for understanding of the method and it's origin we need to begin with algebraic form of the equations.\\
+\section{Cluster functions and Exponential Anzats} 
+As we have already discussed above Slater Determinant can be used to describe a wave function of the electrons. In Dirac notations it can be written as follows:
+\begin{equation}
+\Phi_0 =  \ket{\phi_i(\bm{x_1})\phi_j(\bm{x_2}) ...\phi_l(\bm{x_n})}
+\end{equation}
+here $\phi_i(\bm{x_1})$ is a one-electron wave function, that describes motion of each electron separately, the $\bm{x_1}$ is a vector of coordinates, both spatial and spin. \\
+Keeping in mind that we are working with fermions, electronic wave function should be antisymmetric. \\
+Such description has some drawbacks, for example it fails to take into account the instantaneous interactions that keep apart electrons with opposite spins. For more details please refer to  \cite{bartlettApplicationsPostHartree2007} and \cite{ModernQuantumChemistry}. \\
+The most important idea of CC method is exponential expansion of wave function. 
+\begin{equation}\label{eq:exponential ansatz}
+\ket{\Psi}=e^{\hat{T}}\ket{\Phi_0}.
+\end{equation}
+Where $\hat{T}$ is cluster operator:
+
+\begin{align} \label{eq:T}
+\hat{T}   &= \hat{T_1}+ \hat{T_2}+ \hat{T_3}...\hat{T_n},  \\
+\hat{T_1} &= \sum_{i,a} t_i^a c_a^\dagger c_i, \label{eq:T1}\\
+\hat{T_2} &= \frac{1}{4} \sum_{i,j,a,b} t_{i,j}^{a,b} c_a^\dagger a_b^\dagger c_j c_i,\\
+\hat{T_n} &= \bigg(\frac{1}{n!}\bigg)^2 \sum_{i,j \dots a,b\dots } t_{i,j\dots}^{a,b\dots}  c_a^\dagger c_b^\dagger \dots c_j c_i.\\
+\end{align}
+here values $t_i^a $ and $t_{i,j}^{a,b}$ are called cluster amplitudes. \\
+After introducing the exponential ansatz we need a recipe to determine the cluster amplitudes. In order to do this we start with electronic Schr\"{o}dinger equation ($\ref{eq:Ham in 2q}$) and use equation ($\ref{eq:exponential ansatz}$) to approximate the exact wave function:
+\begin{equation}
+	\hat{H}e^{\hat{T}}\ket{\Phi_0}=Ee^{\hat{T}}\ket{\Phi_0}.
+\end{equation}
+Using the \textit{intermediate normalization} $\braket{\Phi_0|\Psi_{CC}}=1$ and  the equation above we can immediately get the energy:
+\begin{equation}\label{eq:energy simple cc}
+\bra{\Phi_0}\hat{H}e^{\hat{T}}\ket{\Phi_0}=E.
+\end{equation}
+Now we want to use the fact that exponentiated operator can be expressed in terms of power series:
+ \begin{equation}
+ e^{\hat{T}}= 1+ \hat{T}+\frac{1}{2!}\hat{T}^2+ ...
+ \end{equation}
+If we now insert this equation into equation ($\ref{eq:energy simple cc}$) and simplify a bit we obtain:
+\begin{equation}
+ \bra{\Phi_0}\hat{H}\ket{\Phi_0} +  \bra{\Phi_0}\hat{H}\hat{T}\ket{\Phi_0} +\bra{\Phi_0}\hat{H}\frac{1}{2!}\hat{T}^2\ket{\Phi_0}  = E.
+\end{equation}
+In the energy equation above the exponential expansion is truncated after $\hat{T}^2$. This fact if often reffed to as \textit{natural truncation} of the coupled cluster energy equation. It's important here that truncation occurs due to the fact that Hamiltonian in our case is at most two-body operator and cluster operator is at least one-body. It this case matrix elements of Hamiltonian are zero for all determinants that differ more then two orbitals. This truncation does not depend on number of particles or any other parameter, it only occurs due to the form of Hamiltonian. \\
+The amplitude expressions can be computed using the same projection technique, only instead of projecting into reference we will be projecting into exited determinant. 
+\begin{equation}\label{eq:ampl simple}
+\bra{\Phi_{ij...}^{ab...}}\hat{H} e^{\hat{T}}\ket{\Phi_0} = E\bra{\Phi_{ij...}^{ab...}} e^{\hat{T}}\ket{\Phi_0}.
+\end{equation}
+
+\subsection{Hausdorff Expansion} \label{sec:Hausdorf}
+Expressions for energy and amplitudes in the section above are not useful for practical computations. In order to obtain equations that can be efficiently implemented in computer programs we are going to use so called similarly transformed Hamiltonian. It is a well known procedure in quantum mechanics. 
+
+For energy equation we get:
+\begin{equation}\label{eq:energy_cc1}
+\bra{\Phi_0} e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = E. 
+\end{equation}
+And for amplitudes equation we get:
+\begin{equation}\label{eq:amplitudesgeneral}
+\bra{\Phi_{ij...}^{ab...}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0.
+\end{equation} 
+These equations are equivalent to ($\ref{eq:ampl simple}$) and ($\ref{eq:energy simple cc}$) derived in the sections above. However there are two significant advantages this transformation provides to the method. Equations for amplitude are now not coupled to the energy equation and we may use so called Hausdorff expansion (or Campbell-Baker-Hausdorff formula) and rewrite the expression for $ e^{\hat{-T}} \hat{H} e^{\hat{T}} $ in terms of linear combinations of nested commutators of $ \hat{H} $ and $\hat{T}$.
+\begin{equation}
+e^{\hat{-T}} \hat{H} e^{\hat{T}} = \hat{H} + [\hat{H},\hat{T}] + \frac{1}{2!}[[\hat{H},\hat{T}],\hat{T}] + \frac{1}{3!}[[[\hat{H},\hat{T}],\hat{T}],\hat{T}] + ...
+\end{equation} 
+Here we need to make a very important remark regarding the transformation we have done. As it has been mentioned in chapter one quantum mechanics demand that observables are expectation values of hermitian operators (Postulate $\ref{postulat2}$). The operator  $e^{\hat{-T}} \hat{H} e^{\hat{T}} $ is obviously not hermitian. 
+\begin{equation}
+(e^{\hat{-T}} \hat{H} e^{\hat{T}})^\dagger \neq e^{\hat{-T}} \hat{H} e^{\hat{T}}
+\end{equation} 
+However, the eigenvalue spectrum of this operator is identical to the original Hamiltonian operator. For details please refer to \cite{kutzelniggAlmostVariationalCoupled}.
+
+\section{Coupled Cluster Equations}
+\subsection{Energy Equation}
+In previous section $\ref{sec:Hausdorf}$ we have introduced Hausdorff expansion for similarly transformed Hamiltonian. Now we will use it to derive energy equation. In case of CCSD (meaning $\hat{T}=\hat{T}_1+\hat{T}_2$) the similarly transformed normal ordered Hamiltonian $\bar{H}=e^{\hat{-T}} \hat{H}_\text{N} e^{\hat{T}}$ can be written as:
+
+\begin{eqnarray}\label{eq:hausdorf_ccsd}
+ \hat{H}_\text{N} + [\hat{H}_\text{N},\hat{T}_1+\hat{T}_2] + \frac{1}{2!}[[\hat{H}_\text{N},\hat{T}_1+\hat{T}_2],\hat{T}_1+\hat{T}_2] + ...= \nonumber\\
+ \hat{H}_\text{N} + [\hat{H}_\text{N},\hat{T}_1] + [\hat{H}_\text{N},\hat{T}_2] + \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_1] +\nonumber\\ \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_2],\hat{T}_2] +  \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_2] + \frac{1}{2}[[\hat{H}_\text{N},\hat{T}_2],\hat{T}_1] + ...
+\end{eqnarray}
+
+We now want to insert ($\ref{eq:hausdorf_ccsd}$) into ($\ref{eq:energy_cc1}$). The $\hat{H}_\text{N}$ term is trivial as $\braket{\Phi_0|\hat{H}_\text{N}|\Phi_0}=0$.\\
+Next term is a bit more interesting:
+\begin{eqnarray}\label{eq:firstterm}
+ [\hat{H}_\text{N},\hat{T}_1] =  [\hat{F}_\text{N},\hat{T}_1] +  [\hat{V}_\text{N},\hat{T}_1].
+\end{eqnarray}
+Using ($\ref{eq:T1}$) and the formulation of Fock operator from ($\ref{eq:Fock_operator}$) we need to deal with products of operator strings and we may immediately re-write them using Wick's theorem:
+\begin{eqnarray}
+\{c_p^\dagger c_q \}\{c_a^\dagger c_i \} =\{c_p^\dagger c_q c_a^\dagger c_i \} + \wick{ \{\c1 c_p^\dagger c_q c_a^\dagger \c1 c_i \} } + \wick{ \{ c_p^\dagger \c1 c_q \c1 c_a^\dagger  c_i \} } +
+ \wick{ \{ \c2 c_p^\dagger \c1 c_q \c1 c_a^\dagger \c2  c_i \} } = \nonumber\\
+ \{c_p^\dagger c_q c_a^\dagger c_i \} + \delta_{pi} \{ c_q c_a^\dagger\} +\delta_{qa} \{  c_p^\dagger c_i \} +  \delta_{pi}\delta_{qa}\\
+ \{c_a^\dagger c_i \}\{c_p^\dagger c_q \}= \{c_p^\dagger c_q c_a^\dagger c_i \}.
+\end{eqnarray}
+Using this the next term ($\ref{eq:firstterm}$) in expansion ($\ref{eq:hausdorf_ccsd}$) may be written as and the fact that expectation value of normal ordered operator string is zero by contraction (only fully contracted terms make contribution to the energy) we get:
+\begin{eqnarray}
+\bra{\Phi_0}[\hat{F}_\text{N},\hat{T}_1] \ket{\Phi_0}=\sum_{ia} f_{ia}t_i^a,\\
+\bra{\Phi_0}[\hat{V}_\text{N},\hat{T}_1] \ket{\Phi_0}=0.
+\end{eqnarray}
+Next term is:
+\begin{eqnarray}\label{eq:secondterm}
+[\hat{H}_\text{N},\hat{T}_2]=[\hat{F}_\text{N},\hat{T}_2] +  [\hat{V}_\text{N},\hat{T}_2].
+\end{eqnarray} 
+Following the same procedure as before we get:
+\begin{eqnarray}
+\bra{\Phi_0}[\hat{F}_\text{N},\hat{T}_2] \ket{\Phi_0}=0\\
+\bra{\Phi_0}[\hat{V}_\text{N},\hat{T}_2] \ket{\Phi_0}=\frac{1}{4}\sum_{ijab}\braket{ij|\hat{v}|ab}t_{ij}^{ab}
+\end{eqnarray}
+And for the next term we have:
+\begin{eqnarray}
+\frac{1}{2}[[\hat{H}_\text{N},\hat{T}_1],\hat{T}_1]= \frac{1}{2}\hat{H}_\text{N}\hat{T}_1^2 -\hat{T}_1\hat{H}_\text{N}\hat{T}_1 + \frac{1}{2}\hat{T}_1^2\hat{H}_\text{N}=\nonumber \\
+ \frac{1}{2}\hat{F}_\text{N}\hat{T}_1^2 +  \frac{1}{2}\hat{V}_\text{N}\hat{T}_1^2 
+ -\hat{T}_1\hat{F}_\text{N}\hat{T}_1  -\hat{T}_1\hat{V}_\text{N}\hat{T}_1 + 
+ \frac{1}{2}\hat{T}_1^2\hat{F}_\text{N} +  \frac{1}{2}\hat{T}_1^2\hat{V}_\text{N}
+\end{eqnarray}
+Let us consider this one more carefully, because it can help us to state a so-called connected contraction theorem.
+\begin{eqnarray}
+\hat{F}_\text{N}\hat{T}_1^2 = \sum_{ijab} \sum_{pq}f_{pq}t_i^at_j^b(\{c_p^\dagger c_q c_a^\dagger c_i c_b^\dagger c_j \}+ \wick{\{\c1 c_p^\dagger c_q c_a^\dagger \c1 c_i c_b^\dagger c_j \}}  +\wick{\{\c1 c_p^\dagger c_q c_a^\dagger  c_i c_b^\dagger \c1c_j \}} + \nonumber \\
+\wick{\{ c_p^\dagger \c1 c_q \c1c_a^\dagger  c_i c_b^\dagger c_j \}} + \wick{\{ c_p^\dagger \c1 c_q c_a^\dagger  c_i \c1 c_b^\dagger c_j \}} + \wick{\{ \c2 c_p^\dagger  \c1 c_q \c1 c_a^\dagger \c2 c_i  c_b^\dagger  c_j \}} + \nonumber \\ \wick{\{ \c2 c_p^\dagger  \c1 c_q \c1 c_a^\dagger  c_i  c_b^\dagger \c2 c_j \}}+ \wick{\{ \c2 c_p^\dagger  \c1 c_q  c_a^\dagger \c2 c_i \c1 c_b^\dagger  c_j \}}+  \wick{\{ \c2 c_p^\dagger  \c1 c_q  c_a^\dagger  c_i \c1 c_b^\dagger \c2 c_j \}})
+\end{eqnarray}
+As we can see there is no fully contracted terms in the expression above. Two other terms can be written as:
+\begin{align*}
+\hat{T}_1\hat{F}_\text{N}\hat{T}_1 &= \nonumber \\ 
+\sum_{ijab} t_i^at_j^b \bigg( &\sum_{pq}f_{pq} \{c_a^\dagger c_ic_p^\dagger c_q  c_b^\dagger c_j \} +  \sum_{q}f_{jq}\{c_a^\dagger c_i  c_q  c_b^\dagger \} +  \sum_{p}f_{pb}\{c_a^\dagger c_i   c_p^\dagger c_j \} + f_{jb}\{c_a^\dagger c_i \}\bigg)\nonumber \\
+\hat{T}_1^2\hat{F}_\text{N} =&\sum_{ijab}  \sum_{pq}f_{pq}  t_i^at_j^b \{c_a^\dagger c_ic_b^\dagger c_j  c_p^\dagger c_q   \} \nonumber \\
+\end{align*}
+Non of the above contribute to the energy expectation value. However the term $[\hat{F}_\text{N},\hat{T}_1] $ does. Using this to facts we may now formulate the connected contraction theorem:
+\begin{theorem} Connected Cluster Theorem \\ \label{theo:connected}
+The contribution to the energy expectation value from the terms in Hausdorff expansion of similarly transformed normal ordered Hamiltonian is non zero only if the the $\hat{H}_\text{N}$ has at least one contraction with every cluster operator on the right side.\\
+Such connected contraction is denoted with subscript $(...)_c$.
+\end{theorem}
+Using this theorem one can say that as soon as Hamiltonian has at most four operators the Hausdorff expansion can have at most four cluster operators. This eventually makes the derivation of energy and amplitudes equations much easier.\\
+Let's continue on derivation of energy equation using the connected contractions. Contribution from $(\hat{F}_\text{N}\hat{T_2})_c$ is zero by construction, due to absence of fully contracted terms ($\hat{F}_\text{N}$ contains two operators and $\hat{T_2}$ has four). The contribution from $(\hat{V}_\text{N}\hat{T_2})_c$ is non zero, because we have two normal ordered operator strings of the same size here.:
+\begin{equation}
+\bra{\Phi_0}(\hat{V}_\text{N}\hat{T}_2)_c \ket{\Phi_0}=\frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab}.
+\end{equation}
+Next non-zero contribution comes from term $(\hat{V}_\text{N}\hat{T_1}^2)_c$:
+\begin{equation}
+\bra{\Phi_0}(\hat{V}_\text{N}\hat{T}_1^2)_c \ket{\Phi_0}=\sum_{ijab} \braket{ij||ab}t_{i}^{a}t_{j}^{b}.
+\end{equation}
+Gathering all the term carefully one obtain the following expression for the correlation energy:
+\begin{equation}
+E_{corr}= E_{CCSD} - E_{HF}= \sum_{ia} f_{ia}t_i^a + \frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab} +\frac{1}{2}\sum_{ijab} \braket{ij||ab}t_{i}^{a}t_{j}^{b}.
+\end{equation}
+Or in case of coupled clusters doubles simply:
+\begin{equation}
+E_{corr}= E_{CCD} - E_{HF}= \frac{1}{4}\sum_{ijab} \braket{ij||ab}t_{ij}^{ab}.
+\end{equation}
+\subsection{Amplitudes equations}
+Above we presented a general form for amplitudes equation in ($\ref{eq:amplitudesgeneral}$). Depending on the truncation of cluster operator we may have different types of coupled cluster methods: coupled cluster singles and doubles (CCSD), coupled cluster doubles (CCD) or coupled cluster singes, doubles and triples (CCSDT). The general form for amplitude equations ($\ref{eq:amplitudesgeneral}$) then can be used to find singly-excited amplitudes $t_{i}^{a}$ and doubly-excited amplitudes  $t_{ij}^{ab}$. 
+
+
+\begin{eqnarray}
+\bra{\Phi_{ij}^{ab}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0 \xRightarrow{~\textsf{CCD}~} \text{ for  $t_{ij}^{ab}$}
+\end{eqnarray}
+
+\begin{eqnarray}
+\begin{aligned}
+\bra{\Phi_{i}^{a}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \\
+\bra{\Phi_{ij}^{ab}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \end{aligned}
+\xRightarrow{~\textsf{CCSD}~}
+\begin{aligned}
+\text{ for  $t_{i}^{a}$} \\
+\text{ for  $t_{ij}^{ab}$} \end{aligned}
+\end{eqnarray}
+
+\begin{eqnarray}
+\begin{aligned}
+\bra{\Phi_{i}^{a}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \\
+\bra{\Phi_{ij}^{ab}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0 \\
+\bra{\Phi_{ijk}^{abc}}e^{\hat{-T}} \hat{H} e^{\hat{T}} \ket{\Phi_0}   = 0  \\ \end{aligned}
+\xRightarrow{~\textsf{CCSDT}~}
+\begin{aligned}
+\text{ for  $t_{i}^{a}$} \\
+\text{ for  $t_{ij}^{ab}$} \\
+\text{ for  $t_{ijk}^{abc}$} \end{aligned}
+\end{eqnarray}
+And so on.\\
+Equations for amplitudes are derived using same approach as for the energy, we just write all operators as normal ordered strings and look for fully contracted and connected clusters. Additionally we need to write an excited determinant as an operator string also:
+\begin{eqnarray}
+\bra{\Phi_{ij}^{ab}} = \bra{\Phi_0} \{  c_i^\dagger c_j^\dagger  c_b  c_a \}.
+\end{eqnarray}
+The derivation is rather simple, though quite time-consuming due to number of terms in BSH expansion to take care of. We are not going to tackle all of them and will just present some as an example.\\
+We are going to look into CCD approximation here, thus only consider terms that contribute to the amplitudes for $\hat{T}_2$.\\
+The one-body term does not contribute because it is not possible to construct fully contracted terms, so the only term that is able to produce such contractions is:
+\begin{eqnarray}
+\braket{\Phi_{ij}^{ab}|(\hat{F}_\text{N}+\hat{V}_\text{N})|\Phi_0} \rightarrow \braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N})|\Phi_0},\nonumber \\
+\braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N})|\Phi_0} = \frac{1}{4}\sum_{pqrs} \braket{pq||rs}\braket{\Phi_0| \{  c_i^\dagger c_j^\dagger  c_b  c_a \} \{  c_p^\dagger c_q^\dagger  c_s  c_r \} |\Phi_0}=\nonumber \\
+ \frac{1}{4}\sum_{pqrs} \braket{pq||rs} \bigg( \wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c1  c_p^\dagger \c2 c_q^\dagger \c3 c_s \c4 c_r \}  } 
+ + \wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c2  c_p^\dagger \c1 c_q^\dagger \c3 c_s \c4 c_r \}  } + \nonumber \\
+  \wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c1  c_p^\dagger \c2 c_q^\dagger \c4 c_s \c3 c_r \}  }+\wick{ \{ \c4 c_i^\dagger \c3 c_j^\dagger \c2 c_b \c1 c_a \c2  c_p^\dagger \c1 c_q^\dagger \c4 c_s \c3 c_r \}  }  \bigg) =\braket{ab||ij}
+\end{eqnarray}
+Contribution from other terms are obtained in the similar manner, one just need to kepp in mind that for terms with cluster operator, like $\braket{\Phi_{ij}^{ab}|(\hat{F}_\text{N}\hat{T}_2)_c|\Phi_0}$ and $\braket{\Phi_{ij}^{ab}|(\hat{V}_\text{N}\hat{T}_2)_c|\Phi_0}$ the Connected Cluster Theorem $\ref{theo:connected}$ must be satisfied.\\
+We are not providing the derivation any further, because it has been done already in many other articles, for example in an article by Crawford and Schaefer  \cite{crawfordIntroductionCoupledCluster2007}, and master theses, for example in M. Lohne thesis \cite{lohneCOUPLEDCLUSTERSTUDIESQUANTUMa}.
+The final expression for the amplitudes in case of CCD approximation is the following:
+\begin{eqnarray}\label{eq:CCD_ampl}
+0 =\braket{ab||ij} + \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} ) +\frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd} 
+\nonumber &+\\
+ \frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab}  + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac} + 
+  P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac} t_{lj}^{db} \nonumber & + \\
+ \frac{1}{4} \sum_{klcd}\braket{kl||cd}t_{ij}^{cd} t_{kl}^{ab}  
+- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{dc}t_{lj}^{ab}- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{lk}^{ac}t_{ij}^{db}.&  
+\end{eqnarray}
+
+The only thing left now is to re-write the equation ($\ref{eq:CCD_ampl}$) in an iterative way. This can be done as follows:
+\begin{align} \label{eq:ccditer}
+   \sum_{c}(f_{bc}t_{ij}^{ac}-f_{ac}t_{ij}^{bc} ) - \sum_{k}(f_{kj}t_{ik}^{ab}-f_{ki}t_{jk}^{ab} )\rightarrow \nonumber \\
+   \rightarrow f_{bb}t_{ij}^{ab} - f_{aa}t_{ij}^{ba}
+  	- f_{jj}t_{ij}^{ab} + f_{ii}t_{ji}^{ab} = - \epsilon_{ij}^{ab} t_{ij}^{ab},
+\end{align} 	
+ here $ \epsilon_{ij}^{ab} = \epsilon_i + \epsilon_j - \epsilon_a
+ - \epsilon_b $.
+   \begin{align}
+& \epsilon_{ij}^{ab} t_{ij}^{ab(n)} = \braket{ab||ij}  +\frac{1}{2} \sum_{cd}\braket{ab||cd}t_{ij}^{cd(n-1)}
+   +	\frac{1}{2} \sum_{kl}\braket{kl||ij}t_{kl}^{ab(n-1)} 
+   + P(ij)(ab)  \sum_{kc}\braket{kb||cj}t_{ik}^{ac(n-1)}  \nonumber \\
+&  +	P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{ac}(n-1) t_{lj}^{db(n-1)}   + 
+  	\frac{1}{4} \sum_{klcd}\braket{kl||cd}t_{ij}^{cd(n-1)} t_{kl}^{ab(n-1)}  \\
+&  	- \frac{1}{2} P(ij) \sum_{klcd}\braket{kl||cd}t_{ik}^{dc(n-1)}t_{lj}^{ab(n-1)}- \frac{1}{2} P(ab) \sum_{klcd}\braket{kl||cd}t_{lk}^{ac(n-1)}t_{ij}^{db(n-1)}, \nonumber
+\end{align}
+here $n$ is number of iteration. 
+

@@ -1,0 +1,100 @@
+\chapter{Homogeneous Electron Gas}
+The Homogeneous Electron Gas (HEG) or, as it sometimes called, the free electron gas is a very useful model in the condensed matter physics as it allows to study the many-fermion system without additional complication caused by lattice symmetry.  This makes useful for study metals, i.e modeling the properties of valence electrons.\\
+Below are main assumptions to be made for this model:
+\begin{itemize}
+	\item We assume to have a certain number of electrons $N_e$ in a cubic box of a certain length $L$. Volume of the cube is $\Omega= L^2$.
+	\item No external forces are present, except those provided by background ions. The density of the background charge is constant and given by $N/\Omega$, here $N$ is number of ions.
+	\item System is neutral and ions are stationary.
+\end{itemize}
+
+HEG model allows us to solve the Hartree-Fock equations for system of many interacting particles in the analytical form. Additionally it also allows us to get the total energy and Hamiltonian matrix elements in the basis for Hartree-Fock. This make the model one of the best options to implement a so called post Hartree-Fock methods, for example, CC, FCI  and  Monte Carlo methods for many-body problems.This properties make HEG a perfect system to test the many-body solvers before using it for other systems.\\
+Theoretical description of the HEG in this chapter is based on the lecture notes of S.Kvaal for Fys-Kjm4480/9480 \cite{s.kvaal.LectureNotesFysKjm44802015}.
+\section{Hamiltonian for Homogeneous Electron Gas}
+The Hamiltonian for HEG is given by:
+\begin{equation}
+\hat{H}=\hat{H}_{el}+\hat{H}_{b}+\hat{H}_{el-b},
+\end{equation}
+with $\hat{H}_{el}$ is the electronic part given by:
+\begin{equation}
+\hat{H}_{el}=\sum_{i=1}^N\frac{p_i^2}{2m}+\frac{e^2}{2}\sum_{i\ne j}\frac{e^{-\mu |\mathbf{r}_i-\mathbf{r}_j|}}{|\mathbf{r}_i-\mathbf{r}_j|},
+\end{equation}
+and $\hat{H}_{b}$ being the operator corresponding to background charge from ions, given by:
+\begin{equation}
+\hat{H}_{b}=\frac{e^2}{2}\int\int d\mathbf{r}d\mathbf{r}'\frac{n(\mathbf{r})n(\mathbf{r}')e^{-\mu |\mathbf{r}-\mathbf{r}'|}}{|\mathbf{r}-\mathbf{r}'|},
+\end{equation}
+and $\hat{H}_{el-b}$ being the operator corresponding to interactions between electrons and the positive background charge, given by:
+\begin{equation}
+\hat{H}_{el-b}=-\frac{e^2}{2}\sum_{i=1}^N\int d\mathbf{r}\frac{n(\mathbf{r})e^{-\mu |\mathbf{r}-\mathbf{x}_i|}}{|\mathbf{r}-\mathbf{x}_i|},
+\end{equation}
+here $\mu$ is a convergence factor, $n(\textbf{r})$ is background charge density. In thermodynamical limit $\mu \rightarrow 0$. \\
+The single-particle wave functions are given py plane wave:
+\begin{equation}
+\psi_{\mathbf{k}\sigma}(\mathbf{r})= \frac{1}{\sqrt{\Omega}}\exp{(i\mathbf{kr})}\xi_{\sigma},
+\end{equation}
+here $\mathbf{k}$ is a wave number and $\xi_{\sigma}$ denotes spin (up and down):
+\begin{equation}
+\xi_{\sigma=+1/2}=\left(\begin{array}{c} 1 \\ 0 \end{array}\right) \hspace{0.5cm}
+\xi_{\sigma=-1/2}=\left(\begin{array}{c} 0 \\ 1 \end{array}\right).
+\end{equation}
+The periodic boundary conditions are assumed, so that wave numbers are only allowed to have some certain values:
+\begin{equation}
+k_i=\frac{2\pi n_i}{L}\hspace{0.5cm} i=x,y,z \hspace{0.5cm} n_i=0,\pm 1,\pm 2, \dots
+\end{equation}
+The single-particle energy is then given by:
+\begin{align}
+\varepsilon_{n_{x}, n_{y}, n_{z}} = \frac{\hbar^{2}}{2m}
+\left( \frac{2\pi }{L}\right)^{2}
+\left( n_{x}^{2} + n_{y}^{2} + n_{z}^{2}\right).
+\end{align}
+The antisymmetrized matrix elements are given by:
+\begin{align} \tag{5}
+& \langle \mathbf{k}_{p}m_{s_{p}}\mathbf{k}_{q}m_{s_{q}}
+|\tilde{v}|\mathbf{k}_{r}m_{s_{r}}\mathbf{k}_{s}m_{s_{s}}\rangle_{AS} 
+\nonumber \\
+& = \frac{4\pi }{L^{3}}\delta_{\mathbf{k}_{p}+\mathbf{k}_{q},
+	\mathbf{k}_{r}+\mathbf{k}_{s}}\left\{ 
+\delta_{m_{s_{p}}m_{s_{r}}}\delta_{m_{s_{q}}m_{s_{s}}}
+\left( 1 - \delta_{\mathbf{k}_{p}\mathbf{k}_{r}}\right) 
+\frac{1}{|\mathbf{k}_{r}-\mathbf{k}_{p}|^{2}}
+\right. \nonumber \\
+& \left. - \delta_{m_{s_{p}}m_{s_{s}}}\delta_{m_{s_{q}}m_{s_{r}}}
+\left( 1 - \delta_{\mathbf{k}_{p}\mathbf{k}_{s}} \right)
+\frac{1}{|\mathbf{k}_{s}-\mathbf{k}_{p}|^{2}} 
+\right\} ,
+\end{align}
+here $\delta_{\mathbf{k}_{p}\mathbf{k}_{r}}$ and $\delta_{\mathbf{k}_{p}\mathbf{k}_{s}}$ are Kronecker delta functions.\\
+Table $\ref{tab:spnumbers}$ presents the shell structure for the HEG in three dimensions.
+
+
+\begin{table}[!ht]
+	\begin{center}
+		\begin{tabular}{ |c | r | r | r | c|} 
+			\hline
+			$n_x^2+n_y^2+n_z^2$& $n_x$ & $n_y$ & $n_z$ & $N_{\uparrow \downarrow}$ \\
+			\hline
+			\hline
+			0& 0  & 0  & 0  & 2 \\ \hline
+			1& -1 & 0  & 0  &  \\ 
+			1& 1  & 0  & 0  &  \\ 
+			1& 0  & -1 & 0  &  \\ 
+			1& 0  & 1  & 0  &  \\ 
+			1& 0  & 0  & -1 &  \\ 
+			1& 0  & 0  & 1  & 14 \\ 	\hline
+			2& -1 & -1 & 0  &  \\ 
+			2& -1 & 1  & 0  &  \\ 
+			2& 1  & -1 & 0  &  \\ 
+			2& 1  & 1  & 0  &  \\ 
+			2& -1 & 0  & -1 &  \\ 
+			2& -1 & 0  & 1  &  \\ 
+			2& 1  & 0  & -1 &  \\ 
+			2& 1  & 0  & 1  &  \\ 
+			2& 0  & -1 & -1 &  \\ 
+			2& 0  & -1 & 1  &  \\ 
+			2& 0  & 1  & -1 &  \\ 
+			2& 0  & 1  & 1  & 38 \\ 	\hline
+		\end{tabular} 
+		\caption{Single-particle state energies for HEG in atomic units. $N_{\uparrow \downarrow }$ stands for the total number of spin-orbitals.}
+		\label{tab:spnumbers}
+	\end{center}
+\end{table}
+
